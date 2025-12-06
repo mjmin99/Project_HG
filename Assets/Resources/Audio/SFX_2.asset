@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b609ee0aa037ec45b1ef7f7c5bd7233, type: 3}
-  m_Name: BGM_3
+  m_Name: SFX_2
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
-  clipSource: {fileID: 8300000, guid: 9186b54f5a9ec2b4096e9889736011db, type: 3}
-  clipName: Frog's Theme
+  clipSource: {fileID: 8300000, guid: 5474b0c218daf684aba7333c49a8921b, type: 3}
+  clipName: Hello
   volume: 0.9
-  audioType: 1
-  loop: 1
+  audioType: 3
+  loop: 0

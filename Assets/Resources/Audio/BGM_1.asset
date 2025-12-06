@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BGM_1
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
   clipSource: {fileID: 8300000, guid: 3201150663af7a64396a0bf7272ed7b7, type: 3}
-  clipName: BGM1
+  clipName: Wind Scene
   volume: 0.9
-  mixerGroup: {fileID: -6704043592883796563, guid: 2730d1b2f3c3e2944b253b1ec305e24e, type: 2}
+  audioType: 1
   loop: 1

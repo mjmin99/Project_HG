@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BGM_2
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
   clipSource: {fileID: 8300000, guid: e6121d87317902e4b96e2525d2355d23, type: 3}
-  clipName: BGM2
+  clipName: Secret of the forest
   volume: 0.9
-  mixerGroup: {fileID: -6704043592883796563, guid: 2730d1b2f3c3e2944b253b1ec305e24e, type: 2}
+  audioType: 1
   loop: 1

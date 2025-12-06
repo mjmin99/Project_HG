@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 using DG.Tweening;
@@ -6,8 +7,19 @@ using DG;
 
 public class AudioManager : MonoBehaviour
 {
+    /// <summary>
+    /// SwapClip : BGM, Ambient 전환 시 사용. Fade 기능 적용됨
+    /// PlaySFX : 효과음 재생 시 사용
+    /// PlayVoice : 음성 재생 시 사용
+    /// SetMixerVolume : 설정 창에서 믹서 볼륨 조절에 사용
+    /// KillSound : 모든 소리 재생 종료
+    /// </summary>
     [Header("Set Audio Database")]
     [SerializeField] private AudioDatabase audioDatabase;
+
+    [Header("Set Ease Type")] 
+    [SerializeField] private Ease easeInType = Ease.InSine;
+    [SerializeField] private Ease easeOutType = Ease.OutSine;
     
     // 믹서와 그룹
     private AudioMixer mixer;    
@@ -41,7 +53,7 @@ public class AudioManager : MonoBehaviour
     private string sfxV = "SFXVolume";
     private string voiceV = "VoiceVolume";
     
-    
+    #region 라이프 사이클
     void Awake()
     {
         SetAudioDictionary();
@@ -51,8 +63,11 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        
+        SetMixerVolume();
     }
+    #endregion
+    
+    #region 초기화
     // 딕셔너리 세팅
     private void SetAudioDictionary()
     {
@@ -114,26 +129,26 @@ public class AudioManager : MonoBehaviour
         AmbientVolume = PlayerPrefs.GetFloat(ambientV, 1f);
         SFXVolume = PlayerPrefs.GetFloat(sfxV, 1f);
         VoiceVolume = PlayerPrefs.GetFloat(voiceV, 1f);
-
-        mixer.SetFloat("MasterVolume", Mathf.Log10(Mathf.Clamp(MasterVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat("BGMVolume", Mathf.Log10(Mathf.Clamp(BGMVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat("AmbientVolume", Mathf.Log10(Mathf.Clamp(AmbientVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat("SFXVolume",  Mathf.Log10(Mathf.Clamp(SFXVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat("VoiceVolume",  Mathf.Log10(Mathf.Clamp(VoiceVolume, 0.0001f, 1f)) * 20);
     }
 
-
+    private void SetMixerVolume()
+    {
+        mixer.SetFloat(masterV, Mathf.Log10(Mathf.Clamp(MasterVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(bgmV, Mathf.Log10(Mathf.Clamp(BGMVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(ambientV, Mathf.Log10(Mathf.Clamp(AmbientVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(sfxV, Mathf.Log10(Mathf.Clamp(SFXVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(voiceV, Mathf.Log10(Mathf.Clamp(VoiceVolume, 0.0001f, 1f)) * 20);
+    }
+    #endregion
+    
+    
     // 오디오 전환
-    public void SwapClip(AudioClipType clipType, string clipName)
+    public async UniTask SwapClip(AudioClipType clipType, string clipName)
     {
         AudioSource source;
-        AudioData data;
-        
+
         switch (clipType)
         {
-            case AudioClipType.None:
-                Debug.LogWarning("클립 타입이 지정안되어있음");
-                return;
             case AudioClipType.BGM:
                 source = bgmSource;
                 break;
@@ -144,59 +159,110 @@ public class AudioManager : MonoBehaviour
                 Debug.LogWarning("클립 타입을 확인해주세요");
                 return;
         }
-        
-        data = audioDict[clipName];
-        if (data.audioType != clipType)
+
+        if (!audioDict.TryGetValue(clipName, out var data))
         {
-            Debug.LogWarning($"입력한 오디오 클립 타입과 오디오 클립이 서로 맞지 않습니다. 입력타입: {clipType}, 데이터 타입: {data.audioType}");
-            return;
+            Debug.LogWarning("클립이 없음");
         }
-        
+
+        if (source.isPlaying && source.clip == data.clipSource) return;
+        if (DOTween.IsTweening(source)) return;
         DOTween.Kill(source); // 기존 Tween 종료 (중복 수행 방지)
         
         // 플레이 중일 때 전환
+        // FadeOut => 클립교체 => FadeIn
         if (source.isPlaying)
         {
-            Sequence seq = DOTween.Sequence();
-            seq.AppendCallback(() => FadeOut(source))
-                .AppendCallback(() =>
-                {
-                    source.clip = data.clipSource;
-                    source.loop = data.loop;
-                })
-                .AppendCallback(() => FadeIn(source, data.volume))
-                .SetEase(Ease.Linear);
+            await FadeOut(source);
+            
+            source.clip = data.clipSource;
+            source.loop = data.loop;
+            source.Play();
+                    
+            await FadeIn(source,data.volume);
         }
         // 플레이 중이 아니라면
         else
         {
-            FadeIn(source,data.volume);
+            source.clip = data.clipSource;
+            source.loop = data.loop;
+            source.volume = 0f;
+            await FadeIn(source,data.volume);
         }
     }
     
+    // 효과음 재생
+    public void PlaySFX(string clipName)
+    {
+        if (!audioDict.TryGetValue(clipName, out AudioData data))
+        {
+            Debug.LogWarning($"딕셔너리 안에 해당 클립이 없음.{clipName}");
+        }
+        
+        GameObject go = new GameObject(clipName);
+        AudioSource source = go.AddComponent<AudioSource>();
+        
+        source.clip = data.clipSource;
+        source.loop = data.loop;
+        source.volume = data.volume;
+        source.outputAudioMixerGroup = sfxMixerGroup;
+        
+        source.Play();
+        if(!data.loop) Destroy(go, data.clipSource.length);
+    }
+    
+    // 음성 재생
+    public void PlayVoice(string clipName)
+    {
+        if (!voiceDict.TryGetValue(clipName, out AudioData data))
+        {
+            Debug.LogWarning($"딕셔너리안에 해당 클립이 없음:{clipName}");
+        }
+
+        if (voiceSource.isPlaying && voiceSource.clip == data.clipSource) return;
+        
+        voiceSource.clip = data.clipSource;
+        voiceSource.loop = data.loop;
+        voiceSource.volume = data.volume;
+        
+        voiceSource.Play();
+        
+    }
+    
+    // 믹서 볼륨 조절
     public void SetMixerVolume(string key, float value)
     {
-        float tmp = Mathf.Log10(Mathf.Clamp(value,0.0001f, 1f));
+        Debug.Log($"{key}  {value}");
+        float tmp = Mathf.Log10(Mathf.Clamp(value,0.0001f, 1f)) * 20;
         mixer.SetFloat(key, tmp);
+        PlayerPrefs.SetFloat(key, value);
     }
     
     // 소리 전부 죽이기
-    public void KillSound()
+    public async UniTask KillSound()
     {
-        FadeOut(bgmSource);
-        FadeOut(ambientSource);
-        FadeOut(voiceSource);
+        await UniTask.WhenAll(
+            FadeOut(bgmSource),
+            FadeOut(ambientSource),
+            FadeOut(voiceSource));
     }
     
+    #region 내부 기능
     // 페이드 인-아웃
-    private void FadeIn(AudioSource source, float setVolume, float duration = 1f)
+    private async UniTask FadeIn(AudioSource source, float setVolume, float duration = 2f)
     {
-        source.DOFade(setVolume, duration).SetEase(Ease.OutSine);
+        source.Play();
+        await source.DOFade(setVolume, duration)
+            .SetEase(easeInType)
+            .AsyncWaitForCompletion();
     }
 
-    private void FadeOut(AudioSource source, float duration = 1f)
+    private async UniTask FadeOut(AudioSource source, float duration = 2f)
     {
-        source.DOFade(0f, duration).SetEase(Ease.InSine);
+        await source.DOFade(0f, duration)
+            .SetEase(easeOutType)
+            .AsyncWaitForCompletion();
+        source.Stop();
     }
-
+    #endregion
 }
