@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("캐릭터 모델들")]
-    [SerializeField] private List<CharacterModel> characterModels;
-
     [Header("모델 붙일 위치")]
-    [SerializeField] private Transform modelroot;
+    [SerializeField] private Transform modelRoot;
 
     [Header("이동 속도")]
     [SerializeField] private float moveSpeed = 5;
@@ -20,25 +17,17 @@ public class PlayerController : MonoBehaviour
     [Header("UI")]
     [SerializeField] private CharacterStatusView statusView;
 
-    private int currentIndex = 0;
     private GameObject currentModelInstance;
+    private CharacterModel currentModel;
+    private int currentHP;
 
-    private void Start()
-    {
-        if (characterModels.Count > 0)
-        {
-            if (characterModels.Count > 0)
-            {
-                ApplyCharacter(0); // 첫 캐릭터로 시작
-            }
-        }
-    }
+
 
     private void Update()
     {
         HandleMove();
         HandleShoot();
-        HandleChangeCharacter();
+        
     }
 
     private void HandleMove() // 움직임 관련
@@ -66,54 +55,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleChangeCharacter() // 캐릭터 변경 관련
+
+    public void ApplyModel(CharacterModel model)
     {
-        if (characterModels.Count == 0) return;
+        currentModel = model;
 
-        if (Input.GetKeyDown(KeyCode.Z)) // Z 키 누르면 이전 캐릭터
-        {
-            currentIndex--;
-            if (currentIndex < 0)
-                currentIndex = characterModels.Count - 1;
-
-            ApplyCharacter(currentIndex);
-        }
-        else if (Input.GetKeyDown(KeyCode.X)) // X키 누르면 다음 캐릭터
-        {
-            currentIndex++;
-            if (currentIndex >= characterModels.Count)
-                currentIndex = 0;
-
-            ApplyCharacter(currentIndex);
-        }
-
-    }
-
-    private void ApplyCharacter(int index) // 모델 적용과 UI갱신
-    {
-        CharacterModel model = characterModels[index];
-
+        // 기존 모델 제거
         if (currentModelInstance != null)
-        {
             Destroy(currentModelInstance);
-        }
 
-        if (model.characterPrefab != null && modelroot != null)
-        {
-            currentModelInstance = Instantiate(
-                model.characterPrefab,
-                modelroot.position,
-                modelroot.rotation,
-                modelroot
-                );
-        }
+        // 새 모델 생성
+        currentModelInstance = Instantiate(model.prefab, modelRoot);
 
-        if (statusView != null) // UI 갱신
-        {
-            statusView.UadateView(model);
-        }
+        // 스탯 적용
+        currentHP = model.maxHP;
 
+        // UI 업데이트
+        statusView?.UpdateView(model);
     }
-
-
 }

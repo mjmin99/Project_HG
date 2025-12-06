@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1479cee4acc13bb41a8ad2754970551e, type: 3}
-  m_Name: jinyoung
+  m_Name: jinyoung 1
   m_EditorClassIdentifier: Assembly-CSharp::CharacterModel
-  id: 1
-  maxHP: 500
-  attack: 1
-  characterName: "\uC9C4\uC601"
-  prefab: {fileID: 3514358265316034892, guid: c55ba830c9e13924a9b4775020a49899, type: 3}
+  id: 4
+  maxHP: 5000
+  attack: 10
+  characterName: "\uC9C4\uC601\uC9C4\uD654\uCCB4"
+  prefab: {fileID: 3514358265316034892, guid: 0a842f600c2f5484b9c6bedd5a19fcd2, type: 3}

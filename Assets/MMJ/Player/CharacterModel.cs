@@ -5,10 +5,8 @@ public class CharacterModel : ScriptableObject
 {
     [Header("기본 정보")]
     public int id;
-    public int hp;
-    public int ad;
-    public string name;
-
-
-    public GameObject characterPrefab;   // 씬에 보여줄 실제 모델
+    public int maxHP;
+    public int attack;
+    public string characterName;
+    public GameObject prefab;// 씬에 보여줄 실제 모델
 }

@@ -7,12 +7,12 @@ public class CharacterStatusView : MonoBehaviour
     [SerializeField] TMP_Text hpText;
     [SerializeField] TMP_Text adText;
 
-    public void UadateView(CharacterModel model)
+    public void UpdateView(CharacterModel model)
     {
         if (model == null) return;
 
         nameText.text = model.name;
-        hpText.text = $"HP : {model.hp}";
-        adText.text = $"AD : {model.ad}";
+        hpText.text = $"HP : {model.maxHP}";
+        adText.text = $"AD : {model.attack}";
     }
 }

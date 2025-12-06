@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: guyjin
   m_EditorClassIdentifier: Assembly-CSharp::CharacterModel
   id: 2
-  hp: 1
-  ad: 100
-  name: "\uADDC\uC9C4"
-  characterPrefab: {fileID: 4316263509416595304, guid: 7f40dab39766a7b46854249982b4b5f4, type: 3}
+  maxHP: 5
+  attack: 50
+  characterName: "\uADDC\uC9C4"
+  prefab: {fileID: 4316263509416595304, guid: 7f40dab39766a7b46854249982b4b5f4, type: 3}

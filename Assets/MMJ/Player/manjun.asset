@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: manjun
   m_EditorClassIdentifier: Assembly-CSharp::CharacterModel
   id: 0
-  hp: 10
-  ad: 10
-  name: "\uB9CC\uC900"
-  characterPrefab: {fileID: 8847021387486855231, guid: e714ba475a3088b43b19e5e2587a484c, type: 3}
+  maxHP: 50
+  attack: 5
+  characterName: "\uB9CC\uC900"
+  prefab: {fileID: 8847021387486855231, guid: e714ba475a3088b43b19e5e2587a484c, type: 3}
