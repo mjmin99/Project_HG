@@ -7,7 +7,7 @@ public class SaveData
     public SaveData()
     {
         partySet[0] = 0;
-        partySet[1] = 4;
-        partySet[2] = 5;
+        partySet[1] = 1;
+        partySet[2] = 2;
     }
 }

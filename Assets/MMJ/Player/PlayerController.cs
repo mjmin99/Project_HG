@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterStatusView statusView;
 
     private GameObject currentModelInstance;
-    private CharacterModel currentModel;
+    private CharacterModelRuntime currentModel;
     private int currentHP;
 
 
@@ -56,21 +56,26 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void ApplyModel(CharacterModel model)
+    public void ApplyModel(CharacterModelRuntime model)
     {
+        if (model == null)
+        {
+            Debug.LogError("ApplyModel() 받은 model == null !!");
+            return;
+        }
+
+        if (model.prefab == null)
+        {
+            Debug.LogError("ApplyModel() 받은 model.prefab == null !! id=" + model.id + " name=" + model.name);
+        }
         currentModel = model;
 
-        // 기존 모델 제거
         if (currentModelInstance != null)
             Destroy(currentModelInstance);
 
-        // 새 모델 생성
-        currentModelInstance = Instantiate(model.prefab, modelRoot);
+        currentModelInstance = Object.Instantiate(model.prefab, modelRoot);
 
-        // 스탯 적용
         currentHP = model.maxHP;
-
-        // UI 업데이트
-        statusView?.UpdateView(model);
+        statusView?.UpdateView(model.name, model.maxHP, model.attack);
     }
 }

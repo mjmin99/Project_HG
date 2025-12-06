@@ -1,13 +1,21 @@
-﻿using DG.Tweening.Core.Easing;
+﻿using System.Collections.Generic;
+using DG.Tweening.Core.Easing;
+using NUnit.Framework;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public SaveManager saveManager;
-    public CharacterDatabase database;
-
-    public Transform[] playerSpawnPoint;
     public PlayerController[] players;
+
+    private List<CharacterModelRuntime> characterDB;
+    public Transform[] playerSpawnPoint;
+
+    private void Awake()
+    {
+        characterDB = CharacterCSVLoader.LoadFromCSV();
+    }
+
 
     private void Start()
     {
@@ -16,12 +24,12 @@ public class GameManager : MonoBehaviour
 
     private void LoadParty()
     {
-        var party = saveManager.CurrentData.partySet;
+        int[] party = saveManager.CurrentData.partySet;
 
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
             int id = party[i];
-            CharacterModel model = database.Get(id);
+            CharacterModelRuntime model = characterDB.Find(c => c.id == id);
 
             players[i].ApplyModel(model);
         }

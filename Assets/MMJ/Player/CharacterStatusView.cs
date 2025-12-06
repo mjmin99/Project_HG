@@ -5,14 +5,12 @@ public class CharacterStatusView : MonoBehaviour
 {
     [SerializeField] TMP_Text nameText;
     [SerializeField] TMP_Text hpText;
-    [SerializeField] TMP_Text adText;
+    [SerializeField] TMP_Text attackText;
 
-    public void UpdateView(CharacterModel model)
+    public void UpdateView(string name, int hp, int atk)
     {
-        if (model == null) return;
-
-        nameText.text = model.name;
-        hpText.text = $"HP : {model.maxHP}";
-        adText.text = $"AD : {model.attack}";
+        nameText.text = name;
+        hpText.text = "HP : " + hp;
+        attackText.text = "ATK : " + atk;
     }
 }

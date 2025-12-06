@@ -1116,15 +1116,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   saveManager: {fileID: 2110536735}
-  database: {fileID: 11400000, guid: 8295c4c244af0084482826353f87beed, type: 2}
-  playerSpawnPoint:
-  - {fileID: 2117878631}
-  - {fileID: 1382571598}
-  - {fileID: 570813525}
   players:
   - {fileID: 2117878632}
   - {fileID: 1382571597}
   - {fileID: 570813524}
+  playerSpawnPoint:
+  - {fileID: 2117878631}
+  - {fileID: 1382571598}
+  - {fileID: 570813525}
 --- !u!4 &708957639
 Transform:
   m_ObjectHideFlags: 0
@@ -1171,7 +1170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatusView
   nameText: {fileID: 2130108781}
   hpText: {fileID: 1990098878}
-  adText: {fileID: 395932482}
+  attackText: {fileID: 395932482}
 --- !u!4 &895016902
 Transform:
   m_ObjectHideFlags: 0
@@ -1818,37 +1817,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473757836}
   m_CullTransparentMesh: 1
---- !u!1 &1551209609
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1551209610}
-  m_Layer: 0
-  m_Name: spawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1551209610
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551209609}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.7808454, y: 0, z: -5.657746}
-  m_LocalScale: {x: 0.36, y: 0.36, z: 0.36}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1593988902
 GameObject:
   m_ObjectHideFlags: 0
@@ -2117,7 +2085,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatusView
   nameText: {fileID: 95947215}
   hpText: {fileID: 257530929}
-  adText: {fileID: 1029222035}
+  attackText: {fileID: 1029222035}
 --- !u!4 &2008106404
 Transform:
   m_ObjectHideFlags: 0
@@ -2164,7 +2132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStatusView
   nameText: {fileID: 1473757838}
   hpText: {fileID: 509842836}
-  adText: {fileID: 461728451}
+  attackText: {fileID: 461728451}
 --- !u!4 &2059205573
 Transform:
   m_ObjectHideFlags: 0
@@ -2454,7 +2422,6 @@ SceneRoots:
   - {fileID: 2059205573}
   - {fileID: 895016902}
   - {fileID: 708957639}
-  - {fileID: 1551209610}
   - {fileID: 2110536736}
   - {fileID: 2117878631}
   - {fileID: 1382571598}
