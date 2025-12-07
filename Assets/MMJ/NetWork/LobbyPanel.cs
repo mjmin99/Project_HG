@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class LobbyPanel : MonoBehaviour
 {
     [SerializeField] GameObject loginPanel;
+    [SerializeField] GameObject editPanel;
     
     [SerializeField] TMP_Text emailContent;
     [SerializeField] TMP_Text nameContent;
@@ -42,7 +43,8 @@ public class LobbyPanel : MonoBehaviour
 
     private void EditProfile()
     { 
-        //TODO
+        editPanel.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     private void DeleteUser()
