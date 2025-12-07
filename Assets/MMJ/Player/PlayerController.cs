@@ -78,4 +78,18 @@ public class PlayerController : MonoBehaviour
         currentHP = model.maxHP;
         statusView?.UpdateView(model.name, model.maxHP, model.attack);
     }
+
+    public void ClearModel()
+    {
+        if (currentModelInstance != null)
+            Destroy(currentModelInstance);
+
+        currentModel = null;
+        currentHP = 0;
+
+        if (statusView != null)
+            statusView.UpdateEmpty();
+    }
+
+
 }

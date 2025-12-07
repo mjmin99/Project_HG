@@ -2,6 +2,7 @@
 using Firebase.Extensions;
 using Firebase;
 using Firebase.Auth;
+using Firebase.Database;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class FirebaseManager : MonoBehaviour
 
     private static FirebaseAuth auth;
     public static FirebaseAuth Auth { get { return auth; } }
+
+    private static FirebaseDatabase database;
+    public static FirebaseDatabase Database { get { return database; } }
 
 
     private void Awake()
@@ -36,12 +40,14 @@ public class FirebaseManager : MonoBehaviour
                 Debug.Log("파이어베이스 설정이 모두 충족되어 사용할 수 있는 상황");
                 app = FirebaseApp.DefaultInstance;
                 auth = FirebaseAuth.DefaultInstance;
+                database = FirebaseDatabase.DefaultInstance;
             }
             else
             {
                 Debug.LogError($"파이어 베이스 설정이 충족되지 않아 실패했습니다. 이유 : {dependencyStatus}");
                 app = null;
                 auth = null;
+                database = null;
             }
         });
     }

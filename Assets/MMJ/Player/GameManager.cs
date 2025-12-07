@@ -26,10 +26,25 @@ public class GameManager : MonoBehaviour
     {
         int[] party = saveManager.CurrentData.partySet;
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < players.Length; i++)
         {
             int id = party[i];
+
+            if (id == -1)
+            {
+                // 이 자리는 빈 슬롯으로 처리
+                players[i].ClearModel();    
+                continue;
+            }
+
             CharacterModelRuntime model = characterDB.Find(c => c.id == id);
+
+            if (model == null)
+            {
+                Debug.LogError($"CSV에서 id={id} 찾지 못함!");
+                players[i].ClearModel();
+                continue;
+            }
 
             players[i].ApplyModel(model);
         }

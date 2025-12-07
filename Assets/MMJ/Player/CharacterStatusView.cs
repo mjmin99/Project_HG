@@ -13,4 +13,11 @@ public class CharacterStatusView : MonoBehaviour
         hpText.text = "HP : " + hp;
         attackText.text = "ATK : " + atk;
     }
+
+    public void UpdateEmpty()
+    {
+        nameText.text = "-";
+        hpText.text = "HP : -";
+        attackText.text = "ATK : -";
+    }
 }
