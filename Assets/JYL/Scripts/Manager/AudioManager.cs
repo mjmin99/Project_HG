@@ -46,7 +46,7 @@ public class AudioManager : MonoBehaviour
     public float SFXVolume { get; private set; }
     public float VoiceVolume { get; private set; }
     
-    // 스트링 해시
+    // 볼륨 스트링 캐싱
     private string masterV = "MasterVolume";
     private string bgmV = "BGMVolume";
     private string ambientV = "AmbientVolume";
@@ -140,7 +140,6 @@ public class AudioManager : MonoBehaviour
         mixer.SetFloat(voiceV, Mathf.Log10(Mathf.Clamp(VoiceVolume, 0.0001f, 1f)) * 20);
     }
     #endregion
-    
     
     // 오디오 전환
     public async UniTask SwapClip(AudioClipType clipType, string clipName)

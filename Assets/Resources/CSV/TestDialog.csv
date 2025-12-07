@@ -1,0 +1,14 @@
+????ID,???ID,???ID,?????,???
+1,10,1,CharacterIn,
+1,11,2,CharacterIn,
+1,Hello,1,WithVoice,Hello
+1,Look,1,WithVoice,Look
+1,Hey,2,WithVoice,Hey
+1,12,2,NoVoice,...
+1,13,1,NoVoice,...
+2,20,1,CharacterIn,
+2,21,2,CharacterIn,
+2,Hey,2,WithVoice,Hey
+2,Look,1,WithVoice,Look
+2,Look,2,WithVoice,Look
+2,22,1,NoVoice,...
