@@ -1,6 +1,9 @@
 ﻿using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// 테스트용 View 스크립트 자세히 볼 필요 없음
+/// </summary>
 public class CharacterStatusView : MonoBehaviour
 {
     [SerializeField] TMP_Text nameText;

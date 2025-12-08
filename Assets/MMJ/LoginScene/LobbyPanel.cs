@@ -17,11 +17,19 @@ public class LobbyPanel : MonoBehaviour
     [SerializeField] Button editProfileButton;
     [SerializeField] Button deleteUserButton;
 
+    // --- 테스트 중인 기능
+
+    [SerializeField] Button gameStartButton;
+
+    // ---
+
+
     private void Awake()
     {
         logoutButton.onClick.AddListener(Logout);
         editProfileButton.onClick.AddListener(EditProfile);
         deleteUserButton.onClick.AddListener(DeleteUser);
+        gameStartButton.onClick.AddListener(GameStart);
     }
 
     private void OnEnable()
@@ -69,4 +77,18 @@ public class LobbyPanel : MonoBehaviour
                 gameObject.SetActive(false);
             });
     }
+
+    // --- 테스트 중인 기능
+
+    private void GameStart()
+    {
+        FirebaseUser user = FirebaseManager.Auth.CurrentUser;
+
+        SaveManager.Instance.LoadFromFirebase(user.UserId, () =>
+        {
+            SceneChanger.Instance.LoadScene("MainScene");
+        });
+    }
+    // ---
+
 }

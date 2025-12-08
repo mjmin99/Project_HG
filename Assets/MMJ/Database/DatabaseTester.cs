@@ -20,11 +20,17 @@ public class DatabaseTester : MonoBehaviour
         // 여기에 작성한 방식은 한번에 모든 내용을 다 보냄 
         FirebaseUser user = FirebaseManager.Auth.CurrentUser;
 
-        DatabaseReference root = FirebaseManager.Database.RootReference;
-        DatabaseReference userInfo = root.Child("Userdata").Child(user.UserId);
+        if (user == null)
+        {
+            Debug.LogError("로그인된 유저가 없습니다!");
+            return;
+        }
 
-        string json = JsonUtility.ToJson(data);
-        Debug.Log(json);
+        DatabaseReference root = FirebaseManager.Database.RootReference;
+        DatabaseReference userInfo = root.Child("users").Child(user.UserId).Child("saveData");
+
+        string json = JsonUtility.ToJson(data, true);
+        Debug.Log($"저장 JSON : {json}");
 
         userInfo.SetRawJsonValueAsync(json);
 
