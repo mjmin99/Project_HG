@@ -1,95 +1,103 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("모델 붙일 위치")]
+    [Header("캐릭터 모델 위치")]
     [SerializeField] private Transform modelRoot;
 
-    [Header("이동 속도")]
-    [SerializeField] private float moveSpeed = 5;
-
-    [Header("총알 발사 관련")]
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Transform muzzlePoint;
-
     [Header("UI")]
-    [SerializeField] private CharacterStatusView statusView;
+    [SerializeField] private CharacterStatusView statusUI;
 
-    private GameObject currentModelInstance;
-    private CharacterModelRuntime currentModel;
-    private int currentHP;
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 5f;
 
+    private GameObject currentModelObject;
+    private int characterId = -1;
+    private CharacterStats stats;
 
+    private float attackTimer = 0f;
 
     private void Update()
     {
         HandleMove();
-        HandleShoot();
-        
+        HandleAutoAttack();
     }
 
-    private void HandleMove() // 움직임 관련
+    //  캐릭터 적용
+    public void ApplyCharacter(int id, CharacterStats stats)
     {
-        float h = Input.GetAxisRaw("Horizontal"); // A,D / 좌,우
-        float v = Input.GetAxisRaw("Vertical");   // W,S / 상,하
+        this.characterId = id;
+        this.stats = stats;
+
+        // 기존 모델 제거
+        if (currentModelObject != null)
+        {
+            Destroy(currentModelObject);
+        }
+
+        // 모델 불러오기
+        var model = CharacterManager.Instance.models[id];
+        if (model.prefab != null)
+        {
+            currentModelObject = Instantiate(model.prefab, modelRoot);
+        }
+
+        // UI 갱신
+        statusUI?.UpdateView(model.name, stats.hp, stats.attack);
+
+        Debug.Log($"플레이어에 캐릭터 적용됨: {model.name}, HP={stats.hp}, ATK={stats.attack}");
+    }
+
+
+
+    //  캐릭터 제거 (파티 슬롯 비어있을 때)
+    public void ClearCharacter()
+    {
+        characterId = -1;
+        stats = new CharacterStats();
+
+        if (currentModelObject != null)
+            Destroy(currentModelObject);
+
+        statusUI?.UpdateView("Empty", 0, 0);
+    }
+
+
+
+    //  이동 처리 테스트로 만들었던 것
+    private void HandleMove()
+    {
+        if (characterId < 0) return; // 캐릭터 없으면 이동 금지
+
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
 
         Vector3 dir = new Vector3(h, 0f, v).normalized;
 
-        if (dir.sqrMagnitude > 0f)
+        if (dir.sqrMagnitude > 0.01f)
         {
             transform.position += dir * moveSpeed * Time.deltaTime;
-            transform.forward = dir; // 이동 방향으로 바라보기
+            transform.forward = dir;
         }
     }
 
-    private void HandleShoot() // 총알 발사 관련
+
+
+    //  자동 공격 처리 (기본 구조)
+    private void HandleAutoAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (bulletPrefab != null && muzzlePoint != null)
-            {
-                Instantiate(bulletPrefab, muzzlePoint.position, muzzlePoint.rotation);
-            }
-        }
+        if (characterId < 0) return;
+
+        attackTimer += Time.deltaTime;
+
+        float attackInterval = 1f / stats.attackSpeed;
+
+        // if (attackTimer >= attackInterval)
+        // {
+        //     attackTimer = 0f;
+        // 
+        //     // 실제 공격 로직은 CombatCharacter 추가 후 작성 예정 여기 말고 전투땐 전투 캐릭터 플레이어1 로 만들 수도 있음.
+        //     Debug.Log($"자동 공격 ! (ATK = {stats.attack})");
+        // }
     }
-
-
-    public void ApplyModel(CharacterModelRuntime model)
-    {
-        if (model == null)
-        {
-            Debug.LogError("ApplyModel() 받은 model == null !!");
-            return;
-        }
-
-        if (model.prefab == null)
-        {
-            Debug.LogError("ApplyModel() 받은 model.prefab == null !! id=" + model.id + " name=" + model.name);
-        }
-        currentModel = model;
-
-        if (currentModelInstance != null)
-            Destroy(currentModelInstance);
-
-        currentModelInstance = Object.Instantiate(model.prefab, modelRoot);
-
-        currentHP = model.maxHP;
-        statusView?.UpdateView(model.name, model.maxHP, model.attack);
-    }
-
-    public void ClearModel()
-    {
-        if (currentModelInstance != null)
-            Destroy(currentModelInstance);
-
-        currentModel = null;
-        currentHP = 0;
-
-        if (statusView != null)
-            statusView.UpdateEmpty();
-    }
-
-
 }

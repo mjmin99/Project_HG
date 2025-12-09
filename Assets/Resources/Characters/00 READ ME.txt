@@ -1,0 +1,21 @@
+﻿캐릭터 이름만 맞춰놓으면 자동으로 프리팹이 연결되도록 만든 폴더
+
+※ 주의사항
+
+csv 파일 위치는 -> Asset/Resource/character.csv
+프리펩 위치는   -> Asset/Resource/Character/(csv의 네임 필드와 맞게).prefab
+
+확장자는 달지 말것
+
+파일명은 CSV의 name 필드와 정확히 같아야 한다.
+
+예)
+CSV:
+
+id,name,...
+0,Manjun,...
+
+
+Prefab 이름:
+
+Manjun.prefab

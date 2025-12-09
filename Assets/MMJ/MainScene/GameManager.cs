@@ -1,73 +1,76 @@
-﻿using System.Collections.Generic;
-using DG.Tweening.Core.Easing;
-using NUnit.Framework;
-using UnityEngine;
-
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    // Firebase에서 저장/로드한 SaveData(CurrentData)에 접근하기 위해 사용
-    public SaveManager saveManager;
-
-    // PlayerController는 ApplyModel()을 통해 캐릭터 모델을 변경함
-    public PlayerController[] players;
-
-    // 전역 접근용 싱글톤
     public static GameManager Instance;
 
-    // 전체 캐릭터 데이터베이스(CharacterModelRuntime 리스트)
-    // - CSV에서 로드한 결과가 들어있음
-    public List<CharacterModelRuntime> CharacterDB => characterDB;
-    private List<CharacterModelRuntime> characterDB;
-
-    // 플레이어가 생성될 위치(optional)
-    public Transform[] playerSpawnPoint;
+    public PlayerController[] players;
+    public Transform[] spawnPoints;
 
     private void Awake()
     {
-        Instance = this; // 싱글톤 설정
+        Instance = this;
 
-        // Firebase에서 불러온 SaveData.partySet 정보를 기반으로
-        // 현재 파티를 PlayerController에게 적용
-        characterDB = CharacterCSVLoader.LoadFromCSV();
+        // CSV 로드
+        List<CharacterModel> models = CharacterCSVLoader.Load();
+        CharacterManager.Instance.LoadModels(models);
+
+        // 프리팹 연결
+        foreach (var model in CharacterManager.Instance.models.Values)
+        {
+            model.prefab = Resources.Load<GameObject>($"Characters/{model.name}");
+            if (model.prefab == null)
+                Debug.LogWarning($"Prefab not found for {model.name}");
+        }
     }
 
     private void Start()
     {
+        // Firebase 로딩이 끝날 때까지 대기
+        StartCoroutine(WaitAndLoadParty());
+    }
+
+    private System.Collections.IEnumerator WaitAndLoadParty()
+    {
+        while (SaveManager.Instance.CurrentData == null)
+            yield return null;
+
         LoadParty();
     }
 
-    /// 저장된 파티 세팅을 기반으로 각 PlayerController에게 캐릭터 모델을 적용하는 함수
-    /// SaveManager.CurrentData.partySet 배열을 확인
-    /// -1이면 빈 슬롯 → ClearModel()
-    /// 유효한 캐릭터 ID이면 characterDB에서 해당 모델을 찾아 ApplyModel()
-    private void LoadParty()
+    public void LoadParty()
     {
-        // 디버그용 로그
-        // Debug.Log("SaveManager.Instance = " + SaveManager.Instance);
-        // Debug.Log("CurrentData = " + SaveManager.Instance?.CurrentData);
-
-        // Firebase에서 가져온 현재 파티 정보
         int[] party = SaveManager.Instance.CurrentData.partySet;
 
-        // players[] 배열의 순서대로 파티 모델을 적용
+        Debug.Log($"파티 데이터: [{party[0]}, {party[1]}, {party[2]}]");
+
         for (int i = 0; i < players.Length; i++)
         {
             int id = party[i];
 
             if (id == -1)
             {
-                // -1 자리는 빈 슬롯으로 처리
-                players[i].ClearModel();    
+                players[i].ClearCharacter();
                 continue;
             }
 
-            // characterDB에서 캐릭터 ID로 Runtime 모델 찾기
-            var model = characterDB.Find(c => c.id == id);
+            if (!CharacterManager.Instance.models.ContainsKey(id))
+            {
+                Debug.LogError($"모델에 ID {id} 없음");
+                continue;
+            }
 
-            // PlayerController가 해당 모델로 캐릭터를 재구성
-            players[i].ApplyModel(model);
+            if (!CharacterManager.Instance.instances.ContainsKey(id))
+            {
+                Debug.LogError($"CharacterInstance에 ID {id} 없음");
+                continue;
+            }
+
+            CharacterStats stats = CharacterManager.Instance.GetStats(id);
+            players[i].ApplyCharacter(id, stats);
         }
+
+        Debug.Log("파티 로딩 완료!");
     }
 }
-
