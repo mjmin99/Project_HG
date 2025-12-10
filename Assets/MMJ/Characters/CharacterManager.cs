@@ -11,9 +11,36 @@ public class CharacterManager : MonoBehaviour
     // 유저의 캐릭터 인스턴스
     public Dictionary<int, CharacterInstance> instances = new();
 
+    public SaveData SaveData { get; private set; }
+
+
+
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void LoadFromSaveData(SaveData data)
+    {
+        SaveData = data;
+        instances.Clear();
+        foreach (var inst in data.characters)
+            instances[inst.id] = inst;
+    }
+
+    public void SaveToSaveData()
+    {
+        SaveData.characters.Clear();
+        foreach (var inst in instances.Values)
+            SaveData.characters.Add(inst);
     }
 
     // CSV 로드 후 모델 저장

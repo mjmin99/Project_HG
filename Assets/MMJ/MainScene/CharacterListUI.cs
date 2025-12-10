@@ -21,6 +21,12 @@ public class CharacterListUI : MonoBehaviour
 
     void PopulateList()
     {
+        // 기존 UI 전부 제거
+        foreach (Transform child in container)
+        {
+            Destroy(child.gameObject);
+        }
+
         foreach (var pair in CharacterManager.Instance.instances)
         {
             int id = pair.Key;

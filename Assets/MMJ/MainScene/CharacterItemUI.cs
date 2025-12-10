@@ -10,6 +10,15 @@ public class CharacterItemUI : MonoBehaviour
 
     private int characterId;
 
+    private PartyUI cachedPartyUI; // 캐싱 변수 추가
+
+
+    private void Awake()
+    {
+        cachedPartyUI = FindFirstObjectByType<PartyUI>();
+    }
+
+
     public void Set(int id)
     {
         this.characterId = id;
@@ -23,17 +32,7 @@ public class CharacterItemUI : MonoBehaviour
 
         selectButton.onClick.AddListener(() =>
         {
-            FindFirstObjectByType<PartyUI>().AssignCharacter(characterId);
+            cachedPartyUI?.AssignCharacter(characterId);
         });
-    }
-
-    private void OnSelected()
-    {
-        // PartyUI 찾아서 전달
-        var partyUI = FindFirstObjectByType<PartyUI>();
-        if (partyUI != null)
-        {
-            partyUI.AssignCharacter(characterId);
-        }
     }
 }

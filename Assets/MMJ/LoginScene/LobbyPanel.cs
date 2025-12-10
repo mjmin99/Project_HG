@@ -88,6 +88,12 @@ public class LobbyPanel : MonoBehaviour
         var models = CharacterCSVLoader.Load();
         CharacterManager.Instance.LoadModels(models);
 
+        // Firebase 초기화 확인 추가
+        if (FirebaseManager.Auth == null)
+        {
+            Debug.LogError("Firebase가 아직 초기화되지 않았습니다!");
+            return;
+        }
         // 2) 현재 로그인 유저 확인
         var user = FirebaseManager.Auth.CurrentUser;
         if (user == null)
