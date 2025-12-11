@@ -8,7 +8,12 @@ public class GameManager : MonoBehaviour
     public PlayerController[] players;
     public Transform[] spawnPoints;
 
-    private void Awake()
+    // 추후에 할 일 1단계 – 로딩 파이프라인 정리
+    // - CSV 로드 위치를 “한 곳”으로 고정
+    // - SaveManager.CreateDefaultSaveData에서 models 비어 있을 때 방어 코드 추가
+    // - GameManager에서 중복 CSV 로드 제거
+
+    private void Awake() //todo 현재 게임매니저에서도 CSV를 로드하기때문에 추후 삭제할 가능성 있음.
     {
         Instance = this;
 
