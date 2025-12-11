@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 public record Dialog
 {
-    public readonly string DialogId;
+    public readonly DialogKey DialogId;
     public IReadOnlyList<DialogLine> DialogContents;
 
-    public Dialog(string id, List<DialogLine> lines)
+    public Dialog(DialogKey id, List<DialogLine> lines)
     {
         DialogId = id;
         DialogContents = lines;
@@ -15,7 +15,7 @@ public record Dialog
 
 public record DialogLine
 {
-    public readonly string DialogId;
+    public readonly DialogKey DialogId;
     public readonly string LineId;
     public readonly string SpeakerId;
     public readonly DialogType Type;
@@ -23,7 +23,7 @@ public record DialogLine
 
     public DialogLine(string[] csvData)
     {
-        DialogId = csvData[0];
+        DialogId = Enum.Parse<DialogKey>(csvData[0]);
         LineId = csvData[1];
         SpeakerId = csvData[2];
         Type = Enum.Parse<DialogType>(csvData[3]);
@@ -31,3 +31,4 @@ public record DialogLine
     }
 }
 public enum DialogType { CharacterIn, CharacterOut, NoVoice, WithVoice}
+public enum DialogKey { None, Test1, Test2 }

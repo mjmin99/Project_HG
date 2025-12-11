@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class Util
 {
@@ -36,7 +38,7 @@ public static class Util
         return rows;
     }
 
-    public static async UniTask<Dictionary<string,Dialog>> ParseCsvToDialogs(string csvFilePath)
+    public static async UniTask<Dictionary<DialogKey, Dialog>> ParseCsvToDialogs(string csvFilePath)
     {
         return await UniTask.Run(() =>
         {
@@ -51,5 +53,25 @@ public static class Util
                     g => g.Key, 
                     g => new Dialog(g.Key, g.ToList()));
         });
+    }
+
+    public static Tween FadeInImage(this Image image, float duration = 0.3f)
+    {
+        Color c = image.color;
+        c.a = 0f;
+        image.color = c;
+        image.gameObject.SetActive(true);
+
+        return image.DOFade(1f, duration)
+            .SetEase(Ease.InQuad)
+            .SetUpdate(true);
+    }
+
+    public static Tween FadeOutImage(this Image image, float duration = 0.3f)
+    {
+        return image.DOFade(0f, duration)
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(true)
+            .OnComplete(() => image.gameObject.SetActive(false));
     }
 }
