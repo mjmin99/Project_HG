@@ -10,7 +10,8 @@ public class DialogDatabase : ScriptableObject
     /// 청크(장소, 대화 씬) 별로 구별하여 SO로 만들어 관리함.
     /// 
     /// </summary>
-    [SerializeField] private string csvPath = "CSV/TestDialog";
+    
+    //[SerializeField] private string csvPath = "CSV/TestDialog";
     public Dictionary<string, Dialog> Dialogs = new();
 
     [ContextMenu("Set Database")]

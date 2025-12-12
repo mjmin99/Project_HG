@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,29 +27,36 @@ public class DialogManager : MonoBehaviour
     // UI 관련
     [SerializeField] private GameObject backGroundPanel;
     [SerializeField] private GameObject characterContent;
+    [SerializeField] private PortraitUIPanel portraitUIPanel;
     [SerializeField] private PortraitPrefab portraitPrefab;
     [SerializeField] private TMP_Text nameField;
     [SerializeField] private TMP_Text dialogText;
+    [SerializeField] private Button testButton;
 
     // 텍스트 재생 변수
-    private bool isTyping = false;
-    private Tween typingTween = null;
-    private bool skipTyping = false;
+    private bool isTyping;
+    private Tween typingTween;
+    private readonly string speakerKey = "";
     
     // 다이얼로그 전체 딕셔너리
     private Dictionary<DialogKey, Dialog> dialogs;
     
     // 초상화 리스트
-    private List<PortraitPrefab> portraitList = new();
+    private readonly List<PortraitPrefab> portraitList = new();
     
     void Awake()
     {
-        _ = GetDialogFromCsv();
+        GetDialogFromCsv();
+        testButton.OnClickAsObservable().Subscribe(_ => portraitUIPanel.AddPortrait(speakerKey).AsAsyncUnitUniTask());
     }
 
-    private async UniTask GetDialogFromCsv()
+    void Start()
     {
-        dialogs = await Util.ParseCsvToDialogs(csvPath);
+    }
+
+    private void GetDialogFromCsv()
+    {
+        dialogs = Util.ParseCsvToDialogs(csvPath);
     }
     
     private Dialog GetDialog(DialogKey key)
@@ -78,7 +85,7 @@ public class DialogManager : MonoBehaviour
     private async UniTask ProcessDialogLine(DialogLine line)
     {
         // 대사의 종류에 따른 처리
-        TaskDialogLine(line);
+        await TaskDialogLine(line);
         
         // 텍스트 출력
         if(!string.IsNullOrWhiteSpace(line.Content))
@@ -92,13 +99,12 @@ public class DialogManager : MonoBehaviour
 
         int total = content.Length;
         isTyping = true;
-        skipTyping = false;
 
         typingTween = DOTween.To(
             () => dialogText.maxVisibleCharacters,
             x => dialogText.maxVisibleCharacters = x, 
             total,
-            0.04f * total)
+            outputTime * total)
             .SetEase(Ease.Linear);
 
         // 타이핑 중 키 입력 감지
@@ -108,7 +114,6 @@ public class DialogManager : MonoBehaviour
             // 스킵 : 트윈 종료
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                skipTyping = true;
                 typingTween.Kill();
                 dialogText.maxVisibleCharacters = total;
                 isTyping = false;
@@ -137,22 +142,18 @@ public class DialogManager : MonoBehaviour
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
     }
-    private void TaskDialogLine(DialogLine line)
+    private async UniTask TaskDialogLine(DialogLine line)
     {
         switch (line.Type)
         {
             case DialogType.CharacterIn:
                 // 현재 스프라이트 패널 UI에 요소로 신규 캐릭터 추가
-                PortraitPrefab portrait = Instantiate(portraitPrefab, characterContent.transform);
-                portrait.gameObject.SetActive(true);
-                var container = Resources.Load<SpriteContainer>($"Image/{line.SpeakerId}");
-                portrait.Init(container.sprite,line.SpeakerId);
-                portraitList.Add(portrait);
-                portrait.FadeInPortrait();
+                await portraitUIPanel.AddPortrait(line.SpeakerId);
                 break;
             case DialogType.CharacterOut:
                 // 현재 스프라이트 패널 UI에서 해당 캐릭터 뺌
                 dialogText.text = "";
+                // await portraitUIPanel.RemovePortrait(line.SpeakerId);
                 break;
             case DialogType.NoVoice:
                 // 노 보이스는 나레이션임

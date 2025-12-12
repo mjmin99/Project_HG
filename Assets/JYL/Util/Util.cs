@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Unity.Collections;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 public static class Util
@@ -38,21 +40,18 @@ public static class Util
         return rows;
     }
 
-    public static async UniTask<Dictionary<DialogKey, Dialog>> ParseCsvToDialogs(string csvFilePath)
+    public static Dictionary<DialogKey, Dialog> ParseCsvToDialogs(string csvFilePath)
     {
-        return await UniTask.Run(() =>
-        {
-            var rows = CsvRead(csvFilePath);
-            if (rows == null || rows.Count == 0) return null;
+        var rows = CsvRead(csvFilePath);
+        if (rows == null || rows.Count == 0) return null;
 
-            return rows
-                .Skip(1)
-                .Select(row => new DialogLine(row))
-                .GroupBy(x => x.DialogId)
-                .ToDictionary(
-                    g => g.Key, 
-                    g => new Dialog(g.Key, g.ToList()));
-        });
+        return rows
+            .Skip(1)
+            .Select(row => new DialogLine(row))
+            .GroupBy(x => x.DialogId)
+            .ToDictionary(
+                g => g.Key, 
+                g => new Dialog(g.Key, g.ToList()));
     }
 
     public static Tween FadeInImage(this Image image, float duration = 0.3f)
