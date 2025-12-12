@@ -38,6 +38,12 @@ public class CharacterManager : MonoBehaviour
 
     public void SaveToSaveData()
     {
+        if (SaveData == null)
+        {
+            Debug.LogWarning("SaveData가 없어서 자동 생성합니다.");
+            SaveData = new SaveData();
+        }
+
         SaveData.characters.Clear();
         foreach (var inst in instances.Values)
             SaveData.characters.Add(inst);
@@ -77,6 +83,40 @@ public class CharacterManager : MonoBehaviour
             inst.level++;
         }
     }
+
+    public void GiveCharacter(int id)
+    {
+        // 이미 세이브데이터 안에 이 id가 있는지 먼저 확인
+        if (!instances.TryGetValue(id, out var inst))
+        {
+            // 새로 생성
+            inst = new CharacterInstance
+            {
+                id = id,
+                isOwned = true,
+                // level, star, shard 는 기본값(1,1,0) 그대로 사용
+            };
+
+            instances[id] = inst;
+        }
+        else
+        {
+            // 이미 목록에는 있는데 미소유였던 경우 → 소유만 true로
+            if (!inst.isOwned)
+            {
+                inst.isOwned = true;
+            }
+            else
+            {
+                // 이미 소유중인 캐릭터 중복 뽑기 → 조각 지급
+                inst.shard += 10;
+            }
+        }
+
+        // SaveData로 동기화
+        SaveToSaveData();
+    }
+
 
     private int RequiredExp(int level) => level * 5;
 }
