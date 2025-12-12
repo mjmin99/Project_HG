@@ -5,11 +5,48 @@ public class PartyUI : MonoBehaviour
 {
     public PartySlotUI[] slots; // 0~2 슬롯
 
+    private int activeSlotIndex = -1;
+
     private void Start()
     {
         LoadParty();
     }
 
+
+    public void SelectSlot(int index)
+    {
+        activeSlotIndex = index;
+        Debug.Log($"[PartyUI] {index}번 슬롯 선택됨");
+    }
+
+    public void AssignCharacter(int characterId)
+    {
+        if (activeSlotIndex == -1)
+        {
+            Debug.LogWarning("슬롯이 선택되지 않았습니다!");
+            return;
+        }
+
+        // 기존 파티에서 찾기
+        int prevIndex = FindCharacterInParty(characterId);
+
+        if (prevIndex != -1)
+        {
+            SaveManager.Instance.CurrentData.partySet[prevIndex] = -1;
+            slots[prevIndex].ClearSlot();
+        }
+
+        // 선택된 슬롯에 배치
+        SaveManager.Instance.CurrentData.partySet[activeSlotIndex] = characterId;
+        slots[activeSlotIndex].SetCharacter(characterId);
+
+        Debug.Log($"캐릭터 {characterId} → 슬롯 {activeSlotIndex}로 교체됨");
+
+        SaveManager.Instance.SaveCurrentUser();
+    }
+
+
+    /* 이전 AssignCharacter(int characterId) 함수
     // 캐릭터 할당 함수 (모든 파티 배치 로직은 여기서만!)
     public void AssignCharacter(int characterId)
     {
@@ -44,7 +81,7 @@ public class PartyUI : MonoBehaviour
         // Firebase 저장
         SaveManager.Instance.SaveCurrentUser();
     }
-
+    */
     private int FindCharacterInParty(int characterId)
     {
         var party = SaveManager.Instance.CurrentData.partySet;

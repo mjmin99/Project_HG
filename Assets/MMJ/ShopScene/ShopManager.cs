@@ -35,7 +35,7 @@ public class ShopManager : MonoBehaviour
 
     public void OnClickDrawOne()
     {
-        int cost = 50;
+        int cost = 50;// 소모하는 돈
 
         // 골드체크
         if (SaveManager.Instance.CurrentData.gold < cost)
@@ -46,6 +46,9 @@ public class ShopManager : MonoBehaviour
 
         // 골드 차감
         SaveManager.Instance.CurrentData.gold -= cost;
+
+        // 현재 보유한 돈 갱신
+        UpdateGoldUI();
 
         // 랜덤 선택
         int id = DrawCharacter();  

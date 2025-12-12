@@ -441,6 +441,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartySlotUI
   icon: {fileID: 1957491001}
   nameText: {fileID: 895594798}
+  slotIndex: 2
+  partyUI: {fileID: 1235902410}
 --- !u!114 &121756627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2978,6 +2980,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartySlotUI
   icon: {fileID: 749181275}
   nameText: {fileID: 1058136775}
+  slotIndex: 1
+  partyUI: {fileID: 1235902410}
 --- !u!114 &770381853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3284,6 +3288,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartySlotUI
   icon: {fileID: 228716317}
   nameText: {fileID: 501006506}
+  slotIndex: 0
+  partyUI: {fileID: 1235902410}
 --- !u!114 &839385252
 MonoBehaviour:
   m_ObjectHideFlags: 0

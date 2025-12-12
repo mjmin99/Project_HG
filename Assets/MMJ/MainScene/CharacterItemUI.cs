@@ -18,7 +18,25 @@ public class CharacterItemUI : MonoBehaviour
         cachedPartyUI = FindFirstObjectByType<PartyUI>();
     }
 
+    public void Set(int id)
+    {
+        this.characterId = id;
+        var model = CharacterManager.Instance.models[id];
 
+        nameText.text = model.name;
+        icon.sprite = model.Icon;
+
+        selectButton.onClick.RemoveAllListeners();
+
+        selectButton.onClick.AddListener(() =>
+        {
+            cachedPartyUI?.AssignCharacter(characterId);
+        });
+    }
+
+
+
+    /* 이전 Set(int id) 함수
     public void Set(int id)
     {
         this.characterId = id;
@@ -37,4 +55,5 @@ public class CharacterItemUI : MonoBehaviour
             cachedPartyUI?.AssignCharacter(characterId);
         });
     }
+    */
 }
