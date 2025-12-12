@@ -19,6 +19,19 @@ public class CharacterModel
 
     public GameObject prefab;
 
+    // 아이콘 캐싱용 (Resources.Load를 한 번만 실행하게 함)
+    private Sprite _icon;
+    public Sprite Icon
+    {
+        get
+        {
+            if (_icon == null)
+                _icon = Resources.Load<Sprite>($"Icons/{name}");
+            return _icon;
+        }
+    }
+
+
     // 여기에 스킬 모델 추가 가능(지금은 생략)
     // public SkillModel passiveSkill;
     // public SkillModel activeSkill;

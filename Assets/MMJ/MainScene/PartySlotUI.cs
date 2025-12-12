@@ -13,8 +13,9 @@ public class PartySlotUI : MonoBehaviour
 
         nameText.text = model.name;
 
-        // 스프라이트 로드
-        Sprite sp = Resources.Load<Sprite>($"Icons/{model.name}");
+        // 스프라이트 로드 방식 변경
+        Sprite sp = model.Icon;
+        //Sprite sp = Resources.Load<Sprite>($"Icons/{model.name}");
 
         icon.sprite = sp;
         gameObject.SetActive(true);

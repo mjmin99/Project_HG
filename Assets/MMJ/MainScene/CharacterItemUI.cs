@@ -26,7 +26,9 @@ public class CharacterItemUI : MonoBehaviour
 
         nameText.text = model.name;
 
-        Sprite sp = Resources.Load<Sprite>($"Icons/{model.name}");
+        // 아이콘 로드 방식 변경
+        Sprite sp = model.Icon;
+        // Sprite sp = Resources.Load<Sprite>($"Icons/{model.name}");
 
         icon.sprite = sp;
 
