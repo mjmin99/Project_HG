@@ -82,10 +82,32 @@ public class LobbyPanel : MonoBehaviour
 
     private void GameStart()
     {
-        FirebaseUser user = FirebaseManager.Auth.CurrentUser;
+        Debug.Log("▶ GameStart 실행됨");
 
-        SaveManager.Instance.LoadFromFirebase(user.UserId, () =>
+        // 1) 정적 데이터 로드
+        var models = CharacterCSVLoader.Load();
+        CharacterManager.Instance.LoadModels(models);
+
+        // Firebase 초기화 확인 추가
+        if (FirebaseManager.Auth == null)
         {
+            Debug.LogError("Firebase가 아직 초기화되지 않았습니다!");
+            return;
+        }
+        // 2) 현재 로그인 유저 확인
+        var user = FirebaseManager.Auth.CurrentUser;
+        if (user == null)
+        {
+            Debug.LogError("유저 정보 없음. 로그인 먼저 필요");
+            return;
+        }
+
+        Debug.Log("CurrentUser = " + user.UserId);
+        Debug.Log("▶ Firebase 세이브 로드 시작");
+
+        SaveManager.Instance.InitForUser(user.UserId, () =>
+        {
+            Debug.Log("▶ Firebase 로드 완료 → 메인씬 이동합니다!");
             SceneChanger.Instance.LoadScene("MainScene");
         });
     }
