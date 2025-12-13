@@ -27,7 +27,7 @@ public static class CharacterCSVLoader
 
             CharacterModel m = new CharacterModel();
             m.id = int.Parse(tokens[0]);
-            m.name = tokens[1];
+            m.characterName = tokens[1];
             m.rarity = int.Parse(tokens[2]);
             m.role = System.Enum.Parse<CharacterRole>(tokens[3]);
 

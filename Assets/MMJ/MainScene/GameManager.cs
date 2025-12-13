@@ -24,9 +24,9 @@ public class GameManager : MonoBehaviour
         // 프리팹 연결
         foreach (var model in CharacterManager.Instance.models.Values)
         {
-            model.prefab = Resources.Load<GameObject>($"Characters/{model.name}");
+            model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
             if (model.prefab == null)
-                Debug.LogWarning($"Prefab not found for {model.name}");
+                Debug.LogWarning($"Prefab not found for {model.characterName}");
         }
     }
 

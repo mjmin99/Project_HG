@@ -3,7 +3,7 @@
 public class CharacterModel
 {
     public int id;
-    public string name;
+    public string characterName;
     public int rarity; // 1~5
     public CharacterRole role;
 
@@ -26,7 +26,7 @@ public class CharacterModel
         get
         {
             if (_icon == null)
-                _icon = Resources.Load<Sprite>($"Icons/{name}");
+                _icon = Resources.Load<Sprite>($"Icons/{characterName}");
             return _icon;
         }
     }

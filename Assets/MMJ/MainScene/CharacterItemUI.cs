@@ -23,7 +23,7 @@ public class CharacterItemUI : MonoBehaviour
         this.characterId = id;
         var model = CharacterManager.Instance.models[id];
 
-        nameText.text = model.name;
+        nameText.text = model.characterName;
         icon.sprite = model.Icon;
 
         selectButton.onClick.RemoveAllListeners();

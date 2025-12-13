@@ -55,7 +55,7 @@ public class PartySlotUI : MonoBehaviour
         nameText.enabled = true;
         icon.enabled = true;
 
-        nameText.text = model.name;
+        nameText.text = model.characterName;
         icon.sprite = model.Icon;
     }
 
