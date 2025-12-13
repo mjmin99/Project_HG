@@ -37,15 +37,24 @@ public class PortraitPrefab : MonoBehaviour
             image.FadeOutImage(duration).SetUpdate(true);
         }
     }
-
-    public void HighlightIn()
+    
+    public async UniTask HighlightIn()
     {
-        
-        portraitImage.DOColor(dimColor,0.2f).SetUpdate(true);
+        await portraitImage.DOColor(originColor, 0.3f)
+            .SetEase(Ease.Linear)
+            .SetUpdate(true)
+            .AsyncWaitForCompletion()
+            .AsUniTask();
     }
 
-    public void HighlightOut()
+    public async UniTask HighlightOut()
     {
-        portraitImage.DOColor(originColor, 0.2f).SetUpdate(true);
+        await portraitImage
+            .DOColor(dimColor,0.3f)
+            .SetEase(Ease.Linear)
+            .SetUpdate(true)
+            .AsyncWaitForCompletion()
+            .AsUniTask();
     }
+
 }

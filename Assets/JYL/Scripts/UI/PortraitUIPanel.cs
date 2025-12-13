@@ -15,6 +15,7 @@ public class PortraitUIPanel : MonoBehaviour
 
     
     private readonly List<RectTransform> portraits = new();
+    private readonly List<PortraitPrefab> portraitsList = new();
     private readonly Dictionary<string, PortraitPrefab> portraitDict = new();
     
     private CanvasScaler scaler;
@@ -47,6 +48,7 @@ public class PortraitUIPanel : MonoBehaviour
         rect.localScale = Vector3.one * 0.2f;
         rect.gameObject.SetActive(false);
         portraits.Add(rect);
+        portraitsList.Add(go);
         if (!portraitDict.TryAdd(key, go))
         {
             Debug.LogWarning($"이미 키에 대한 값이 있음: {key}");
@@ -180,5 +182,29 @@ public class PortraitUIPanel : MonoBehaviour
         // 추가적인 연출(Scale-in, Fade-in)
         tasks.Add(rt.DOScale(1f, 0.3f).SetUpdate(true).SetEase(Ease.OutQuart).AsyncWaitForCompletion().AsUniTask());
         await UniTask.WhenAll(tasks);
+    }
+    
+    // 화자만 하이라이트 처리
+    public async UniTask HighlightSpeaker(string speaker)
+    {
+        // 스프라이트 오브젝트 찾아서 색상 값 원래대로 변경. 나머지 스프라이트들은 반대로 색 낮춤
+        var  tasks = new List<UniTask>();
+        foreach (var portrait in portraitsList)
+        {
+            tasks.Add(string.Equals(portrait.speakerID, speaker)
+                ? portrait.HighlightIn() : portrait.HighlightOut());
+        }
+        await UniTask.WhenAll(tasks);
+    }
+
+    // 전체 하이라이트 OFF
+    public async UniTask HighlightOff()
+    {
+        var tasks = new List<UniTask>();
+        foreach (var portrait in portraitsList)
+        {
+            tasks.Add(portrait.HighlightOut());
+        }
+        await  UniTask.WhenAll(tasks);
     }
 }
