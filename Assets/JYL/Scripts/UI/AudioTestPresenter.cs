@@ -145,7 +145,7 @@ public class AudioTestPresenter : MonoBehaviour
                 await audioManager.SwapClip(AudioClipType.Ambient, clipName);
                 break;
             case 2:
-                audioManager.PlaySFX(clipName);
+                audioManager.PlaySfx(clipName);
                 break;
             case 3:
                 audioManager.PlayVoice(clipName);
