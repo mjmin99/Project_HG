@@ -3,26 +3,24 @@ using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class LobbyPanel : MonoBehaviour
 {
+    [Header("Panel References")]
     [SerializeField] GameObject loginPanel;
     [SerializeField] GameObject editPanel;
-    
+
+    [Header("User Info UI")]
     [SerializeField] TMP_Text emailContent;
     [SerializeField] TMP_Text nameContent;
     [SerializeField] TMP_Text userIDContent;
 
+    [Header("Buttons")]
     [SerializeField] Button logoutButton;
     [SerializeField] Button editProfileButton;
     [SerializeField] Button deleteUserButton;
-
-    // --- 테스트 중인 기능
-
     [SerializeField] Button gameStartButton;
-
-    // ---
-
 
     private void Awake()
     {
@@ -34,13 +32,11 @@ public class LobbyPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        // 로비 패널이 활성화 되었다는 뜻은 로그인이 성공했다는 뜻
         FirebaseUser user = FirebaseManager.Auth.CurrentUser;
         emailContent.text = user.Email;
         nameContent.text = user.DisplayName;
         userIDContent.text = user.UserId;
     }
-
 
     private void Logout()
     {
@@ -50,7 +46,7 @@ public class LobbyPanel : MonoBehaviour
     }
 
     private void EditProfile()
-    { 
+    {
         editPanel.SetActive(true);
         gameObject.SetActive(false);
     }
@@ -63,54 +59,113 @@ public class LobbyPanel : MonoBehaviour
             {
                 if (task.IsCanceled)
                 {
-                    Debug.LogError("유저 삭제 취소됨");
+                    Debug.LogError("[LobbyPanel] 유저 삭제 취소됨");
                     return;
                 }
                 if (task.IsFaulted)
                 {
-                    Debug.LogError($"유저 삭제 실패함. 이유 : {task.Exception}");
+                    Debug.LogError($"[LobbyPanel] 유저 삭제 실패: {task.Exception}");
                     return;
                 }
-                Debug.LogError($"유저 삭제 성공함");
+
+                Debug.Log("[LobbyPanel] 유저 삭제 성공");
                 FirebaseManager.Auth.SignOut();
                 loginPanel.SetActive(true);
                 gameObject.SetActive(false);
             });
     }
 
-    // --- 테스트 중인 기능
-
     private void GameStart()
     {
-        Debug.Log("▶ GameStart 실행됨");
+        StartCoroutine(InitializeGameData());
+    }
 
-        // 1) 정적 데이터 로드
-        var models = CharacterCSVLoader.Load();
-        CharacterManager.Instance.LoadModels(models);
+    private IEnumerator InitializeGameData()
+    {
+        Debug.Log("[LobbyPanel] ========== 게임 데이터 로딩 시작 ==========");
 
-        // Firebase 초기화 확인 추가
+        gameStartButton.interactable = false;
+
+        // 1단계: CSV 로드
+        if (CharacterManager.Instance.models.Count == 0)
+        {
+            Debug.Log("[LobbyPanel] CSV 로드 시작");
+            var models = CharacterCSVLoader.Load();
+
+            if (models.Count == 0)
+            {
+                Debug.LogError("[LobbyPanel] CSV 로드 실패! 게임을 시작할 수 없습니다.");
+                gameStartButton.interactable = true;
+                yield break;
+            }
+
+            CharacterManager.Instance.LoadModels(models);
+
+            // Prefab 연결
+            foreach (var model in CharacterManager.Instance.models.Values)
+            {
+                model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
+                if (model.prefab == null)
+                    Debug.LogWarning($"[LobbyPanel] Prefab not found: {model.characterName}");
+            }
+
+            Debug.Log($"[LobbyPanel] CSV 로드 완료: {models.Count}개 캐릭터");
+        }
+        else
+        {
+            Debug.Log("[LobbyPanel] CSV 이미 로드되어 있음");
+        }
+
+        yield return null;
+
+        // 2단계: Firebase 유저 확인
         if (FirebaseManager.Auth == null)
         {
-            Debug.LogError("Firebase가 아직 초기화되지 않았습니다!");
-            return;
+            Debug.LogError("[LobbyPanel] Firebase Auth가 null입니다!");
+            gameStartButton.interactable = true;
+            yield break;
         }
-        // 2) 현재 로그인 유저 확인
+
         var user = FirebaseManager.Auth.CurrentUser;
         if (user == null)
         {
-            Debug.LogError("유저 정보 없음. 로그인 먼저 필요");
-            return;
+            Debug.LogError("[LobbyPanel] 로그인된 유저가 없습니다!");
+            gameStartButton.interactable = true;
+            yield break;
         }
 
-        Debug.Log("CurrentUser = " + user.UserId);
-        Debug.Log("▶ Firebase 세이브 로드 시작");
+        Debug.Log($"[LobbyPanel] 유저 확인 완료: {user.UserId}");
+        yield return null;
+
+        // 3단계: Firebase 세이브 로드
+        bool loadComplete = false;
 
         SaveManager.Instance.InitForUser(user.UserId, () =>
         {
-            Debug.Log("▶ Firebase 로드 완료 → 메인씬 이동합니다!");
-            SceneChanger.Instance.LoadScene("MainScene");
+            loadComplete = true;
         });
-    }
-    // ---
 
+        float timeout = 10f;
+        float elapsed = 0f;
+
+        while (!loadComplete && elapsed < timeout)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!loadComplete)
+        {
+            Debug.LogError("[LobbyPanel] 세이브 로드 타임아웃!");
+            gameStartButton.interactable = true;
+            yield break;
+        }
+
+        Debug.Log("[LobbyPanel] 세이브 로드 완료");
+        yield return null;
+
+        // 4단계: 메인씬 이동
+        Debug.Log("[LobbyPanel] ========== 로딩 완료! MainScene 이동 ==========");
+        SceneChanger.Instance.LoadScene("MainScene");
+    }
 }

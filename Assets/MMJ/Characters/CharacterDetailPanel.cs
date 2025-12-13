@@ -38,18 +38,26 @@ public class CharacterDetailPanel : MonoBehaviour
 
     private void Awake()
     {
-        // 처음엔 닫혀있어야 함
         panelRoot.SetActive(false);
         enhanceButton.onClick.AddListener(OnClickEnhance);
-
     }
 
     public void Show(int characterId)
     {
         currentCharacterId = characterId;
 
-        var model = CharacterManager.Instance.models[characterId];
-        var inst = CharacterManager.Instance.instances[characterId];
+        if (!CharacterManager.Instance.models.TryGetValue(characterId, out var model))
+        {
+            Debug.LogError($"[CharacterDetailPanel] 모델 ID {characterId} 없음");
+            return;
+        }
+
+        if (!CharacterManager.Instance.instances.TryGetValue(characterId, out var inst))
+        {
+            Debug.LogError($"[CharacterDetailPanel] 인스턴스 ID {characterId} 없음");
+            return;
+        }
+
         var stats = CharacterManager.Instance.GetStats(characterId);
 
         panelRoot.SetActive(true);
@@ -58,37 +66,30 @@ public class CharacterDetailPanel : MonoBehaviour
         nameText.text = model.characterName;
         roleText.text = model.role.ToString();
 
-        // rarity
         for (int i = 0; i < starGroup.childCount; i++)
             starGroup.GetChild(i).gameObject.SetActive(i < model.rarity);
 
         levelText.text = $"Lv. {inst.level}";
         shardText.text = $"Shard: {inst.shard}";
 
-        // 공격 계열
-        matkText.text = $"MATK: {stats.magicAttack:0}";
-        atkText.text = $"ATK: {stats.attack:0}";
-        defText.text = $"DEF: {stats.defense:0}";
         hpText.text = $"HP: {stats.hp:0}";
+        atkText.text = $"ATK: {stats.attack:0}";
+        matkText.text = $"MATK: {stats.magicAttack:0}";
+        defText.text = $"DEF: {stats.defense:0}";
 
-        // 속도 / 확률 계열
         aspdText.text = $"ASPD: {stats.attackSpeed:0.00}";
         critText.text = $"CRIT: {stats.critRate * 100:0.0}%";
         critDmgText.text = $"CRITDMG: {stats.critDamage * 100:0.0}%";
-
-        // 사거리 (고정 스탯)
         rangeText.text = $"RANGE: {stats.attackRange:0.0}";
 
         enhanceCostText.text = $"{ENHANCE_COST} Gold";
-
         UpdateEnhanceButtonState();
     }
 
     void UpdateEnhanceButtonState()
     {
         int gold = SaveManager.Instance.CurrentData.gold;
-
-        enhanceButton.interactable = gold >= ENHANCE_COST;
+        enhanceButton.interactable = (gold >= ENHANCE_COST);
     }
 
     public void OnClickEnhance()
@@ -98,23 +99,24 @@ public class CharacterDetailPanel : MonoBehaviour
 
         if (!SaveManager.Instance.TrySpendGold(ENHANCE_COST))
         {
-            Debug.Log("골드 부족");
+            Debug.Log("[CharacterDetailPanel] 골드 부족");
             return;
         }
 
-        CharacterManager.Instance.AddExp(currentCharacterId, 1);
+        CharacterManager.Instance.AddExp(currentCharacterId, 5);
         SaveManager.Instance.SaveCurrentUser();
+
         RefreshCurrentCharacterUI();
     }
 
     void RefreshCurrentCharacterUI()
     {
-        // 그냥 Show를 다시 호출하는 게 가장 안전
         Show(currentCharacterId);
     }
 
     public void Hide()
     {
         panelRoot.SetActive(false);
+        currentCharacterId = -1;
     }
 }

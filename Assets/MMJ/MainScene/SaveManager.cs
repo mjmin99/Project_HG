@@ -2,7 +2,6 @@
 using Firebase.Extensions;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 
 public class SaveManager : MonoBehaviour
 {
@@ -18,19 +17,19 @@ public class SaveManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
             db = FirebaseDatabase.DefaultInstance.RootReference;
         }
-        else Destroy(gameObject);
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // 로그인 후 호출
     public void InitForUser(string userId, System.Action onComplete)
     {
-        StartCoroutine(WaitForFirebaseAndLoad(userId, onComplete));
+        LoadFromFirebase(userId, onComplete);
     }
 
-    // Firebase 로드
     public void LoadFromFirebase(string userId, System.Action onComplete)
     {
         db.Child("users").Child(userId).Child("saveData")
@@ -38,8 +37,7 @@ public class SaveManager : MonoBehaviour
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
-                    Debug.LogWarning("로드 실패 → 신규 데이터 생성");
-
+                    Debug.LogWarning($"[SaveManager] 로드 실패: {task.Exception} → 신규 데이터 생성");
                     CurrentData = CreateDefaultSaveData();
                     SaveToFirebase(userId);
                     ApplyToCharacterManager();
@@ -53,21 +51,21 @@ public class SaveManager : MonoBehaviour
                 {
                     string json = snap.GetRawJsonValue();
                     CurrentData = JsonUtility.FromJson<SaveData>(json);
+                    Debug.Log("[SaveManager] 기존 세이브 로드 성공");
                 }
                 else
                 {
-                    Debug.Log("기존 세이브 없음 → 기본값 생성");
+                    Debug.Log("[SaveManager] 기존 세이브 없음 → 기본값 생성");
                     CurrentData = CreateDefaultSaveData();
                     SaveToFirebase(userId);
                 }
 
-                // 리스트 보정
                 if (CurrentData.characters == null)
                     CurrentData.characters = new List<CharacterInstance>();
 
-                // 캐릭터 데이터 없으면 기본 지급
                 if (CurrentData.characters.Count == 0)
                 {
+                    Debug.Log("[SaveManager] 캐릭터 없음 → 기본 캐릭터 지급");
                     CurrentData = CreateDefaultSaveData();
                     SaveToFirebase(userId);
                 }
@@ -77,7 +75,6 @@ public class SaveManager : MonoBehaviour
             });
     }
 
-    // Firebase 저장
     public void SaveToFirebase(string userId)
     {
         SyncFromCharacterManager();
@@ -89,70 +86,22 @@ public class SaveManager : MonoBehaviour
             .ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
-                    Debug.LogError("세이브 저장 실패");
+                    Debug.LogError($"[SaveManager] 세이브 저장 실패: {task.Exception}");
                 else
-                    Debug.Log("세이브 저장 성공!");
+                    Debug.Log("[SaveManager] 세이브 저장 성공!");
             });
     }
 
-    // 편의 저장 함수
     public void SaveCurrentUser()
     {
         var user = FirebaseManager.Auth.CurrentUser;
         if (user != null)
             SaveToFirebase(user.UserId);
+        else
+            Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
     }
 
-    // 기본 세이브 생성 (0번 캐릭터 지급)
-    private SaveData CreateDefaultSaveData()
-    {
-        SaveData data = new SaveData();
-
-        foreach (var pair in CharacterManager.Instance.models)
-        {
-            var model = pair.Value;
-
-            CharacterInstance inst = new CharacterInstance
-            {
-                id = model.id,
-                isOwned = (model.id == 0),
-                level = model.id == 0 ? 1 : 0,
-                star = model.id == 0 ? 1 : 0,
-                exp = 0,
-                shard = 0
-            };
-
-            data.characters.Add(inst);
-        }
-
-        return data;
-    }
-
-    private IEnumerator WaitForFirebaseAndLoad(string userId, System.Action onComplete)
-    {
-        while (!FirebaseManager.IsInitialized)
-        {
-            yield return null;
-        }
-
-        LoadFromFirebase(userId, onComplete);
-    }
-
-    // SaveData → CharacterManager
-    private void ApplyToCharacterManager()
-    {
-        CharacterManager.Instance.LoadUserInstances(CurrentData.characters);
-    }
-
-    // CharacterManager → SaveData
-    private void SyncFromCharacterManager()
-    {
-        CurrentData.characters.Clear();
-
-        foreach (var inst in CharacterManager.Instance.instances.Values)
-            CurrentData.characters.Add(inst);
-    }
-
+    // 재화 관리 함수
     public bool TrySpendGold(int amount)
     {
         if (CurrentData.gold < amount)
@@ -167,5 +116,64 @@ public class SaveManager : MonoBehaviour
         CurrentData.gold += amount;
     }
 
+    public bool TrySpendGem(int amount)
+    {
+        if (CurrentData.gem < amount)
+            return false;
 
+        CurrentData.gem -= amount;
+        return true;
+    }
+
+    public void AddGem(int amount)
+    {
+        CurrentData.gem += amount;
+    }
+
+    private SaveData CreateDefaultSaveData()
+    {
+        SaveData data = new SaveData();
+
+        if (CharacterManager.Instance.models.Count == 0)
+        {
+            Debug.LogError("[SaveManager] CharacterManager.models가 비어있음! CSV를 먼저 로드해야 합니다!");
+            return data;
+        }
+
+        foreach (var pair in CharacterManager.Instance.models)
+        {
+            var model = pair.Value;
+
+            CharacterInstance inst = new CharacterInstance
+            {
+                id = model.id,
+                isOwned = (model.id == 0),
+                level = model.id == 0 ? 1 : 0,
+                exp = 0,
+                shard = 0
+            };
+
+            data.characters.Add(inst);
+        }
+
+        data.gold = 1000; // 초기재화
+        data.gem = 100;
+
+        Debug.Log($"[SaveManager] 기본 세이브 생성: 캐릭터 {data.characters.Count}개");
+        return data;
+    }
+
+    private void ApplyToCharacterManager()
+    {
+        CharacterManager.Instance.LoadUserInstances(CurrentData.characters);
+        Debug.Log($"[SaveManager] CharacterManager에 {CurrentData.characters.Count}개 캐릭터 적용");
+    }
+
+    private void SyncFromCharacterManager()
+    {
+        CurrentData.characters.Clear();
+
+        foreach (var inst in CharacterManager.Instance.instances.Values)
+            CurrentData.characters.Add(inst);
+    }
 }

@@ -6,10 +6,15 @@ using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
+    [Header("UI")]
     public TMP_Text goldText;
     public ResultPanelController resultPanel;
+
+    [Header("Buttons")]
     public Button goMainSceneButton;
     public Button drawOneButton;
+
+    private const int DRAW_ONE_COST = 50;
 
     private void Awake()
     {
@@ -29,11 +34,9 @@ public class ShopManager : MonoBehaviour
 
     public void OnClickDrawOne()
     {
-        int cost = 50;
-
-        if (!SaveManager.Instance.TrySpendGold(cost))
+        if (!SaveManager.Instance.TrySpendGold(DRAW_ONE_COST))
         {
-            Debug.Log("골드 부족");
+            Debug.Log("[ShopManager] 골드 부족");
             return;
         }
 
@@ -41,6 +44,7 @@ public class ShopManager : MonoBehaviour
 
         int id = DrawCharacter();
         CharacterModel model = CharacterManager.Instance.models[id];
+
         bool isNew = !CharacterManager.Instance.instances.ContainsKey(id)
                      || !CharacterManager.Instance.instances[id].isOwned;
 
@@ -56,7 +60,7 @@ public class ShopManager : MonoBehaviour
 
         if (models.Count == 0)
         {
-            Debug.LogError("캐릭터 모델이 비어있음!");
+            Debug.LogError("[ShopManager] 캐릭터 모델이 비어있음!");
             return -1;
         }
 
@@ -70,27 +74,25 @@ public class ShopManager : MonoBehaviour
             if (rand < cumulative)
                 return m.id;
         }
+
         return models.OrderByDescending(m => m.rarity).First().id;
     }
 
     float GetWeight(int rarity)
     {
-        // 너무 확률이 높으면 재미없고, 너무 낮으면 유저가 빡침ㅋ
         switch (rarity)
         {
-            case 1: return 60f; // 1성 노말급
-            case 2: return 25f; // 2성 희귀
-            case 3: return 10f; // 3성 SR
-            case 4: return 4f; // 4성 SUR
-            case 5: return 1f; // 오성 과 한음
+            case 1: return 60f;
+            case 2: return 25f;
+            case 3: return 10f;
+            case 4: return 4f;
+            case 5: return 1f;
+            default: return 1f;
         }
-        return 1f;
     }
 
     public void BackToMain()
     {
         SceneManager.LoadScene("MainScene");
-        // 또는 SceneChanger.Instance.LoadScene("MainScene");
     }
-
 }

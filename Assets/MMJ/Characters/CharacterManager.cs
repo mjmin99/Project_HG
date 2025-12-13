@@ -5,10 +5,7 @@ public class CharacterManager : MonoBehaviour
 {
     public static CharacterManager Instance;
 
-    // 정적 캐릭터 모델 (CSV)
     public Dictionary<int, CharacterModel> models = new();
-
-    // 유저의 캐릭터 인스턴스
     public Dictionary<int, CharacterInstance> instances = new();
 
     private void Awake()
@@ -24,71 +21,105 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    // CSV 로드 후 모델 저장
     public void LoadModels(List<CharacterModel> list)
     {
         models.Clear();
         foreach (var m in list)
             models[m.id] = m;
+
+        Debug.Log($"[CharacterManager] 모델 {list.Count}개 로드됨");
     }
 
-    // Firebase → CharacterManager 로 유저 캐릭터 로드
     public void LoadUserInstances(List<CharacterInstance> list)
     {
         instances.Clear();
         foreach (var inst in list)
             instances[inst.id] = inst;
+
+        Debug.Log($"[CharacterManager] 인스턴스 {list.Count}개 로드됨");
     }
 
-    // 최종 스탯 계산
     public CharacterStats GetStats(int id)
     {
-        return instances[id].GetStats(models[id]);
+        if (!models.TryGetValue(id, out var model))
+        {
+            Debug.LogError($"[CharacterManager] 모델 ID {id} 없음");
+            return new CharacterStats();
+        }
+
+        if (!instances.TryGetValue(id, out var inst))
+        {
+            Debug.LogError($"[CharacterManager] 인스턴스 ID {id} 없음");
+            return new CharacterStats();
+        }
+
+        // ⚠ 성급은 model.rarity만 사용
+        return inst.GetStats(model);
     }
 
-    // 경험치 추가
     public void AddExp(int id, int amount)
     {
-        var inst = instances[id];
+        if (!instances.TryGetValue(id, out var inst))
+        {
+            Debug.LogError($"[CharacterManager] 인스턴스 ID {id} 없음");
+            return;
+        }
+
         inst.exp += amount;
 
         while (inst.exp >= RequiredExp(inst.level))
         {
             inst.exp -= RequiredExp(inst.level);
             inst.level++;
+            Debug.Log($"[CharacterManager] 캐릭터 {id} 레벨업! Lv.{inst.level}");
         }
     }
 
     public void GiveCharacter(int id)
     {
-        // 이미 세이브데이터 안에 이 id가 있는지 먼저 확인
+        if (!models.ContainsKey(id))
+        {
+            Debug.LogError($"[CharacterManager] 모델 ID {id} 없음");
+            return;
+        }
+
         if (!instances.TryGetValue(id, out var inst))
         {
-            // 새로 생성
+
             inst = new CharacterInstance
             {
                 id = id,
                 isOwned = true,
-                // level, star, shard 는 기본값(1,1,0) 그대로 사용
+                level = 1,
+                exp = 0,
+                shard = 0
             };
 
             instances[id] = inst;
+            Debug.Log($"[CharacterManager] 신규 캐릭터 생성 & 획득 ID: {id}");
+            return;
+        }
+
+        if (!inst.isOwned)
+        {
+            inst.isOwned = true;
+            inst.level = 1;
+            inst.exp = 0;
+            inst.shard = 0;
+
+            Debug.Log($"[CharacterManager] 캐릭터 획득! ID: {id}");
         }
         else
         {
-            // 이미 목록에는 있는데 미소유였던 경우 → 소유만 true로
-            if (!inst.isOwned)
-            {
-                inst.isOwned = true;
-            }
-            else
-            {
-                // 이미 소유중인 캐릭터 중복 뽑기 → 조각 지급
-                inst.shard += 10;
-            }
+            // 중복 캐릭터 → 조각 변환
+            inst.shard += 10;
+            Debug.Log($"[CharacterManager] 중복 캐릭터! 조각 +10 (현재: {inst.shard})");
         }
     }
 
 
-    private int RequiredExp(int level) => level * 5;
+    private int RequiredExp(int level)
+    {
+        return level * 5;
+    }
 }
