@@ -21,9 +21,9 @@ public class PartyUI : MonoBehaviour
 
     public void AssignCharacter(int characterId)
     {
-        if (activeSlotIndex == -1)
+        if (activeSlotIndex < 0)
         {
-            Debug.LogWarning("슬롯이 선택되지 않았습니다!");
+            Debug.LogWarning("슬롯을 먼저 선택하세요!");
             return;
         }
 

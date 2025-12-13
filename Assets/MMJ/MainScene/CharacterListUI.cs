@@ -2,38 +2,50 @@
 
 public class CharacterListUI : MonoBehaviour
 {
+    [Header("UI")]
     public Transform container;
     public GameObject itemPrefab;
 
-    private void Start()
+    private PartyUI partyUI;
+    private CharacterDetailPanel detailPanel;
+
+    private void Awake()
     {
-        Initialize();
+        // 메인씬에 항상 존재하는 UI들이므로 Find로 캐싱
+        partyUI = FindFirstObjectByType<PartyUI>();
+        detailPanel = FindFirstObjectByType<CharacterDetailPanel>();
     }
 
-
-    // 가챠로 새 캐릭터를 얻은 후 UI 즉시 갱신
-    // 유저가 다른 필터 버튼을 눌러서 정렬/검색할 때
-    // 파티 배치 후 스탯 변동으로 UI 갱신 필요할 때와 같은 상황에서 초기화를 다시 해줄 필요가 있다고 판단해서 일단 이렇게 만듬
-    public void Initialize()
+    private void OnEnable()
     {
-        PopulateList();
+        Refresh();
     }
 
-    void PopulateList()
+    /// <summary>
+    /// 캐릭터 리스트 전체 갱신
+    /// </summary>
+    public void Refresh()
     {
-        // 기존 UI 전부 제거
+        // 기존 아이템 제거
         foreach (Transform child in container)
         {
             Destroy(child.gameObject);
         }
 
+        // 보유 캐릭터만 리스트에 표시
         foreach (var pair in CharacterManager.Instance.instances)
         {
             int id = pair.Key;
-            if (!pair.Value.isOwned) continue;
+            var inst = pair.Value;
 
-            GameObject obj = Instantiate(itemPrefab, container);
-            obj.GetComponent<CharacterItemUI>().Set(id);
+            if (!inst.isOwned)
+                continue;
+
+            GameObject go = Instantiate(itemPrefab, container);
+            var itemUI = go.GetComponent<CharacterItemUI>();
+
+            // 파티UI + 상세 패널 전달
+            itemUI.Setup(id, partyUI, detailPanel);
         }
     }
 }
