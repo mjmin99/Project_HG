@@ -5,7 +5,6 @@ public static class CharacterCSVLoader
 {
     public static List<CharacterModel> Load()
     {
-        // Resources/characters.csv
         TextAsset csvFile = Resources.Load<TextAsset>("characters");
 
         if (csvFile == null)
@@ -17,31 +16,42 @@ public static class CharacterCSVLoader
         string[] lines = csvFile.text.Split('\n');
         List<CharacterModel> list = new List<CharacterModel>();
 
-        for (int i = 1; i < lines.Length; i++) // header 제외
+        for (int i = 1; i < lines.Length; i++)
         {
             string line = lines[i].Trim();
             if (string.IsNullOrWhiteSpace(line)) continue;
 
             var tokens = line.Split(',');
-            if (tokens.Length < 12) continue;
+            if (tokens.Length < 12)
+            {
+                Debug.LogWarning($"CSV 라인 {i} 파싱 실패: 컬럼 수 부족");
+                continue;
+            }
 
-            CharacterModel m = new CharacterModel();
-            m.id = int.Parse(tokens[0]);
-            m.characterName = tokens[1];
-            m.rarity = int.Parse(tokens[2]);
-            m.role = System.Enum.Parse<CharacterRole>(tokens[3]);
+            try
+            {
+                CharacterModel m = new CharacterModel();
+                m.id = int.Parse(tokens[0]);
+                m.characterName = tokens[1];
+                m.rarity = int.Parse(tokens[2]);
+                m.role = System.Enum.Parse<CharacterRole>(tokens[3]);
 
-            m.baseHP = int.Parse(tokens[4]);
-            m.baseAttack = int.Parse(tokens[5]);
-            m.baseMagicAttack = int.Parse(tokens[6]);
-            m.baseDefense = int.Parse(tokens[7]);
+                m.baseHP = int.Parse(tokens[4]);
+                m.baseAttack = int.Parse(tokens[5]);
+                m.baseMagicAttack = int.Parse(tokens[6]);
+                m.baseDefense = int.Parse(tokens[7]);
 
-            m.baseAttackSpeed = float.Parse(tokens[8]);
-            m.baseCritRate = float.Parse(tokens[9]);
-            m.baseCritDamage = float.Parse(tokens[10]);
-            m.attackRange = float.Parse(tokens[11]);
+                m.baseAttackSpeed = float.Parse(tokens[8]);
+                m.baseCritRate = float.Parse(tokens[9]);
+                m.baseCritDamage = float.Parse(tokens[10]);
+                m.attackRange = float.Parse(tokens[11]);
 
-            list.Add(m);
+                list.Add(m);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"CSV 라인 {i} 파싱 실패: {ex.Message}");
+            }
         }
 
         Debug.Log($"CSV 로드 성공! 캐릭터 수 = {list.Count}");

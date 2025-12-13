@@ -2,6 +2,7 @@
 using Firebase.Extensions;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class SaveManager : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class SaveManager : MonoBehaviour
     // 로그인 후 호출
     public void InitForUser(string userId, System.Action onComplete)
     {
-        LoadFromFirebase(userId, onComplete);
+        StartCoroutine(WaitForFirebaseAndLoad(userId, onComplete));
     }
 
     // Firebase 로드
@@ -127,6 +128,16 @@ public class SaveManager : MonoBehaviour
         return data;
     }
 
+    private IEnumerator WaitForFirebaseAndLoad(string userId, System.Action onComplete)
+    {
+        while (!FirebaseManager.IsInitialized)
+        {
+            yield return null;
+        }
+
+        LoadFromFirebase(userId, onComplete);
+    }
+
     // SaveData → CharacterManager
     private void ApplyToCharacterManager()
     {
@@ -141,4 +152,20 @@ public class SaveManager : MonoBehaviour
         foreach (var inst in CharacterManager.Instance.instances.Values)
             CurrentData.characters.Add(inst);
     }
+
+    public bool TrySpendGold(int amount)
+    {
+        if (CurrentData.gold < amount)
+            return false;
+
+        CurrentData.gold -= amount;
+        return true;
+    }
+
+    public void AddGold(int amount)
+    {
+        CurrentData.gold += amount;
+    }
+
+
 }

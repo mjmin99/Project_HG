@@ -11,10 +11,6 @@ public class CharacterManager : MonoBehaviour
     // 유저의 캐릭터 인스턴스
     public Dictionary<int, CharacterInstance> instances = new();
 
-    public SaveData SaveData { get; private set; }
-
-
-
     private void Awake()
     {
         if (Instance == null)
@@ -26,27 +22,6 @@ public class CharacterManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    public void LoadFromSaveData(SaveData data)
-    {
-        SaveData = data;
-        instances.Clear();
-        foreach (var inst in data.characters)
-            instances[inst.id] = inst;
-    }
-
-    public void SaveToSaveData()
-    {
-        if (SaveData == null)
-        {
-            Debug.LogWarning("SaveData가 없어서 자동 생성합니다.");
-            SaveData = new SaveData();
-        }
-
-        SaveData.characters.Clear();
-        foreach (var inst in instances.Values)
-            SaveData.characters.Add(inst);
     }
 
     // CSV 로드 후 모델 저장
@@ -112,9 +87,6 @@ public class CharacterManager : MonoBehaviour
                 inst.shard += 10;
             }
         }
-
-        // SaveData로 동기화
-        SaveToSaveData();
     }
 
 

@@ -19,12 +19,6 @@ public class ShopManager : MonoBehaviour
 
     private void Start()
     {
-        // 세이브데이터를 캐릭터매니저에 다시 로드
-        var data = SaveManager.Instance.CurrentData;
-
-        if (data != null)
-            CharacterManager.Instance.LoadFromSaveData(data);
-
         UpdateGoldUI();
     }
 
@@ -35,61 +29,48 @@ public class ShopManager : MonoBehaviour
 
     public void OnClickDrawOne()
     {
-        int cost = 50;// 소모하는 돈
+        int cost = 50;
 
-        // 골드체크
-        if (SaveManager.Instance.CurrentData.gold < cost)
+        if (!SaveManager.Instance.TrySpendGold(cost))
         {
             Debug.Log("골드 부족");
             return;
         }
 
-        // 골드 차감
-        SaveManager.Instance.CurrentData.gold -= cost;
-
-        // 현재 보유한 돈 갱신
         UpdateGoldUI();
 
-        // 랜덤 선택
-        int id = DrawCharacter();  
+        int id = DrawCharacter();
         CharacterModel model = CharacterManager.Instance.models[id];
+        bool isNew = !CharacterManager.Instance.instances.ContainsKey(id)
+                     || !CharacterManager.Instance.instances[id].isOwned;
 
-        bool isNew = false;
-
-        // 신규/중복 판단
-        if (!CharacterManager.Instance.instances.ContainsKey(id) ||
-            !CharacterManager.Instance.instances[id].isOwned)
-        {
-            isNew = true;
-        }
-
-        // 캐릭터 획득 처리 (신규/중복 반영)
         CharacterManager.Instance.GiveCharacter(id);
-
-        // 저장
         SaveManager.Instance.SaveCurrentUser();
 
-        // 결과창 표시
         resultPanel.Show(model, isNew);
     }
 
     int DrawCharacter()
     {
-        // rarity 기반 가중치 랜덤 처리
         var models = CharacterManager.Instance.models.Values.ToList();
 
+        if (models.Count == 0)
+        {
+            Debug.LogError("캐릭터 모델이 비어있음!");
+            return -1;
+        }
+
         float totalWeight = models.Sum(m => GetWeight(m.rarity));
-        float rand = Random.Range(0, totalWeight); // 랜덤 알고리즘 추가해서 기술문서로 만들어보자. 유니티 랜덤도 있음. C#의 랜덤과 유니티 랜덤의 비교를 해보자
+        float rand = Random.Range(0, totalWeight);
         float cumulative = 0f;
 
         foreach (var m in models)
         {
             cumulative += GetWeight(m.rarity);
-            if (rand <= cumulative)
+            if (rand < cumulative)
                 return m.id;
         }
-
-        return models[0].id;
+        return models.OrderByDescending(m => m.rarity).First().id;
     }
 
     float GetWeight(int rarity)

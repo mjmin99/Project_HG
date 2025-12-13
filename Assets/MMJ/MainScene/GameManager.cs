@@ -17,17 +17,17 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
+        if (CharacterManager.Instance.models.Count > 0)
+        {
+            Debug.Log("CSV 이미 로드됨");
+            LoadPrefabs();
+            return;
+        }
+
         // CSV 로드
         List<CharacterModel> models = CharacterCSVLoader.Load();
         CharacterManager.Instance.LoadModels(models);
-
-        // 프리팹 연결
-        foreach (var model in CharacterManager.Instance.models.Values)
-        {
-            model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
-            if (model.prefab == null)
-                Debug.LogWarning($"Prefab not found for {model.characterName}");
-        }
+        LoadPrefabs();
     }
 
     private void Start()
@@ -42,6 +42,16 @@ public class GameManager : MonoBehaviour
             yield return null;
 
         LoadParty();
+    }
+
+    private void LoadPrefabs()
+    {
+        foreach (var model in CharacterManager.Instance.models.Values)
+        {
+            model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
+            if (model.prefab == null)
+                Debug.LogWarning($"Prefab not found for {model.characterName}");
+        }
     }
 
     public void LoadParty()

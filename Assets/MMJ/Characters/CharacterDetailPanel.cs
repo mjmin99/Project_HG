@@ -96,26 +96,14 @@ public class CharacterDetailPanel : MonoBehaviour
         if (currentCharacterId < 0)
             return;
 
-        var saveData = SaveManager.Instance.CurrentData;
-
-        if (saveData.gold < ENHANCE_COST)
+        if (!SaveManager.Instance.TrySpendGold(ENHANCE_COST))
         {
             Debug.Log("골드 부족");
             return;
         }
 
-        // 1. 골드 차감
-        saveData.gold -= ENHANCE_COST;
-
-        // 2. 캐릭터 강화 (레벨업)
         CharacterManager.Instance.AddExp(currentCharacterId, 1);
-        // 또는 바로 level++
-        // CharacterManager.Instance.instances[currentCharacterId].level++;
-
-        // 3. 저장
         SaveManager.Instance.SaveCurrentUser();
-
-        // 4. UI 즉시 갱신
         RefreshCurrentCharacterUI();
     }
 
