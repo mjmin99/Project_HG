@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 using DG.Tweening;
-using DG;
 
 public class AudioManager : MonoBehaviour
 {
@@ -23,7 +22,6 @@ public class AudioManager : MonoBehaviour
     
     // 믹서와 그룹
     private AudioMixer mixer;    
-    private AudioMixerGroup masterMixerGroup;
     private AudioMixerGroup bgmMixerGroup;
     private AudioMixerGroup ambientMixerGroup;
     private AudioMixerGroup sfxMixerGroup;
@@ -40,19 +38,19 @@ public class AudioManager : MonoBehaviour
     private readonly Dictionary<string, AudioData> voiceDict = new();
 
     // 볼륨값
-    public float MasterVolume { get; private set; }
-    public float BGMVolume { get; private set; }
-    public float AmbientVolume { get; private set; }
-    public float SFXVolume { get; private set; }
-    public float VoiceVolume { get; private set; }
+    private float MasterVolume { get; set; }
+    private float BGMVolume { get; set; }
+    private float AmbientVolume { get; set; }
+    private float SfxVolume { get; set; }
+    private float VoiceVolume { get; set; }
     
     // 볼륨 스트링 캐싱
-    private string masterV = "MasterVolume";
-    private string bgmV = "BGMVolume";
-    private string ambientV = "AmbientVolume";
-    private string sfxV = "SFXVolume";
-    private string voiceV = "VoiceVolume";
-    
+    private const string MASTER_V = "MasterVolume";
+    private const string BGM_V = "BGMVolume";
+    private const string AMBIENT_V = "AmbientVolume";
+    private const string SFX_V = "SFXVolume";
+    private const string VOICE_V = "VoiceVolume";
+
     #region 라이프 사이클
     void Awake()
     {
@@ -74,25 +72,25 @@ public class AudioManager : MonoBehaviour
         audioDict.Clear();
         voiceDict.Clear();
         
-        foreach (AudioData audio in audioDatabase.audios)
+        foreach (AudioData audioData in audioDatabase.audios)
         {
-            switch (audio.audioType)
+            switch (audioData.audioType)
             {
                 case AudioClipType.None:
-                    Debug.Log($"타입을 지정해주세요: {audio.name}");
+                    Debug.Log($"타입을 지정해주세요: {audioData.name}");
                     break;
                 case AudioClipType.BGM:
                 case AudioClipType.Ambient:
                 case AudioClipType.SFX:
-                    if (!audioDict.TryAdd(audio.clipName, audio))
+                    if (!audioDict.TryAdd(audioData.clipName, audioData))
                     {
-                        Debug.LogWarning($"이미 오디오 딕셔너리에 있는 오디오 클립 이름입니다. : {audio.clipName}");
+                        Debug.LogWarning($"이미 오디오 딕셔너리에 있는 오디오 클립 이름입니다. : {audioData.clipName}");
                     }
                     break;
                 case AudioClipType.Voice:
-                    if (!voiceDict.TryAdd(audio.clipName, audio))
+                    if (!voiceDict.TryAdd(audioData.clipName, audioData))
                     {
-                        Debug.LogWarning($"이미 보이스 딕셔너리에 있는 오디오 클립 이름입니다. : {audio.clipName}");
+                        Debug.LogWarning($"이미 보이스 딕셔너리에 있는 오디오 클립 이름입니다. : {audioData.clipName}");
                     }
                     break;
             }
@@ -104,7 +102,6 @@ public class AudioManager : MonoBehaviour
     {
         // 믹서, 그룹 설정
         mixer = Resources.Load<AudioMixer>("Audio/" + nameof(AudioMixer));
-        masterMixerGroup = mixer.FindMatchingGroups("Master")[0];
         bgmMixerGroup = mixer.FindMatchingGroups("Master/BGM")[0];
         ambientMixerGroup = mixer.FindMatchingGroups("Master/Ambient")[0];
         sfxMixerGroup = mixer.FindMatchingGroups("Master/SFX")[0];
@@ -124,20 +121,20 @@ public class AudioManager : MonoBehaviour
     // 초기 볼륨 세팅
     private void SetVolumes()
     {
-        MasterVolume = PlayerPrefs.GetFloat(masterV, 1f);
-        BGMVolume = PlayerPrefs.GetFloat(bgmV, 1f);
-        AmbientVolume = PlayerPrefs.GetFloat(ambientV, 1f);
-        SFXVolume = PlayerPrefs.GetFloat(sfxV, 1f);
-        VoiceVolume = PlayerPrefs.GetFloat(voiceV, 1f);
+        MasterVolume = PlayerPrefs.GetFloat(MASTER_V, 1f);
+        BGMVolume = PlayerPrefs.GetFloat(BGM_V, 1f);
+        AmbientVolume = PlayerPrefs.GetFloat(AMBIENT_V, 1f);
+        SfxVolume = PlayerPrefs.GetFloat(SFX_V, 1f);
+        VoiceVolume = PlayerPrefs.GetFloat(VOICE_V, 1f);
     }
 
     private void SetMixerVolume()
     {
-        mixer.SetFloat(masterV, Mathf.Log10(Mathf.Clamp(MasterVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat(bgmV, Mathf.Log10(Mathf.Clamp(BGMVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat(ambientV, Mathf.Log10(Mathf.Clamp(AmbientVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat(sfxV, Mathf.Log10(Mathf.Clamp(SFXVolume, 0.0001f, 1f)) * 20);
-        mixer.SetFloat(voiceV, Mathf.Log10(Mathf.Clamp(VoiceVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(MASTER_V, Mathf.Log10(Mathf.Clamp(MasterVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(BGM_V, Mathf.Log10(Mathf.Clamp(BGMVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(AMBIENT_V, Mathf.Log10(Mathf.Clamp(AmbientVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(SFX_V, Mathf.Log10(Mathf.Clamp(SfxVolume, 0.0001f, 1f)) * 20);
+        mixer.SetFloat(VOICE_V, Mathf.Log10(Mathf.Clamp(VoiceVolume, 0.0001f, 1f)) * 20);
     }
     #endregion
     
@@ -162,6 +159,7 @@ public class AudioManager : MonoBehaviour
         if (!audioDict.TryGetValue(clipName, out var data))
         {
             Debug.LogWarning("클립이 없음");
+            return;
         }
 
         if (source.isPlaying && source.clip == data.clipSource) return;
@@ -191,11 +189,12 @@ public class AudioManager : MonoBehaviour
     }
     
     // 효과음 재생
-    public void PlaySFX(string clipName)
+    public float PlaySfx(string clipName)
     {
         if (!audioDict.TryGetValue(clipName, out AudioData data))
         {
             Debug.LogWarning($"딕셔너리 안에 해당 클립이 없음.{clipName}");
+            return 0f;
         }
         
         GameObject go = new GameObject(clipName);
@@ -208,14 +207,16 @@ public class AudioManager : MonoBehaviour
         
         source.Play();
         if(!data.loop) Destroy(go, data.clipSource.length);
+        return data.clipSource.length;
     }
     
     // 음성 재생
     public void PlayVoice(string clipName)
     {
-        if (!voiceDict.TryGetValue(clipName, out AudioData data))
+        if (!voiceDict.TryGetValue(clipName, out var data))
         {
             Debug.LogWarning($"딕셔너리안에 해당 클립이 없음:{clipName}");
+            return;
         }
 
         if (voiceSource.isPlaying && voiceSource.clip == data.clipSource) return;
@@ -231,7 +232,6 @@ public class AudioManager : MonoBehaviour
     // 믹서 볼륨 조절
     public void SetMixerVolume(string key, float value)
     {
-        Debug.Log($"{key}  {value}");
         float tmp = Mathf.Log10(Mathf.Clamp(value,0.0001f, 1f)) * 20;
         mixer.SetFloat(key, tmp);
         PlayerPrefs.SetFloat(key, value);

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PortraitPrefab : MonoBehaviour
 {
+    [Header("Set Portrait Image")]
     [SerializeField] private Image portraitImage;
 
     private Image[] images;
@@ -13,6 +14,7 @@ public class PortraitPrefab : MonoBehaviour
     private readonly Color originColor = Color.white;
     private readonly Color dimColor = Color.dimGray;
 
+    // 초기화. UI 패널에서 관리
     public void Init(Sprite sprite, string speaker)
     {
         this.speakerID = speaker; 
@@ -20,6 +22,7 @@ public class PortraitPrefab : MonoBehaviour
         portraitImage.sprite = sprite;
     }
 
+    // 초상화 추가 시, Fade-IN 효과 추가
     public async UniTask FadeInPortrait(float duration = 0.3f)
     {
         var list = new List<UniTask>();
@@ -30,14 +33,18 @@ public class PortraitPrefab : MonoBehaviour
         await UniTask.WhenAll(list);
     }
 
-    public void FadeOutPortrait(float duration = 0.3f)
+    // 초상화 삭제 시, Fade-OUT 효과 추가
+    public async UniTask FadeOutPortrait(float duration = 0.3f)
     {
+        var tasks =  new List<UniTask>();
         foreach (var image in images)
         {
-            image.FadeOutImage(duration).SetUpdate(true);
+            tasks.Add(image.FadeOutImage(duration).SetUpdate(true).AsyncWaitForCompletion().AsUniTask());
         }
+        await UniTask.WhenAll(tasks);
     }
     
+    // 대화 중 화자일 때 하이라이트
     public async UniTask HighlightIn()
     {
         await portraitImage.DOColor(originColor, 0.3f)
@@ -47,6 +54,7 @@ public class PortraitPrefab : MonoBehaviour
             .AsUniTask();
     }
 
+    // 대화 중 화자가 아닐 때 하이라이트 꺼짐
     public async UniTask HighlightOut()
     {
         await portraitImage
@@ -56,5 +64,4 @@ public class PortraitPrefab : MonoBehaviour
             .AsyncWaitForCompletion()
             .AsUniTask();
     }
-
 }

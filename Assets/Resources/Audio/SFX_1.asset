@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b609ee0aa037ec45b1ef7f7c5bd7233, type: 3}
   m_Name: SFX_1
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
-  clipSource: {fileID: 8300000, guid: 16eb77ac5fdf64a408c6fd6200d42eb9, type: 3}
-  clipName: Listen
+  clipSource: {fileID: 8300000, guid: eda50a1dee748674ea1462572251cc9a, type: 3}
+  clipName: LinkHit
   volume: 0.9
-  audioType: 4
+  audioType: 3
   loop: 0

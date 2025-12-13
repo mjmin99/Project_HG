@@ -1,23 +1,24 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-using UniRx;
 
 public class PortraitUIPanel : MonoBehaviour
 {
+    [Header("Set References")]
     [SerializeField] private RectTransform panel;
     [SerializeField] private PortraitPrefab portraitPrefab;
 
+    [Header("Set Values")]
     [SerializeField] private float betweenGap = 50f;
 
-    
+    // 생성한 초상화들 관리
     private readonly List<RectTransform> portraits = new();
     private readonly List<PortraitPrefab> portraitsList = new();
     private readonly Dictionary<string, PortraitPrefab> portraitDict = new();
     
+    // 출력하는 화면의 정보를 담음
     private CanvasScaler scaler;
     private Vector2 resolution;
     private RectTransform prefabRect;
@@ -28,6 +29,7 @@ public class PortraitUIPanel : MonoBehaviour
         Init();
     }
 
+    // 초기화
     private void Init()
     {
         scaler = GetComponentInParent<CanvasScaler>();
@@ -36,11 +38,25 @@ public class PortraitUIPanel : MonoBehaviour
         // 생성한 프리팹의 UI 가로 길이
         rectX = prefabRect.rect.width;
     }
+
+    // 대화 시작 시, 대화 UI들 초기화 작업
+    public async UniTask InitializeUI()
+    {
+        portraitDict.Clear();
+        foreach (var go in portraitsList)
+        {
+            DestroyImmediate(go.gameObject);
+        }
+        portraitsList.Clear();
+        portraits.Clear();
+        
+        await UniTask.Yield(PlayerLoopTiming.Update);
+    }
     
     // Portrait 추가 함수. 애니메이션 적용
     public async UniTask AddPortrait(string key)
     {
-        // 2. 프리팹 생성
+        // 프리팹 생성 및 컬렉션에 추가
         PortraitPrefab go = Instantiate(portraitPrefab, panel);
         SpriteContainer spriteContainer = Resources.Load<SpriteContainer>($"Image/{key}");
         go.Init(spriteContainer.sprite, key);
@@ -49,6 +65,7 @@ public class PortraitUIPanel : MonoBehaviour
         rect.gameObject.SetActive(false);
         portraits.Add(rect);
         portraitsList.Add(go);
+        
         if (!portraitDict.TryAdd(key, go))
         {
             Debug.LogWarning($"이미 키에 대한 값이 있음: {key}");
@@ -68,58 +85,47 @@ public class PortraitUIPanel : MonoBehaviour
         // 추가할 요소의 위치를 아래로 미리 변경하여, 이동 애니메이션 효과 줌
         rect.anchoredPosition = targetPosList[^1] + new Vector2(0, -120);
         
-        // 7. 추가된 Portrait을 Tween
+        // 추가된 Portrait을 Tween
         rect.gameObject.SetActive(true);
         await TweenPortraitTo(targetPosList[^1], go);
     }
     
-    // public async UniTask RemovePortrait(string key)
-    // {
-    //     if (portraits.Count == 0) return;
-    //     if (!portraitDict.TryGetValue(key, out var go))
-    //     {
-    //         Debug.LogWarning($"해당 스트링에 해당하는 프리팹이 딕셔너리에 저장 실패함:{key}");
-    //         return;
-    //     }
-    //     var rt = go.GetComponent<RectTransform>();
-    //     
-    //     // 1. 페이드 아웃 + 스케일 다운 + 포지션 이동 제거(등장의 역순)
-    //     
-    //     // 2. 딕셔너리, 리스트에서 해당 객체들 삭제
-    //     portraits.Remove(rt);
-    //     portraitDict.Remove(key);
-    //     // 3. 남은 요소들 재배치
-    //     
-    //
-    //     // 1. 우선 제거 연출
-    //     rt.DOScale(0f, 0.2f).SetEase(Ease.InBack);
-    //
-    //     await UniTask.Delay(200);
-    //
-    //     // 2. 실제로 리스트/Hierarchy에서 제거
-    //     portraits.RemoveAt(index);
-    //     Destroy(removed.gameObject);
-    //
-    //     // 3. Layout 재계산
-    //     Canvas.ForceUpdateCanvases();
-    //
-    //     // 4. 새 위치 목록 계산
-    //     var targetPositions = GetCurrentPositions();
-    //
-    //     // 5. 전체 Portrait를 새 위치로 자연스럽게 이동
-    //     await TweenAllPortraitsTo(targetPositions);
-    // }
+    // Portrait 삭제
+    public async UniTask RemovePortrait(string key)
+    {
+        // key에 해당하는 go 찾은 후 애니메이션 처리
+        if (portraits.Count == 0) return;
+        if (!portraitDict.TryGetValue(key, out var go))
+        {
+            Debug.LogWarning($"{key}에 해당하는 프리팹이 딕셔너리에 없음");
+            return;
+        }
+        var rt =  go.GetComponent<RectTransform>();
+
+        await RemovePortraitAnimation(go, rt);
+        
+        // 딕셔너리, 리스트에서 해당 객체들 삭제
+        portraits.Remove(rt);
+        portraitsList.Remove(go);
+        portraitDict.Remove(key);
+        
+        // 남은 애들 기준으로 위치 산정
+        var targetPosList = GetTargetPositions(FindFirstTargetPosition());
+        
+        // 남은 애들 재배치 
+        await TweenAllPortraitsTo(targetPosList,true);
+    }
 
     // 현재 Portrait 위치들을 가져옴
-    private List<Vector2> GetCurrentPositions()
-    {
-        var curPos = new List<Vector2>();
-        foreach (var rect in portraits)
-        {
-            curPos.Add(rect.anchoredPosition);
-        }
-        return curPos;
-    }
+    // private List<Vector2> GetCurrentPositions()
+    // {
+    //     var curPos = new List<Vector2>();
+    //     foreach (var rect in portraits)
+    //     {
+    //         curPos.Add(rect.anchoredPosition);
+    //     }
+    //     return curPos;
+    // }
     
     // 첫 번째 요소의 위치 및 나머지 요소들의 리스트를 찾는 함수
     private Vector2 FindFirstTargetPosition()
@@ -140,8 +146,7 @@ public class PortraitUIPanel : MonoBehaviour
     // 트윈할 위치의 정보들을 만들어서 가져옴
     private List<Vector2> GetTargetPositions(Vector2 firstPos)
     {
-        var targetPositions = new List<Vector2>();
-        targetPositions.Add(firstPos);
+        var targetPositions = new List<Vector2> { firstPos };
         for (int i = 1; i < portraits.Count; i++)
         {
             // 첫 번째 요소의 위치를 기준으로 나머지 요소들의 위치를 만듦
@@ -152,6 +157,7 @@ public class PortraitUIPanel : MonoBehaviour
     }
 
     // 경우에 따라 마지막 요소를 제외한 Portrait들의 위치를 조정함
+    // includeLast로 전체 Portrait의 위치 조정 가능
     private async UniTask TweenAllPortraitsTo(List<Vector2> targetPositions, bool includeLast = false)
     {
         var tasks = new List<UniTask>();
@@ -177,10 +183,22 @@ public class PortraitUIPanel : MonoBehaviour
         
         Tweener t1 = rt.DOAnchorPos(targetPositions, 0.5f).SetUpdate(true).SetEase(Ease.OutElastic);
         tasks.Add(t1.SetUpdate(true).AsyncWaitForCompletion().AsUniTask());
-        
-        tasks.Add(go.FadeInPortrait());
         // 추가적인 연출(Scale-in, Fade-in)
         tasks.Add(rt.DOScale(1f, 0.3f).SetUpdate(true).SetEase(Ease.OutQuart).AsyncWaitForCompletion().AsUniTask());
+        tasks.Add(go.FadeInPortrait());
+        
+        await UniTask.WhenAll(tasks);
+    }
+
+    // 삭제되는 Portrait의 애니메이션 적용
+    private async UniTask RemovePortraitAnimation(PortraitPrefab go,RectTransform rt)
+    {
+        var tasks = new List<UniTask>();
+        var targetPos = rt.anchoredPosition + new Vector2(0, rt.anchoredPosition.y - 120);
+        tasks.Add(rt.DOAnchorPos(targetPos, 0.5f).SetUpdate(true).SetEase(Ease.InCirc).AsyncWaitForCompletion().AsUniTask());
+        tasks.Add(rt.DOScale(0.2f, 0.3f).SetUpdate(true).SetEase(Ease.InQuart).AsyncWaitForCompletion().AsUniTask());
+        tasks.Add(go.FadeOutPortrait());
+        
         await UniTask.WhenAll(tasks);
     }
     

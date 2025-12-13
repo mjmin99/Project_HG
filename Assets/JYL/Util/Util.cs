@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 public static class Util
@@ -21,7 +17,7 @@ public static class Util
         return comp;
     }
 
-    public static List<string[]> CsvRead(string csvFilePath)
+    private static List<string[]> CsvRead(string csvFilePath)
     {
         TextAsset csvFile = Resources.Load<TextAsset>(csvFilePath);
         if (csvFile == null)
@@ -48,7 +44,7 @@ public static class Util
         return rows
             .Skip(1)
             .Select(row => new DialogLine(row))
-            .GroupBy(x => x.DialogId)
+            .GroupBy(x => x.dialogId)
             .ToDictionary(
                 g => g.Key, 
                 g => new Dialog(g.Key, g.ToList()));

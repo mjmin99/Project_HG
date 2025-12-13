@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b609ee0aa037ec45b1ef7f7c5bd7233, type: 3}
   m_Name: Voice_2
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
-  clipSource: {fileID: 8300000, guid: baa1ea534e8cf6b4b9f099f2f5049209, type: 3}
-  clipName: Prison
+  clipSource: {fileID: 8300000, guid: 5474b0c218daf684aba7333c49a8921b, type: 3}
+  clipName: Hello
   volume: 0.9
   audioType: 4
   loop: 0
