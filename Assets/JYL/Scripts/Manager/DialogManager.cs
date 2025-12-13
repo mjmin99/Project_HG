@@ -31,12 +31,14 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private PortraitPrefab portraitPrefab;
     [SerializeField] private TMP_Text nameField;
     [SerializeField] private TMP_Text dialogText;
+   
+    // Test
     [SerializeField] private Button testButton;
+    [SerializeField] private DialogKey testKey = DialogKey.Test1;
 
     // 텍스트 재생 변수
     private bool isTyping;
     private Tween typingTween;
-    private readonly string speakerKey = "";
     
     // 다이얼로그 전체 딕셔너리
     private Dictionary<DialogKey, Dialog> dialogs;
@@ -47,7 +49,7 @@ public class DialogManager : MonoBehaviour
     void Awake()
     {
         GetDialogFromCsv();
-        testButton.OnClickAsObservable().Subscribe(_ => portraitUIPanel.AddPortrait(speakerKey).AsAsyncUnitUniTask());
+        testButton.OnClickAsObservable().Subscribe(_ => StartDialog(testKey).ToAsyncLazy());
     }
 
     void Start()
@@ -77,6 +79,7 @@ public class DialogManager : MonoBehaviour
         backGroundPanel.SetActive(true);
         foreach (DialogLine line in dialog.DialogContents)
         {
+            Debug.Log($"한줄씩 처리중{line.LineId}");
             await ProcessDialogLine(line); // 한 줄 처리
         }
     }
@@ -87,13 +90,16 @@ public class DialogManager : MonoBehaviour
         // 대사의 종류에 따른 처리
         await TaskDialogLine(line);
         
-        // 텍스트 출력
-        if(!string.IsNullOrWhiteSpace(line.Content))
-            await TypeText(line.Content);
+        await TypeText(line.Content);
     }
 
     private async UniTask TypeText(string content)
     {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            Debug.Log("빈 칸임 넘어감");
+            return;
+        }
         dialogText.text = content;
         dialogText.maxVisibleCharacters = 0;
 
@@ -105,6 +111,7 @@ public class DialogManager : MonoBehaviour
             x => dialogText.maxVisibleCharacters = x, 
             total,
             outputTime * total)
+            .SetUpdate(true)
             .SetEase(Ease.Linear);
 
         // 타이핑 중 키 입력 감지
@@ -117,6 +124,7 @@ public class DialogManager : MonoBehaviour
                 typingTween.Kill();
                 dialogText.maxVisibleCharacters = total;
                 isTyping = false;
+                await UniTask.Yield(PlayerLoopTiming.Update);
                 break;
             }
             
@@ -124,6 +132,7 @@ public class DialogManager : MonoBehaviour
             if (!typingTween.active)
             {
                 isTyping = false;
+                await UniTask.Yield(PlayerLoopTiming.Update);
                 break;
             }
 
@@ -141,6 +150,8 @@ public class DialogManager : MonoBehaviour
         {
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
+        Debug.Log("다음 대사로 넘어감");
+        await UniTask.Yield(PlayerLoopTiming.Update);
     }
     private async UniTask TaskDialogLine(DialogLine line)
     {
@@ -148,6 +159,7 @@ public class DialogManager : MonoBehaviour
         {
             case DialogType.CharacterIn:
                 // 현재 스프라이트 패널 UI에 요소로 신규 캐릭터 추가
+                Debug.Log(line.SpeakerId);
                 await portraitUIPanel.AddPortrait(line.SpeakerId);
                 break;
             case DialogType.CharacterOut:
@@ -159,7 +171,7 @@ public class DialogManager : MonoBehaviour
                 // 노 보이스는 나레이션임
                 nameField.text = "";
                 // 이름 부분 UI 끄기
-                HighlightOff();
+                //HighlightOff();
                 break;
             case DialogType.WithVoice:
                 // 보이스 찾아서 출력
@@ -167,7 +179,7 @@ public class DialogManager : MonoBehaviour
                 // 화자 이름 설정
                 nameField.text = line.SpeakerId;
                 // 화자 하이라이트
-                HighlightSpeaker(line.SpeakerId);
+                //HighlightSpeaker(line.SpeakerId);
                 break;
         }
     }

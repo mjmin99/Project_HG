@@ -346,9 +346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PortraitPanel
   panel: {fileID: 173984480}
   portraitPrefab: {fileID: 1674089701721588346, guid: 7df0b4ea700e8e5438ac83cdbbc688d2, type: 3}
-  testButton: {fileID: 393874260}
   betweenGap: 50
-  testKey: Test1
 --- !u!1 &251389716
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +520,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -272, y: -304}
+  m_AnchoredPosition: {x: -657, y: 313}
   m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &393874260
@@ -1150,7 +1148,7 @@ MonoBehaviour:
   portraitPrefab: {fileID: 1674089701721588346, guid: 7df0b4ea700e8e5438ac83cdbbc688d2, type: 3}
   nameField: {fileID: 740070052}
   dialogText: {fileID: 1171362757}
-  testButton: {fileID: 0}
+  testButton: {fileID: 393874260}
 --- !u!4 &778396111
 Transform:
   m_ObjectHideFlags: 0
@@ -1661,7 +1659,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1415591395
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1679,7 +1677,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -200}
+  m_AnchoredPosition: {x: -657, y: 13}
   m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1415591396

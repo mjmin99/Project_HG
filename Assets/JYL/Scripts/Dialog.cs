@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public record Dialog
 {
@@ -23,10 +24,10 @@ public record DialogLine
 
     public DialogLine(string[] csvData)
     {
-        DialogId = Enum.Parse<DialogKey>(csvData[0]);
+        Enum.TryParse(csvData[0], out DialogId);
         LineId = csvData[1];
         SpeakerId = csvData[2];
-        Type = Enum.Parse<DialogType>(csvData[3]);
+        Enum.TryParse(csvData[3], out Type);
         Content = csvData[4];
     }
 }

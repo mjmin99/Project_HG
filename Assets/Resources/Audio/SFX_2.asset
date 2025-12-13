@@ -15,5 +15,5 @@ MonoBehaviour:
   clipSource: {fileID: 8300000, guid: 5474b0c218daf684aba7333c49a8921b, type: 3}
   clipName: Hello
   volume: 0.9
-  audioType: 3
+  audioType: 4
   loop: 0

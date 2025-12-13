@@ -15,5 +15,5 @@ MonoBehaviour:
   clipSource: {fileID: 8300000, guid: 16eb77ac5fdf64a408c6fd6200d42eb9, type: 3}
   clipName: Listen
   volume: 0.9
-  audioType: 3
+  audioType: 4
   loop: 0

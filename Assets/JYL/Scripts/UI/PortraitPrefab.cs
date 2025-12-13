@@ -25,7 +25,7 @@ public class PortraitPrefab : MonoBehaviour
         var list = new List<UniTask>();
         foreach (var image in images)
         {
-            list.Add(image.FadeInImage(duration).AsyncWaitForCompletion().AsUniTask());
+            list.Add(image.FadeInImage(duration).SetUpdate(true).AsyncWaitForCompletion().AsUniTask());
         }
         await UniTask.WhenAll(list);
     }
@@ -34,7 +34,7 @@ public class PortraitPrefab : MonoBehaviour
     {
         foreach (var image in images)
         {
-            image.FadeOutImage(duration);
+            image.FadeOutImage(duration).SetUpdate(true);
         }
     }
 

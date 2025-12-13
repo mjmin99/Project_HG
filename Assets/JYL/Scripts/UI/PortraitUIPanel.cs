@@ -10,7 +10,6 @@ public class PortraitUIPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform panel;
     [SerializeField] private PortraitPrefab portraitPrefab;
-    [SerializeField] private Button testButton;
 
     [SerializeField] private float betweenGap = 50f;
 
@@ -22,9 +21,6 @@ public class PortraitUIPanel : MonoBehaviour
     private Vector2 resolution;
     private RectTransform prefabRect;
     private float rectX;
-    
-    //Test
-    [SerializeField] private string testKey = "Test1"; 
     
     void Awake()
     {
@@ -38,7 +34,6 @@ public class PortraitUIPanel : MonoBehaviour
         prefabRect = portraitPrefab.GetComponent<RectTransform>();
         // 생성한 프리팹의 UI 가로 길이
         rectX = prefabRect.rect.width;
-        testButton.OnClickAsObservable().Subscribe(_ => AddPortrait(testKey));
     }
     
     // Portrait 추가 함수. 애니메이션 적용
@@ -50,6 +45,7 @@ public class PortraitUIPanel : MonoBehaviour
         go.Init(spriteContainer.sprite, key);
         var rect = go.GetComponent<RectTransform>();
         rect.localScale = Vector3.one * 0.2f;
+        rect.gameObject.SetActive(false);
         portraits.Add(rect);
         if (!portraitDict.TryAdd(key, go))
         {
@@ -71,6 +67,7 @@ public class PortraitUIPanel : MonoBehaviour
         rect.anchoredPosition = targetPosList[^1] + new Vector2(0, -120);
         
         // 7. 추가된 Portrait을 Tween
+        rect.gameObject.SetActive(true);
         await TweenPortraitTo(targetPosList[^1], go);
     }
     
@@ -163,8 +160,8 @@ public class PortraitUIPanel : MonoBehaviour
             var rt = portraits[i];
             var target = targetPositions[i];
 
-            Tweener t = rt.DOAnchorPos(target, 0.5f).SetEase(Ease.OutBack);
-            tasks.Add(t.AsyncWaitForCompletion().AsUniTask());
+            Tweener t = rt.DOAnchorPos(target, 0.5f).SetUpdate(true).SetEase(Ease.OutBack);
+            tasks.Add(t.SetUpdate(true).AsyncWaitForCompletion().AsUniTask());
         }
 
         await UniTask.WhenAll(tasks);
@@ -176,12 +173,12 @@ public class PortraitUIPanel : MonoBehaviour
         RectTransform rt = portraits[^1];
         var tasks = new List<UniTask>();
         
-        Tweener t1 = rt.DOAnchorPos(targetPositions, 0.5f).SetEase(Ease.OutElastic);
-        tasks.Add(t1.AsyncWaitForCompletion().AsUniTask());
+        Tweener t1 = rt.DOAnchorPos(targetPositions, 0.5f).SetUpdate(true).SetEase(Ease.OutElastic);
+        tasks.Add(t1.SetUpdate(true).AsyncWaitForCompletion().AsUniTask());
         
         tasks.Add(go.FadeInPortrait());
         // 추가적인 연출(Scale-in, Fade-in)
-        tasks.Add(rt.DOScale(1f, 0.3f).SetEase(Ease.OutQuart).AsyncWaitForCompletion().AsUniTask());
+        tasks.Add(rt.DOScale(1f, 0.3f).SetUpdate(true).SetEase(Ease.OutQuart).AsyncWaitForCompletion().AsUniTask());
         await UniTask.WhenAll(tasks);
     }
 }
