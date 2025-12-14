@@ -24,7 +24,7 @@ public class ResultPanelController : MonoBehaviour
         icon.sprite = model.Icon;
 
         // 이름 설정
-        nameText.text = model.name;
+        nameText.text = model.characterName;
 
         // 별 표시
         int rarity = model.rarity;

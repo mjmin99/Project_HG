@@ -18,6 +18,7 @@ public class FirebaseManager : MonoBehaviour
     private static FirebaseDatabase database;
     public static FirebaseDatabase Database { get { return database; } }
 
+    public static bool IsInitialized { get; private set; } = false;
 
     private void Awake()
     {
@@ -26,28 +27,37 @@ public class FirebaseManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else 
-        { 
+        else
+        {
             Destroy(gameObject);
         }
     }
+
     void Start()
     {
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+        Debug.Log("[FirebaseManager] 초기화 시작...");
+
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
             var dependencyStatus = task.Result;
+
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
-                Debug.Log("파이어베이스 설정이 모두 충족되어 사용할 수 있는 상황");
+                Debug.Log("[FirebaseManager] 설정 완료!");
                 app = FirebaseApp.DefaultInstance;
                 auth = FirebaseAuth.DefaultInstance;
                 database = FirebaseDatabase.DefaultInstance;
+
+                IsInitialized = true;
             }
             else
             {
-                Debug.LogError($"파이어 베이스 설정이 충족되지 않아 실패했습니다. 이유 : {dependencyStatus}");
+                Debug.LogError($"[FirebaseManager] 초기화 실패: {dependencyStatus}");
                 app = null;
                 auth = null;
                 database = null;
+
+                IsInitialized = false;
             }
         });
     }

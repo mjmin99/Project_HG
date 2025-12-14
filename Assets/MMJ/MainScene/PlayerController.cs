@@ -43,9 +43,9 @@ public class PlayerController : MonoBehaviour
         }
 
         // UI 갱신
-        statusUI?.UpdateView(model.name, stats.hp, stats.attack);
+        statusUI?.UpdateView(model.characterName, stats.hp, stats.attack);
 
-        Debug.Log($"플레이어에 캐릭터 적용됨: {model.name}, HP={stats.hp}, ATK={stats.attack}");
+        Debug.Log($"플레이어에 캐릭터 적용됨: {model.characterName}, HP={stats.hp}, ATK={stats.attack}");
     }
 
 

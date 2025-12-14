@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,38 +8,30 @@ public class GameManager : MonoBehaviour
     public PlayerController[] players;
     public Transform[] spawnPoints;
 
-    // 추후에 할 일 1단계 – 로딩 파이프라인 정리
-    // - CSV 로드 위치를 “한 곳”으로 고정
-    // - SaveManager.CreateDefaultSaveData에서 models 비어 있을 때 방어 코드 추가
-    // - GameManager에서 중복 CSV 로드 제거
-
-    private void Awake() //todo 현재 게임매니저에서도 CSV를 로드하기때문에 추후 삭제할 가능성 있음.
+    private void Awake()
     {
         Instance = this;
 
-        // CSV 로드
-        List<CharacterModel> models = CharacterCSVLoader.Load();
-        CharacterManager.Instance.LoadModels(models);
-
-        // 프리팹 연결
-        foreach (var model in CharacterManager.Instance.models.Values)
+        if (CharacterManager.Instance.models.Count == 0)
         {
-            model.prefab = Resources.Load<GameObject>($"Characters/{model.name}");
-            if (model.prefab == null)
-                Debug.LogWarning($"Prefab not found for {model.name}");
+            Debug.LogError("[GameManager] CharacterManager.models가 비어있음! LobbyPanel을 먼저 거쳐야 합니다.");
+            return;
         }
+
+        Debug.Log($"[GameManager] 캐릭터 모델 {CharacterManager.Instance.models.Count}개 확인됨");
     }
 
     private void Start()
     {
-        // Firebase 로딩이 끝날 때까지 대기
         StartCoroutine(WaitAndLoadParty());
     }
 
-    private System.Collections.IEnumerator WaitAndLoadParty()
+    private IEnumerator WaitAndLoadParty()
     {
         while (SaveManager.Instance.CurrentData == null)
+        {
             yield return null;
+        }
 
         LoadParty();
     }
@@ -48,7 +40,7 @@ public class GameManager : MonoBehaviour
     {
         int[] party = SaveManager.Instance.CurrentData.partySet;
 
-        Debug.Log($"파티 데이터: [{party[0]}, {party[1]}, {party[2]}]");
+        Debug.Log($"[GameManager] 파티 데이터: [{party[0]}, {party[1]}, {party[2]}]");
 
         for (int i = 0; i < players.Length; i++)
         {
@@ -62,13 +54,13 @@ public class GameManager : MonoBehaviour
 
             if (!CharacterManager.Instance.models.ContainsKey(id))
             {
-                Debug.LogError($"모델에 ID {id} 없음");
+                Debug.LogError($"[GameManager] 모델에 ID {id} 없음");
                 continue;
             }
 
             if (!CharacterManager.Instance.instances.ContainsKey(id))
             {
-                Debug.LogError($"CharacterInstance에 ID {id} 없음");
+                Debug.LogError($"[GameManager] CharacterInstance에 ID {id} 없음");
                 continue;
             }
 
@@ -76,6 +68,6 @@ public class GameManager : MonoBehaviour
             players[i].ApplyCharacter(id, stats);
         }
 
-        Debug.Log("파티 로딩 완료!");
+        Debug.Log("[GameManager] 파티 로딩 완료!");
     }
 }

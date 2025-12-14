@@ -15,6 +15,11 @@ public class SaveData
     public int gold = 0;
     public int gem = 0;
 
+    // 스테이지 진행도
+    public int clearedWorld = 1;
+    public int clearedStage = 0;
+
+
     public SaveData()
     {
         // 기본 생성자: 캐릭터 데이터를 CharacterManager에서 불러올 때 채워짐

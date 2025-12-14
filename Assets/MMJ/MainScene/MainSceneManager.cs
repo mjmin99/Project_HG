@@ -7,10 +7,12 @@ public class MainSceneManager : MonoBehaviour
 {
     public TMP_Text goldText;
     public Button shopButton;
-
+    public StageSelectUIController stageSelectUI;
+    public Button expeditionButton;
     private void Awake()
     {
         shopButton.onClick.AddListener(GoToShop);
+        expeditionButton.onClick.AddListener(OnClickExpedition);
     }
 
     private void Start()
@@ -25,7 +27,7 @@ public class MainSceneManager : MonoBehaviour
             var inst = pair.Value;
             var model = CharacterManager.Instance.models[inst.id];
             string ownedStr = inst.isOwned ? "보유" : "미보유";
-            Debug.Log($"캐릭터 id={inst.id}, name={model.name}, 상태={ownedStr}, 레벨={inst.level}, 별={inst.star}");
+            Debug.Log($"캐릭터 id={inst.id}, name={model.characterName}, 상태={ownedStr}, 레벨={inst.level}");
         }
 
         // 여기서 PartyUI.Initialize() 같은거 호출하면 됨
@@ -41,5 +43,10 @@ public class MainSceneManager : MonoBehaviour
     {
         SceneManager.LoadScene("ShopScene");
         // 또는 SceneChanger.Instance.LoadScene("ShopScene");
+    }
+
+    public void OnClickExpedition()
+    {
+        stageSelectUI.Open();
     }
 }

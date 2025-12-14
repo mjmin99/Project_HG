@@ -4,37 +4,52 @@ using TMPro;
 
 public class CharacterItemUI : MonoBehaviour
 {
+    [Header("UI")]
     public Image icon;
     public TMP_Text nameText;
-    public Button selectButton;
+
+    [Header("Buttons")]
+    public Button btnInfo;
+    public Button btnAssign;
 
     private int characterId;
+    private PartyUI cachedPartyUI;
+    private CharacterDetailPanel cachedDetailPanel;
 
-    private PartyUI cachedPartyUI; // 캐싱 변수 추가
-
-
-    private void Awake()
+    public void Setup(int id, PartyUI partyUI, CharacterDetailPanel detailPanel)
     {
-        cachedPartyUI = FindFirstObjectByType<PartyUI>();
-    }
+        characterId = id;
+        cachedPartyUI = partyUI;
+        cachedDetailPanel = detailPanel;
 
-
-    public void Set(int id)
-    {
-        this.characterId = id;
         var model = CharacterManager.Instance.models[id];
 
-        nameText.text = model.name;
+        // name → characterName으로 변경된 상태 반영
+        nameText.text = model.characterName;
+        icon.sprite = model.Icon;
 
-        // 아이콘 로드 방식 변경
-        Sprite sp = model.Icon;
-        // Sprite sp = Resources.Load<Sprite>($"Icons/{model.name}");
+        // 리스너 누적 방지
+        btnInfo.onClick.RemoveAllListeners();
+        btnAssign.onClick.RemoveAllListeners();
 
-        icon.sprite = sp;
-
-        selectButton.onClick.AddListener(() =>
+        // 1) 정보 버튼 → 상세창 열기
+        btnInfo.onClick.AddListener(() =>
         {
-            cachedPartyUI?.AssignCharacter(characterId);
+            cachedDetailPanel?.Show(characterId);
+        });
+
+        // 2) 배치 버튼 → 파티 배치
+        btnAssign.onClick.AddListener(() =>
+        {
+            if (cachedPartyUI == null)
+            {
+                Debug.LogWarning("PartyUI를 찾을 수 없습니다.");
+                return;
+            }
+
+            // PartyUI가 activeSlotIndex를 가지고 있으므로
+            // 슬롯 선택 안 했으면 PartyUI에서 경고 처리되게!
+            cachedPartyUI.AssignCharacter(characterId);
         });
     }
 }

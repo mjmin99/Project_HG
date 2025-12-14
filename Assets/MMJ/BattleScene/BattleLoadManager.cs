@@ -14,30 +14,24 @@ public class BattleLoadManager : MonoBehaviour
     {
         int[] party = SaveManager.Instance.CurrentData.partySet;
 
-        Debug.Log($"전투씬 파티 로드: [{party[0]}, {party[1]}, {party[2]}]");
-
         for (int i = 0; i < party.Length; i++)
         {
             int id = party[i];
+            if (id == -1) continue;
 
-            if (id == -1)
-            {
-                Debug.Log($"Slot {i} 비어 있음 → 스킵");
-                continue;
-            }
-
-            // 모델/스탯 얻기
             CharacterModel model = CharacterManager.Instance.models[id];
             CharacterStats stats = CharacterManager.Instance.GetStats(id);
 
-            // 프리팹 instantiate
-            GameObject obj = Instantiate(model.prefab, playerSpawnPoints[i].position, Quaternion.identity);
+            // 🔥 전투 전용 루트
+            GameObject battleRoot = new GameObject($"BattlePlayer_{id}");
+            battleRoot.transform.position = playerSpawnPoints[i].position;
 
-            // 전투용 유닛 스크립트 붙이기
-            PlayerBattleUnit unit = obj.AddComponent<PlayerBattleUnit>();
+            // 캐릭터 비주얼 (기존 프리팹)
+            GameObject visual = Instantiate(model.prefab, battleRoot.transform);
+
+            // 전투 유닛
+            PlayerBattleUnit unit = battleRoot.AddComponent<PlayerBattleUnit>();
             unit.Init(id, stats);
         }
-
-        Debug.Log("전투씬 파티 배치 완료!");
     }
 }
