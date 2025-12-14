@@ -8,6 +8,7 @@ public class CharacterModel
     public CharacterRole role;
 
     public int baseHP;
+    public AttackType attackType;   // Melee / Ranged
     public int baseAttack;
     public int baseMagicAttack;
     public int baseDefense;
@@ -43,3 +44,10 @@ public enum CharacterRole
     Dealer,
     Healer
 }
+
+public enum AttackType
+{
+    Melee,
+    Ranged
+}
+

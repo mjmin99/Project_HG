@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography;
+using UnityEngine;
 
 public class PlayerBattleUnit : MonoBehaviour
 {
@@ -11,6 +12,14 @@ public class PlayerBattleUnit : MonoBehaviour
     public PlayerHPBar3D hpBar;
     public float maxHP;
 
+    public AttackType attackType;
+    public float attackRange = 1.5f;
+
+    // 원거리 전용
+    public GameObject projectilePrefab;
+    public Transform firePoint;
+
+
     public void Init(int id, CharacterStats stats)
     {
         this.id = id;
@@ -19,10 +28,24 @@ public class PlayerBattleUnit : MonoBehaviour
         maxHP = stats.hp;
         currentHP = stats.hp;
 
-        // Player 등록
-        PlayerBattleManager.Instance.Register(this);
+        var model = CharacterManager.Instance.models[id];
 
-        // HPBar 생성 추가!
+        attackType = model.attackType;
+        attackRange = model.attackRange;
+
+        // range 기준 자동 판별
+        attackRange = stats.attackRange;
+        if (attackRange > 100f)
+        {
+            attackType = AttackType.Ranged;
+            SetupRanged();
+        }
+        else
+        {
+            attackType = AttackType.Melee;
+        }
+
+        PlayerBattleManager.Instance.Register(this);
         hpBar = PlayerHPBar3D.Create(this);
     }
 
@@ -31,19 +54,69 @@ public class PlayerBattleUnit : MonoBehaviour
         AutoAttack();
     }
 
+    public void SetupRanged()
+    {
+        // firePoint 생성
+        GameObject fp = new GameObject("FirePoint");
+        fp.transform.SetParent(transform);
+        fp.transform.localPosition = new Vector3(0.5f, 0.8f);
+        firePoint = fp.transform;
+
+        // 투사체 프리팹은 Resources 등에서 로드
+        projectilePrefab = Resources.Load<GameObject>("Projectiles/BasicProjectile");
+    }
+
     void AutoAttack()
     {
         attackTimer += Time.deltaTime;
-        if (attackTimer >= stats.attackSpeed)
-        {
-            attackTimer = 0f;
+        if (attackTimer < stats.attackSpeed)
+            return;
 
-            var target = EnemyManager.Instance.GetClosestEnemy(transform.position);
-            Debug.Log("AutoAttack target = " + target);
-            if (target != null)
-                target.TakeDamage(stats.attack);
-        }
+        Enemy target = EnemyManager.Instance.GetClosestEnemy(transform.position);
+        if (target == null)
+            return;
 
+        if (!IsInRange(target))
+            return;
+
+        attackTimer = 0f;
+        DoAttack(target);
+    }
+
+    Enemy FindTarget()
+    {
+        return EnemyManager.Instance.GetClosestEnemy(transform.position);
+    }
+
+    bool IsInRange(Enemy target)
+    {
+        float dist = Vector3.Distance(transform.position, target.transform.position);
+        return dist <= attackRange;
+    }
+
+    void DoAttack(Enemy target)
+    {
+        if (attackType == AttackType.Melee)
+            target.TakeDamage(stats.attack);
+        else
+            FireProjectile(target);
+    }
+
+    void FireProjectile(Enemy target)
+    {
+        GameObject projObj = Instantiate(
+            projectilePrefab,
+            firePoint.position,
+            Quaternion.identity
+        );
+
+        Projectile proj = projObj.GetComponent<Projectile>();
+        proj.Init(target.transform, stats.attack);
+    }
+
+    void DoMeleeAttack(Enemy target)
+    {
+        target.TakeDamage(stats.attack);
     }
 
     public void TakeDamage(float dmg)
