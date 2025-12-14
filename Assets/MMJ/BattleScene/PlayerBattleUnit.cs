@@ -33,7 +33,7 @@ public class PlayerBattleUnit : MonoBehaviour
         attackType = model.attackType;
         attackRange = model.attackRange;
 
-        // range 기준 자동 판별
+        // range 기준 자동 판별 -----------------> 100 사거리를 넘기면 자동으로 원거리로 판정됨
         attackRange = stats.attackRange;
         if (attackRange > 100f)
         {

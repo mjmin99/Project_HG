@@ -7,10 +7,12 @@ public class MainSceneManager : MonoBehaviour
 {
     public TMP_Text goldText;
     public Button shopButton;
-
+    public StageSelectUIController stageSelectUI;
+    public Button expeditionButton;
     private void Awake()
     {
         shopButton.onClick.AddListener(GoToShop);
+        expeditionButton.onClick.AddListener(OnClickExpedition);
     }
 
     private void Start()
@@ -41,5 +43,10 @@ public class MainSceneManager : MonoBehaviour
     {
         SceneManager.LoadScene("ShopScene");
         // 또는 SceneChanger.Instance.LoadScene("ShopScene");
+    }
+
+    public void OnClickExpedition()
+    {
+        stageSelectUI.Open();
     }
 }

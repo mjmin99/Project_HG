@@ -5,6 +5,8 @@ public class BattleResultManager : MonoBehaviour
 {
     public static BattleResultManager Instance;
 
+    private int stageRewardGold;
+
     private void Awake()
     {
         Instance = this;
@@ -33,8 +35,13 @@ public class BattleResultManager : MonoBehaviour
 
     void ShowVictory()
     {
-        Debug.Log("전투 승리!");
-        BattleResultUI.Instance.ShowVictory(50);  // 골드 보상 50
+        if (BattleResultUI.Instance == null)
+        {
+            Debug.LogError("BattleResultUI.Instance == null");
+            return;
+        }
+
+        BattleResultUI.Instance.ShowVictory(stageRewardGold);
     }
 
     void ShowDefeat()
@@ -42,4 +49,10 @@ public class BattleResultManager : MonoBehaviour
         Debug.Log("전투 패배!");
         BattleResultUI.Instance.ShowDefeat();
     }
+
+    public void SetStageReward(int gold)
+    {
+        stageRewardGold = gold;
+    }
+
 }

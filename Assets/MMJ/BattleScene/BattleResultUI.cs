@@ -28,8 +28,25 @@ public class BattleResultUI : MonoBehaviour
         btnOK.onClick.RemoveAllListeners();
         btnOK.onClick.AddListener(() =>
         {
+            // 1) 보상 지급
             SaveManager.Instance.CurrentData.gold += goldReward;
+
+            // 2) 스테이지 진행도 갱신
+            StageId cleared = StageContext.SelectedStage;
+            var data = SaveManager.Instance.CurrentData;
+
+            // 마지막 클리어 스테이지 갱신 (더 앞이면 업데이트)
+            if (cleared.world > data.clearedWorld ||
+                (cleared.world == data.clearedWorld && cleared.stage > data.clearedStage))
+            {
+                data.clearedWorld = cleared.world;
+                data.clearedStage = cleared.stage;
+            }
+
+            // 3) 저장
             SaveManager.Instance.SaveCurrentUser();
+
+            // 4) 메인씬 이동
             SceneChanger.Instance.LoadScene("MainScene");
         });
     }
