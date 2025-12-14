@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+[Serializable]
+public class SaveData
+{
+    // 파티 구성 (3명)
+    public int[] partySet = new int[3] { -1, -1, -1 };
+
+    // 보유 캐릭터들 (CharacterInstance 목록)
+    public List<CharacterInstance> characters = new List<CharacterInstance>();
+
+    // 재화 (옵션)
+    public int gold = 0;
+    public int gem = 0;
+
+    // 스테이지 진행도
+    public int clearedWorld = 1;
+    public int clearedStage = 0;
+
+
+    public SaveData()
+    {
+        // 기본 생성자: 캐릭터 데이터를 CharacterManager에서 불러올 때 채워짐
+    }
+}

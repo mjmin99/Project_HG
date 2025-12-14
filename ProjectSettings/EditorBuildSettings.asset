@@ -6,8 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/MMJ/LoginScene/LoginScene.unity
+    guid: ab3088c58f39511438c84f955a794407
+  - enabled: 1
+    path: Assets/MMJ/MainScene/MainScene.unity
+    guid: 057d580d949ce1a438b03dfa1afc9c42
+  - enabled: 1
+    path: Assets/MMJ/BattleScene/BattleScene.unity
+    guid: 639069ecca1412445a39cbb34c1f4aae
+  - enabled: 1
+    path: Assets/MMJ/ShopScene/ShopScene.unity
+    guid: a917e285bac56f74491a69cf5073385f
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: b232c1147cc13894387f2379105fab0a, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

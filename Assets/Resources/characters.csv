@@ -1,0 +1,7 @@
+id,name,rareity,role,baseHP,baseAttack,baseMagicAttack,baseDefense,baseAttackSpeed,baseCritRate,baseCritDamage,attackRange
+0,manjun,1,Tank,100,10,20,5,10,2,1.5,200
+1,manjun1,2,Dealer,321,321,21,2,46,2,1.5,1.5
+2,jinyoung,3,Healer,321,541,53,5,24,1,1.5,1.5
+3,jinyoung1,4,Tank,423,167,12,6,12,2,1.5,1.5
+4,guyjin,5,Dealer,643,472,43,1,23,4,1.5,1.5
+5,guyjin1,1,Healer,324,486,13,5,43,2,1.5,1.5

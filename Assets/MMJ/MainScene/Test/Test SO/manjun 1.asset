@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1479cee4acc13bb41a8ad2754970551e, type: 3}
+  m_Name: manjun 1
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterModel
+  id: 3
+  maxHP: 500
+  attack: 50
+  characterName: "\uB9CC\uC900\uC9C4\uD654\uCCB4"
+  prefab: {fileID: 8847021387486855231, guid: fe02f2aef22de454cae0499f52aded6d, type: 3}
