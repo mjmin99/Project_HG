@@ -13,7 +13,7 @@ public class CharacterDetailPanel : MonoBehaviour
     public TMP_Text roleText;
 
     [Header("Rarity Stars")]
-    public Transform starGroup;
+    public Transform starGroup; // 레어도 별 (model.rarity, 고정)
 
     [Header("Progress")]
     public TMP_Text levelText;
@@ -62,16 +62,23 @@ public class CharacterDetailPanel : MonoBehaviour
 
         panelRoot.SetActive(true);
 
+        // 기본 정보
         icon.sprite = model.Icon;
         nameText.text = model.characterName;
         roleText.text = model.role.ToString();
 
-        for (int i = 0; i < starGroup.childCount; i++)
-            starGroup.GetChild(i).gameObject.SetActive(i < model.rarity);
+        // 레어도 별 (고정)
+        if (starGroup != null)
+        {
+            for (int i = 0; i < starGroup.childCount; i++)
+                starGroup.GetChild(i).gameObject.SetActive(i < model.rarity);
+        }
 
+        // 성장 정보
         levelText.text = $"Lv. {inst.level}";
         shardText.text = $"Shard: {inst.shard}";
 
+        // 스탯
         hpText.text = $"HP: {stats.hp:0}";
         atkText.text = $"ATK: {stats.attack:0}";
         matkText.text = $"MATK: {stats.magicAttack:0}";
@@ -82,6 +89,7 @@ public class CharacterDetailPanel : MonoBehaviour
         critDmgText.text = $"CRITDMG: {stats.critDamage * 100:0.0}%";
         rangeText.text = $"RANGE: {stats.attackRange:0.0}";
 
+        // 강화 버튼
         enhanceCostText.text = $"{ENHANCE_COST} Gold";
         UpdateEnhanceButtonState();
     }
