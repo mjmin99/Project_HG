@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using DG.Tweening;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
     /// <summary>
     /// SwapClip : BGM, Ambient 전환 시 사용. Fade 기능 적용됨
@@ -13,8 +13,7 @@ public class AudioManager : MonoBehaviour
     /// SetMixerVolume : 설정 창에서 믹서 볼륨 조절에 사용
     /// KillSound : 모든 소리 재생 종료
     /// </summary>
-    [Header("Set Audio Database")]
-    [SerializeField] private AudioDatabase audioDatabase;
+    private AudioDatabase audioDatabase;
 
     [Header("Set Ease Type")] 
     [SerializeField] private Ease easeInType = Ease.InSine;
@@ -52,8 +51,10 @@ public class AudioManager : MonoBehaviour
     private const string VOICE_V = "VoiceVolume";
 
     #region 라이프 사이클
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        audioDatabase = Resources.Load<AudioDatabase>("Audio/AudioDB");
         SetAudioDictionary();
         SetMixerAndSource();
         SetVolumes();
