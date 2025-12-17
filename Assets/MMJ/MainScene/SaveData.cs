@@ -16,6 +16,9 @@ public class SaveData
     public int gem = 0;
 
     // 스테이지 진행도
+    public StageProgressData stageProgress = new StageProgressData();
+
+    // 스테이지 진행도 구버젼
     public int clearedWorld = 1;
     public int clearedStage = 0;
 
