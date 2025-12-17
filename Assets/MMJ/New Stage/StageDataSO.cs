@@ -33,7 +33,7 @@ public class StageWave
 [Serializable]
 public class StageSpawn
 {
-    public string monsterId;     // 전투진행시 ID->Prefab 매핑
+    public int id;     // 전투진행시 ID->Prefab 매핑
     public int count = 1;
     public float spawnInterval = 0.5f;
 }
