@@ -45,7 +45,7 @@ public class StageTestBootstrap : MonoBehaviour
 
             foreach (var spawn in wave.spawns)
             {
-                Debug.Log($"    Spawn monsterId={spawn.monsterId}, count={spawn.count}, interval={spawn.spawnInterval}");
+                Debug.Log($"Spawn monsterId={spawn.id}, count={spawn.count}, interval={spawn.spawnInterval}");
             }
         }
 
