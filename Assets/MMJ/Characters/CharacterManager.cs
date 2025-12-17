@@ -1,25 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterManager : MonoBehaviour
+public class CharacterManager : Singleton<CharacterManager>
 {
-    public static CharacterManager Instance;
-
     public Dictionary<int, CharacterModel> models = new();
     public Dictionary<int, CharacterInstance> instances = new();
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     public void LoadModels(List<CharacterModel> list)
     {
