@@ -35,10 +35,7 @@ public class EnemyDatabase : ScriptableObject
     }
 
 #if UNITY_EDITOR
-    // ===============================
     // CSV → Enemy Model 최신화
-    // ===============================
-
     [ContextMenu("Refresh From CSV")]
     private void RefreshFromCSV()
     {
