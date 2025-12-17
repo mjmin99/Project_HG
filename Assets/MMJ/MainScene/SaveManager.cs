@@ -2,6 +2,7 @@
 using Firebase.Extensions;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SaveManager : MonoBehaviour
 {
@@ -32,12 +33,15 @@ public class SaveManager : MonoBehaviour
 
     public void LoadFromFirebase(string userId, System.Action onComplete)
     {
+        Debug.Log($"[SaveManager] Firebase 로드 시작: users/{userId}/saveData");
+
         db.Child("users").Child(userId).Child("saveData")
             .GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted || task.IsCanceled)
                 {
-                    Debug.LogWarning($"[SaveManager] 로드 실패: {task.Exception} → 신규 데이터 생성");
+                    Debug.LogWarning($"[SaveManager] 로드 실패: {task.Exception}");
+                    Debug.Log("[SaveManager] → 신규 유저로 판단, 기본 데이터 생성");
                     CurrentData = CreateDefaultSaveData();
                     SaveToFirebase(userId);
                     ApplyToCharacterManager();
@@ -47,7 +51,7 @@ public class SaveManager : MonoBehaviour
 
                 DataSnapshot snap = task.Result;
 
-                if (snap.Exists)
+                if (snap.Exists && snap.Value != null)
                 {
                     string json = snap.GetRawJsonValue();
                     CurrentData = JsonUtility.FromJson<SaveData>(json);
@@ -55,17 +59,20 @@ public class SaveManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("[SaveManager] 기존 세이브 없음 → 기본값 생성");
+                    Debug.Log("[SaveManager] Firebase에 데이터 없음");
                     CurrentData = CreateDefaultSaveData();
                     SaveToFirebase(userId);
                 }
 
                 if (CurrentData.characters == null)
+                {
+                    Debug.LogWarning("[SaveManager] characters 리스트가 null → 초기화");
                     CurrentData.characters = new List<CharacterInstance>();
+                }
 
                 if (CurrentData.characters.Count == 0)
                 {
-                    Debug.Log("[SaveManager] 캐릭터 없음 → 기본 캐릭터 지급");
+                    Debug.LogWarning("[SaveManager] 캐릭터 없음 → 기본 캐릭터 지급");
                     CurrentData = CreateDefaultSaveData();
                     SaveToFirebase(userId);
                 }
@@ -88,7 +95,7 @@ public class SaveManager : MonoBehaviour
                 if (task.IsFaulted || task.IsCanceled)
                     Debug.LogError($"[SaveManager] 세이브 저장 실패: {task.Exception}");
                 else
-                    Debug.Log("[SaveManager] 세이브 저장 성공!");
+                    Debug.Log("[SaveManager] Firebase에 세이브 저장 성공!");
             });
     }
 
@@ -101,7 +108,6 @@ public class SaveManager : MonoBehaviour
             Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
     }
 
-    // 재화 관리 함수
     public bool TrySpendGold(int amount)
     {
         if (CurrentData.gold < amount)
@@ -140,7 +146,8 @@ public class SaveManager : MonoBehaviour
             return data;
         }
 
-        foreach (var pair in CharacterManager.Instance.models)
+        // ID 순서로 정렬해서 생성
+        foreach (var pair in CharacterManager.Instance.models.OrderBy(x => x.Key))
         {
             var model = pair.Value;
 
@@ -148,7 +155,7 @@ public class SaveManager : MonoBehaviour
             {
                 id = model.id,
                 isOwned = (model.id == 0),
-                level = model.id == 0 ? 1 : 0,
+                level = 1,
                 exp = 0,
                 shard = 0
             };
@@ -156,10 +163,10 @@ public class SaveManager : MonoBehaviour
             data.characters.Add(inst);
         }
 
-        data.gold = 1000; // 초기재화
+        data.gold = 1000;
         data.gem = 100;
 
-        Debug.Log($"[SaveManager] 기본 세이브 생성: 캐릭터 {data.characters.Count}개");
+        Debug.Log($"[SaveManager] 기본 세이브 생성: 캐릭터 {data.characters.Count}개, 골드 {data.gold}, 젬 {data.gem}");
         return data;
     }
 
@@ -173,7 +180,14 @@ public class SaveManager : MonoBehaviour
     {
         CurrentData.characters.Clear();
 
-        foreach (var inst in CharacterManager.Instance.instances.Values)
+        // ID 순서로 정렬해서 동기화
+        var sortedInstances = CharacterManager.Instance.instances
+            .OrderBy(x => x.Key)
+            .Select(x => x.Value);
+
+        foreach (var inst in sortedInstances)
             CurrentData.characters.Add(inst);
+
+        Debug.Log($"[SaveManager] ID 순으로 {CurrentData.characters.Count}개 캐릭터 동기화");
     }
 }

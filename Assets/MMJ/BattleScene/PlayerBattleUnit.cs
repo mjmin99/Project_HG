@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerBattleUnit : MonoBehaviour
 {
@@ -19,7 +18,6 @@ public class PlayerBattleUnit : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform firePoint;
 
-
     public void Init(int id, CharacterStats stats)
     {
         this.id = id;
@@ -30,19 +28,14 @@ public class PlayerBattleUnit : MonoBehaviour
 
         var model = CharacterManager.Instance.models[id];
 
+        // CSV에서 읽은 attackType 그대로 사용
         attackType = model.attackType;
-        attackRange = model.attackRange;
-
-        // range 기준 자동 판별 -----------------> 100 사거리를 넘기면 자동으로 원거리로 판정됨
         attackRange = stats.attackRange;
-        if (attackRange > 100f)
+
+        // 원거리 공격이면 투사체 설정
+        if (attackType == AttackType.Ranged)
         {
-            attackType = AttackType.Ranged;
             SetupRanged();
-        }
-        else
-        {
-            attackType = AttackType.Melee;
         }
 
         PlayerBattleManager.Instance.Register(this);
@@ -56,20 +49,27 @@ public class PlayerBattleUnit : MonoBehaviour
 
     public void SetupRanged()
     {
-        // firePoint 생성
+        // firePoint 생성 (투사체 발사 위치)
         GameObject fp = new GameObject("FirePoint");
         fp.transform.SetParent(transform);
-        fp.transform.localPosition = new Vector3(0.5f, 0.8f);
+        fp.transform.localPosition = new Vector3(0.5f, 0.8f, 0f);
         firePoint = fp.transform;
 
-        // 투사체 프리팹은 Resources 등에서 로드
+        // 투사체 프리팹 로드
         projectilePrefab = Resources.Load<GameObject>("Projectiles/BasicProjectile");
+
+        if (projectilePrefab == null)
+            Debug.LogWarning($"[PlayerBattleUnit] BasicProjectile 프리팹을 찾을 수 없습니다!");
     }
 
     void AutoAttack()
     {
         attackTimer += Time.deltaTime;
-        if (attackTimer < stats.attackSpeed)
+
+        // attackSpeed는 "초당 공격 횟수"이므로 간격은 1/attackSpeed
+        float attackInterval = 1f / stats.attackSpeed;
+
+        if (attackTimer < attackInterval)
             return;
 
         Enemy target = EnemyManager.Instance.GetClosestEnemy(transform.position);
@@ -83,11 +83,6 @@ public class PlayerBattleUnit : MonoBehaviour
         DoAttack(target);
     }
 
-    Enemy FindTarget()
-    {
-        return EnemyManager.Instance.GetClosestEnemy(transform.position);
-    }
-
     bool IsInRange(Enemy target)
     {
         float dist = Vector3.Distance(transform.position, target.transform.position);
@@ -97,13 +92,25 @@ public class PlayerBattleUnit : MonoBehaviour
     void DoAttack(Enemy target)
     {
         if (attackType == AttackType.Melee)
+        {
+            // 근거리 공격: 즉시 데미지
             target.TakeDamage(stats.attack);
+        }
         else
+        {
+            // 원거리 공격: 투사체 발사
             FireProjectile(target);
+        }
     }
 
     void FireProjectile(Enemy target)
     {
+        if (projectilePrefab == null || firePoint == null)
+        {
+            Debug.LogWarning("[PlayerBattleUnit] 투사체 발사 실패: 프리팹 또는 FirePoint 없음");
+            return;
+        }
+
         GameObject projObj = Instantiate(
             projectilePrefab,
             firePoint.position,
@@ -112,11 +119,6 @@ public class PlayerBattleUnit : MonoBehaviour
 
         Projectile proj = projObj.GetComponent<Projectile>();
         proj.Init(target.transform, stats.attack);
-    }
-
-    void DoMeleeAttack(Enemy target)
-    {
-        target.TakeDamage(stats.attack);
     }
 
     public void TakeDamage(float dmg)
@@ -134,7 +136,6 @@ public class PlayerBattleUnit : MonoBehaviour
 
     void Die()
     {
-        // Player 제거
         PlayerBattleManager.Instance.Unregister(this);
 
         if (hpBar != null)

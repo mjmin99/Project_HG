@@ -155,11 +155,11 @@ RectTransform:
   - {fileID: 888379702}
   - {fileID: 126306329}
   - {fileID: 990508897}
+  - {fileID: 1142458919}
   - {fileID: 219390212}
   - {fileID: 1759745665}
   - {fileID: 890938537}
   - {fileID: 1954250263}
-  - {fileID: 1142458919}
   - {fileID: 1519150638}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -857,6 +857,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleSceneButton
   battleSceneButton: {fileID: 126306331}
+  testWorld: 1
+  testStage: 1
 --- !u!114 &126306331
 MonoBehaviour:
   m_ObjectHideFlags: 0
