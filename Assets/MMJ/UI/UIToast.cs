@@ -1,21 +1,37 @@
-﻿using System.Collections;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
+using DG.Tweening;
 
 public class UIToast : MonoBehaviour
 {
-    [SerializeField] protected TMP_Text messageText;
+    [SerializeField] private TMP_Text messageText;
+    [SerializeField] private RectTransform visualRoot; // ⭐ 핵심
 
-    public void Show(string message, float duration = 2f)
+    private CanvasGroup canvasGroup;
+
+    private void Awake()
     {
-        messageText.text = message;
-        gameObject.SetActive(true);
-        StartCoroutine(AutoHide(duration));
+        if (visualRoot == null)
+            visualRoot = transform as RectTransform;
+
+        canvasGroup = visualRoot.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+            canvasGroup = visualRoot.gameObject.AddComponent<CanvasGroup>();
     }
 
-    private IEnumerator AutoHide(float time)
+    public void Show(string message, float duration)
     {
-        yield return new WaitForSeconds(time);
-        Destroy(gameObject);
+        messageText.text = message;
+
+        visualRoot.anchoredPosition += Vector2.down * 30;
+        canvasGroup.alpha = 0;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(visualRoot.DOAnchorPosY(
+            visualRoot.anchoredPosition.y + 30, 0.2f));
+        seq.Join(canvasGroup.DOFade(1, 0.2f));
+        seq.AppendInterval(duration);
+        seq.Append(canvasGroup.DOFade(0, 0.2f));
+        seq.OnComplete(() => Destroy(gameObject));
     }
 }

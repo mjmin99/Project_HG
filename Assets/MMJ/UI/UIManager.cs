@@ -102,9 +102,9 @@ public class UIManager : MonoBehaviour
         if (!top.CanCloseByESC) return;
 
         uiStack.Pop();
-        top.OnClose();
-        Destroy(top.gameObject);
+        top.OnClose(); // Destroy는 UIBase가 담당
     }
+
 
     public void ShowToast(string key, string message, float duration = 2f)
     {
