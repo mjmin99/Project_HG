@@ -23,5 +23,6 @@ public class PlayerStatusPanel : UIPanel
     public override void OnClose()
     {
         Debug.Log("[PlayerStatusPanel] Close");
+        base.OnClose();             // 닫을땐 항상 오버라이 여기서 정해줘야함
     }
 }

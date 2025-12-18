@@ -34,6 +34,7 @@ public abstract class UIBase : MonoBehaviour
         canvasGroup.alpha = 0f;
 
         Sequence seq = DOTween.Sequence();
+
         seq.Append(rect.DOScale(1f, 0.2f).SetEase(Ease.OutBack));
         seq.Join(canvasGroup.DOFade(1f, 0.15f));
     }
@@ -41,6 +42,7 @@ public abstract class UIBase : MonoBehaviour
     protected virtual void PlayCloseAnimation()
     {
         Sequence seq = DOTween.Sequence();
+
         seq.Append(rect.DOScale(0.9f, 0.15f));
         seq.Join(canvasGroup.DOFade(0f, 0.15f));
         seq.OnComplete(() =>
