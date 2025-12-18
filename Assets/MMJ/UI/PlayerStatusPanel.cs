@@ -18,6 +18,7 @@ public class PlayerStatusPanel : UIPanel
     public override void OnOpen()
     {
         Debug.Log("[PlayerStatusPanel] Open");
+        base.OnOpen();
     }
 
     public override void OnClose()
