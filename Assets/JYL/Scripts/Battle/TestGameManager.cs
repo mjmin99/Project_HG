@@ -2,15 +2,29 @@ using UnityEngine;
 
 public class TestGameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    // TODO: 인게임에서는 UI에 의해 스테이지 선택 시 정해짐
+    [SerializeField] private StageDataSO testStageData;
+
+    // TODO: 임시 캐릭터 파티 편성.
+    // 실제로는 GameManager측에서 CharacterInstance와 Model을 가지고
+    // BattleManager 쪽에서 컨트롤러 생성해야 함
+    [SerializeField] private TestCharacterController[] characters;
+
+    public int curStageWorld;
+    public int curStageLevel;
+    void Awake()
     {
-        
+        curStageWorld = testStageData.world;
+        curStageLevel = testStageData.stage;
     }
 
-    // Update is called once per frame
-    void Update()
+    public TestCharacterController[] GetParty()
     {
-        
+        return characters;
+    }
+
+    public StageDataSO GetTestStageData()
+    {
+        return testStageData;
     }
 }

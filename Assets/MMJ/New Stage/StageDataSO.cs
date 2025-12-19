@@ -9,6 +9,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Stage/Stage Data", fileName = "StageData_")]
 public class StageDataSO : ScriptableObject
 {
+    [Header("Set Map Prefab Path")]
+    public string mapPrefabPath;
+    
+    [Header("Set Stage Values")]
     public int world;
     public int stage;
     public int prevWorld;
