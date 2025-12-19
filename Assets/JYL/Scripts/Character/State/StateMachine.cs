@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class StateMachine : MonoBehaviour
+public class StateMachine
 {
     public BaseState CurrentState { get; private set; }
 
-    public void Initialize(BaseState InitialState)
+    public void Initialize(BaseState initialState)
     {
-        CurrentState = InitialState;
+        CurrentState = initialState;
         CurrentState.Enter();
     }
 

@@ -1,16 +1,14 @@
 using UnityEngine;
 
-public class EnemyState : MonoBehaviour
+public class EnemyState : BaseState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public override void Enter() { }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override void Update() { }
+
+    public override void FixedUpdate() { }
+
+    public override void LateUpdate() { }
+
+    public override void Exit() { }
 }
