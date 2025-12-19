@@ -4,28 +4,61 @@ using UnityEngine;
 
 public class TestCharacterController : MonoBehaviour
 {
-    private StateMachine stateMachine;
-    private Dictionary<CharStateType, BaseState> states = new(); 
+    [SerializeField] private int characterId;
+    [SerializeField] private float range;
+    [SerializeField] private float hp;
+    [SerializeField] private AttackType atkType;
+    [SerializeField] private float atk;
+    [SerializeField] private float def;
 
+    private StateMachine stateMachine;
+    public Rigidbody rb;
+    public BoxCollider col;
+    private Animator animator;
+    
+    private float maxHp;
+    
+    private readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
     public void Init()
     {
+        rb = gameObject.GetOrAddComponent<Rigidbody>();
+        col = gameObject.GetOrAddComponent<BoxCollider>();
+        animator = gameObject.GetOrAddComponent<Animator>();
+        maxHp = hp;
         stateMachine = new StateMachine();
-        states.Add(CharStateType.Idle, new CharacterIdle(this) );
-        states.Add(CharStateType.Run, new CharacterRun(this));
-        states.Add(CharStateType.Attack, new CharacterAttack(this));
-        states.Add(CharStateType.Skill, new CharacterSkill(this));
-        states.Add(CharStateType.Hit, new CharacterHit(this));
-        states.Add(CharStateType.Dead, new CharacterDead(this));
-        stateMachine.Initialize(states[CharStateType.Idle]);
+        stateDict.Add(CharStateType.Idle, new CharacterIdle(this) );
+        stateDict.Add(CharStateType.Run, new CharacterRun(this));
+        stateDict.Add(CharStateType.Attack, new CharacterAttack(this));
+        stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
+        stateDict.Add(CharStateType.Hit, new CharacterHit(this));
+        stateDict.Add(CharStateType.Dead, new CharacterDead(this));
+        stateMachine.Initialize(stateDict[CharStateType.Idle]);
     }
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer($"Enemy"))
+        {
+            var info = collision.gameObject.GetComponent<EnemyAttackInfo>();
+            TakeHit(info);
+        }
+    }
+
+    private void TakeHit(EnemyAttackInfo attackInfo)
+    {
+        hp -= attackInfo.atk * ((100 - def) / 100);
+    }
+    public void PlayAnimation(int animKey)
+    {
+        animator.Play(animKey);
     }
 }
