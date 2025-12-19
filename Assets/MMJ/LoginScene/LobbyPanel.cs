@@ -95,6 +95,7 @@ public class LobbyPanel : MonoBehaviour
             if (models.Count == 0)
             {
                 Debug.LogError("[LobbyPanel] CSV 로드 실패! 게임을 시작할 수 없습니다.");
+                ToastUtil.Error("캐릭터 데이터 로드에 실패했습니다.");
                 gameStartButton.interactable = true;
                 yield break;
             }
