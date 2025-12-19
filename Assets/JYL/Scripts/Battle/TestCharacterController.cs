@@ -7,13 +7,15 @@ public class TestCharacterController : MonoBehaviour
     [SerializeField] private int characterId;
     [SerializeField] private float range;
     [SerializeField] private float hp;
-    [SerializeField] private AttackType atkType;
+    [SerializeField] private float shield;
+    [SerializeField] public AttackType atkType;
     [SerializeField] private float atk;
     [SerializeField] private float def;
 
-    private StateMachine stateMachine;
     public Rigidbody rb;
     public BoxCollider col;
+    
+    private StateMachine stateMachine;
     private Animator animator;
     
     private float maxHp;
@@ -34,29 +36,57 @@ public class TestCharacterController : MonoBehaviour
         stateDict.Add(CharStateType.Dead, new CharacterDead(this));
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
     }
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        
+        stateMachine.Update();
+    }
+
+    void FixedUpdate()
+    {
+        stateMachine.FixedUpdate();
+    }
+
+    void LateUpdate()
+    {
+        stateMachine.LateUpdate();
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer($"Enemy"))
-        {
-            var info = collision.gameObject.GetComponent<EnemyAttackInfo>();
-            TakeHit(info);
-        }
+        if (collision.gameObject.layer != LayerMask.NameToLayer($"Enemy")) return;
+        var info = collision.gameObject.GetComponent<EnemyAttackInfo>();
+        TakeHit(info);
     }
 
     private void TakeHit(EnemyAttackInfo attackInfo)
     {
-        hp -= attackInfo.atk * ((100 - def) / 100);
+        int damage = (int)(attackInfo.atk * (1 - def / 100));
+        // 해당 데미지를 Toast UI로 표현
+        if (shield > 0 && damage > 0)
+        {
+            int shieldDamage = (int)Mathf.Clamp(damage, 0, shield);
+            shield -= shieldDamage;
+            damage -= shieldDamage;
+        }
+
+        if (damage > 0)
+        {
+            hp -= damage;
+        }
     }
+
+    public void Heal(float hp)
+    {
+        this.hp = Mathf.Clamp(this.hp + hp, 0, maxHp);
+        // 힐 이펙트 생성
+    }
+
+    public void GetShield(float amount)
+    {
+        shield += amount;
+    }
+    
     public void PlayAnimation(int animKey)
     {
         animator.Play(animKey);
