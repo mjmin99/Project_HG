@@ -17,6 +17,7 @@ public class PartyUI : MonoBehaviour
     {
         activeSlotIndex = index;
         Debug.Log($"[PartyUI] {index}번 슬롯 선택됨");
+        Debug.Log($"activeSlotIndex={activeSlotIndex}");
     }
 
     public void AssignCharacter(int characterId)

@@ -3,11 +3,8 @@ using UnityEngine.UI;
 
 public class MainSceneUIController : MonoBehaviour
 {
-    [Header("Character UI")]
-    public GameObject characterPanelRoot; // PartyUI + CharacterListUI 부모
-
-    [SerializeField] Button characterUIButton;
-    [SerializeField] Button exitButton;
+    [SerializeField] private Button characterUIButton;
+    [SerializeField] private Button exitButton;
 
     private void Awake()
     {
@@ -15,23 +12,15 @@ public class MainSceneUIController : MonoBehaviour
         exitButton.onClick.AddListener(CloseCharacterUI);
     }
 
-    private void Start()
-    {
-        // 메인씬 진입 시 닫힌 상태
-        characterPanelRoot.SetActive(false);
-    }
-
     // 메인씬 캐릭터 버튼
     public void OpenCharacterUI()
     {
-        UIManager.Instance.OpenUI<PartyPanel>("PartyPanel");
-        UIManager.Instance.OpenUI<CharacterListPanel>("CharacterListPanel");
+        UIManager.Instance.OpenUI<PartySetupPanel>("PartySetupPanel");
     }
 
     // 닫기 버튼
     public void CloseCharacterUI()
     {
-        UIManager.Instance.CloseTop(); // List
-        UIManager.Instance.CloseTop(); // Party
+        UIManager.Instance.CloseTop(); // PartySetupPanel 하나만 닫음
     }
 }
