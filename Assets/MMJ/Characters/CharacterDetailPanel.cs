@@ -1,130 +1,78 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 
-public class CharacterDetailPanel : MonoBehaviour
+public class CharacterDetailPanel : UIPanel
 {
-    [Header("Root")]
-    public GameObject panelRoot;
-
-    [Header("Top")]
-    public Image icon;
-    public TMP_Text nameText;
-    public TMP_Text roleText;
-
-    [Header("Rarity Stars")]
-    public Transform starGroup; // 레어도 별 (model.rarity, 고정)
+    [Header("Header")]
+    [SerializeField] private Image icon;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text roleText;
 
     [Header("Progress")]
-    public TMP_Text levelText;
-    public TMP_Text shardText;
+    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text shardText;
 
     [Header("Stats")]
-    public TMP_Text hpText;
-    public TMP_Text atkText;
-    public TMP_Text matkText;
-    public TMP_Text defText;
-    public TMP_Text aspdText;
-    public TMP_Text critText;
-    public TMP_Text critDmgText;
-    public TMP_Text rangeText;
+    [SerializeField] private TMP_Text hpText;
+    [SerializeField] private TMP_Text atkText;
+    [SerializeField] private TMP_Text matkText;
+    [SerializeField] private TMP_Text defText;
+    [SerializeField] private TMP_Text aspdText;
+    [SerializeField] private TMP_Text critText;
+    [SerializeField] private TMP_Text critDmgText;
+    [SerializeField] private TMP_Text rangeText;
 
-    [Header("Enhance")]
-    public Button enhanceButton;
-    public TMP_Text enhanceCostText;
-
-    private const int ENHANCE_COST = 10;
     private int currentCharacterId = -1;
 
-    private void Awake()
-    {
-        panelRoot.SetActive(false);
-        enhanceButton.onClick.AddListener(OnClickEnhance);
-    }
-
-    public void Show(int characterId)
+    /// <summary>
+    /// 외부에서 캐릭터 선택 시 호출
+    /// </summary>
+    public void SetCharacter(int characterId)
     {
         currentCharacterId = characterId;
+        Refresh();
+    }
 
-        if (!CharacterManager.Instance.models.TryGetValue(characterId, out var model))
-        {
-            Debug.LogError($"[CharacterDetailPanel] 모델 ID {characterId} 없음");
+    private void Refresh()
+    {
+        if (!CharacterManager.Instance.models.TryGetValue(currentCharacterId, out var model))
             return;
-        }
 
-        if (!CharacterManager.Instance.instances.TryGetValue(characterId, out var inst))
-        {
-            Debug.LogError($"[CharacterDetailPanel] 인스턴스 ID {characterId} 없음");
+        if (!CharacterManager.Instance.instances.TryGetValue(currentCharacterId, out var inst))
             return;
-        }
 
-        var stats = CharacterManager.Instance.GetStats(characterId);
+        var stats = CharacterManager.Instance.GetStats(currentCharacterId);
 
-        panelRoot.SetActive(true);
-
-        // 기본 정보
+        // ===== 기존 표시 로직 그대로 =====
         icon.sprite = model.Icon;
         nameText.text = model.characterName;
         roleText.text = model.role.ToString();
 
-        // 레어도 별 (고정)
-        if (starGroup != null)
-        {
-            for (int i = 0; i < starGroup.childCount; i++)
-                starGroup.GetChild(i).gameObject.SetActive(i < model.rarity);
-        }
-
-        // 성장 정보
         levelText.text = $"Lv. {inst.level}";
         shardText.text = $"Shard: {inst.shard}";
 
-        // 스탯
         hpText.text = $"HP: {stats.hp:0}";
         atkText.text = $"ATK: {stats.attack:0}";
         matkText.text = $"MATK: {stats.magicAttack:0}";
         defText.text = $"DEF: {stats.defense:0}";
-
         aspdText.text = $"ASPD: {stats.attackSpeed:0.00}";
         critText.text = $"CRIT: {stats.critRate * 100:0.0}%";
         critDmgText.text = $"CRITDMG: {stats.critDamage * 100:0.0}%";
         rangeText.text = $"RANGE: {stats.attackRange:0.0}";
-
-        // 강화 버튼
-        enhanceCostText.text = $"{ENHANCE_COST} Gold";
-        UpdateEnhanceButtonState();
     }
 
-    void UpdateEnhanceButtonState()
+    public override void OnOpen()
     {
-        int gold = SaveManager.Instance.CurrentData.gold;
-        enhanceButton.interactable = (gold >= ENHANCE_COST);
+        base.OnOpen();
+        // 열릴 때 currentCharacterId가 이미 세팅되어 있으면 즉시 갱신
+        if (currentCharacterId != -1)
+            Refresh();
     }
 
-    public void OnClickEnhance()
+    public override void OnClose()
     {
-        if (currentCharacterId < 0)
-            return;
-
-        if (!SaveManager.Instance.TrySpendGold(ENHANCE_COST))
-        {
-            Debug.Log("[CharacterDetailPanel] 골드 부족");
-            return;
-        }
-
-        CharacterManager.Instance.AddExp(currentCharacterId, 5);
-        SaveManager.Instance.SaveCurrentUser();
-
-        RefreshCurrentCharacterUI();
-    }
-
-    void RefreshCurrentCharacterUI()
-    {
-        Show(currentCharacterId);
-    }
-
-    public void Hide()
-    {
-        panelRoot.SetActive(false);
         currentCharacterId = -1;
+        base.OnClose();
     }
 }

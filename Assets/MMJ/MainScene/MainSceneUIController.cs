@@ -24,12 +24,14 @@ public class MainSceneUIController : MonoBehaviour
     // 메인씬 캐릭터 버튼
     public void OpenCharacterUI()
     {
-        characterPanelRoot.SetActive(true);
+        UIManager.Instance.OpenUI<PartyPanel>("PartyPanel");
+        UIManager.Instance.OpenUI<CharacterListPanel>("CharacterListPanel");
     }
 
     // 닫기 버튼
     public void CloseCharacterUI()
     {
-        characterPanelRoot.SetActive(false);
+        UIManager.Instance.CloseTop(); // List
+        UIManager.Instance.CloseTop(); // Party
     }
 }

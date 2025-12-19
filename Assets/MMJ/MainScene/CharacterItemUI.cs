@@ -35,7 +35,10 @@ public class CharacterItemUI : MonoBehaviour
         // 1) 정보 버튼 → 상세창 열기
         btnInfo.onClick.AddListener(() =>
         {
-            cachedDetailPanel?.Show(characterId);
+            var panel = UIManager.Instance
+                .OpenUI<CharacterDetailPanel>("CharacterDetailPanel");
+
+            panel.SetCharacter(characterId);
         });
 
         // 2) 배치 버튼 → 파티 배치

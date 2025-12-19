@@ -9,13 +9,6 @@ public class CharacterListUI : MonoBehaviour
     private PartyUI partyUI;
     private CharacterDetailPanel detailPanel;
 
-    private void Awake()
-    {
-        // 메인씬에 항상 존재하는 UI들이므로 Find로 캐싱
-        partyUI = FindFirstObjectByType<PartyUI>();
-        detailPanel = FindFirstObjectByType<CharacterDetailPanel>();
-    }
-
     private void OnEnable()
     {
         Refresh();
