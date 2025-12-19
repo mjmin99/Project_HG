@@ -22,7 +22,7 @@ public class CharacterItemUI : MonoBehaviour
         cachedPartyUI = partyUI;
         cachedDetailPanel = detailPanel;
 
-        var model = CharacterManager.Instance.models[id];
+        var model = Manager.Character.models[id];
 
         // name → characterName으로 변경된 상태 반영
         nameText.text = model.characterName;

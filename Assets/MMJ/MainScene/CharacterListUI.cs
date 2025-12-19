@@ -33,7 +33,7 @@ public class CharacterListUI : MonoBehaviour
         }
 
         // 보유 캐릭터만 리스트에 표시
-        foreach (var pair in CharacterManager.Instance.instances)
+        foreach (var pair in Manager.Character.instances)
         {
             int id = pair.Key;
             var inst = pair.Value;

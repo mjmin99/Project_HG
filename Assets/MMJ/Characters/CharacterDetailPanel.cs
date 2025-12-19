@@ -46,19 +46,19 @@ public class CharacterDetailPanel : MonoBehaviour
     {
         currentCharacterId = characterId;
 
-        if (!CharacterManager.Instance.models.TryGetValue(characterId, out var model))
+        if (!Manager.Character.models.TryGetValue(characterId, out var model))
         {
             Debug.LogError($"[CharacterDetailPanel] 모델 ID {characterId} 없음");
             return;
         }
 
-        if (!CharacterManager.Instance.instances.TryGetValue(characterId, out var inst))
+        if (!Manager.Character.instances.TryGetValue(characterId, out var inst))
         {
             Debug.LogError($"[CharacterDetailPanel] 인스턴스 ID {characterId} 없음");
             return;
         }
 
-        var stats = CharacterManager.Instance.GetStats(characterId);
+        var stats = Manager.Character.GetStats(characterId);
 
         panelRoot.SetActive(true);
 
@@ -96,7 +96,7 @@ public class CharacterDetailPanel : MonoBehaviour
 
     void UpdateEnhanceButtonState()
     {
-        int gold = SaveManager.Instance.CurrentData.gold;
+        int gold = Manager.Save.CurrentData.gold;
         enhanceButton.interactable = (gold >= ENHANCE_COST);
     }
 
@@ -105,14 +105,14 @@ public class CharacterDetailPanel : MonoBehaviour
         if (currentCharacterId < 0)
             return;
 
-        if (!SaveManager.Instance.TrySpendGold(ENHANCE_COST))
+        if (!Manager.Save.TrySpendGold(ENHANCE_COST))
         {
             Debug.Log("[CharacterDetailPanel] 골드 부족");
             return;
         }
 
-        CharacterManager.Instance.AddExp(currentCharacterId, 5);
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Character.AddExp(currentCharacterId, 5);
+        Manager.Save.SaveCurrentUser();
 
         RefreshCurrentCharacterUI();
     }

@@ -32,17 +32,17 @@ public class PartyUI : MonoBehaviour
 
         if (prevIndex != -1)
         {
-            SaveManager.Instance.CurrentData.partySet[prevIndex] = -1;
+            Manager.Save.CurrentData.partySet[prevIndex] = -1;
             slots[prevIndex].ClearSlot();
         }
 
         // 선택된 슬롯에 배치
-        SaveManager.Instance.CurrentData.partySet[activeSlotIndex] = characterId;
+        Manager.Save.CurrentData.partySet[activeSlotIndex] = characterId;
         slots[activeSlotIndex].SetCharacter(characterId);
 
         Debug.Log($"캐릭터 {characterId} → 슬롯 {activeSlotIndex}로 교체됨");
 
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Save.SaveCurrentUser();
     }
 
 
@@ -84,7 +84,7 @@ public class PartyUI : MonoBehaviour
     */
     private int FindCharacterInParty(int characterId)
     {
-        var party = SaveManager.Instance.CurrentData.partySet;
+        var party = Manager.Save.CurrentData.partySet;
 
         for (int i = 0; i < party.Length; i++)
         {
@@ -96,7 +96,7 @@ public class PartyUI : MonoBehaviour
 
     private int FindEmptySlot()
     {
-        var party = SaveManager.Instance.CurrentData.partySet;
+        var party = Manager.Save.CurrentData.partySet;
 
         for (int i = 0; i < party.Length; i++)
         {
@@ -109,7 +109,7 @@ public class PartyUI : MonoBehaviour
     // 저장된 파티 불러오기
     public void LoadParty()
     {
-        var party = SaveManager.Instance.CurrentData.partySet;
+        var party = Manager.Save.CurrentData.partySet;
 
         for (int i = 0; i < slots.Length; i++)
         {

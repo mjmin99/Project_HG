@@ -50,7 +50,7 @@ public class PartySlotUI : MonoBehaviour
 
     public void SetCharacter(int id)
     {
-        var model = CharacterManager.Instance.models[id];
+        var model = Manager.Character.models[id];
 
         nameText.enabled = true;
         icon.enabled = true;

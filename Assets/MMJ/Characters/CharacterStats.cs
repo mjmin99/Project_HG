@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public struct CharacterStats
 {
     public float hp;
+    public float maxHp;
     public float attack;
     public float magicAttack;
     public float defense;

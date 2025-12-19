@@ -11,12 +11,14 @@ public class StageDataSO : ScriptableObject
 {
     public int world;
     public int stage;
+    public int prevWorld;
+    public int prevStage;
 
     [Header("Rewards")]
     public int rewardGold;
 
     [Header("Waves")]
-    public List<StageWave> waves = new List<StageWave>();
+    public List<StageWave> waves = new();
 }
 
 // 스테이지 내 웨이브 정보
@@ -27,13 +29,12 @@ public class StageWave
     public float waitBeforeWave = 1f; 
 
     // 이 웨이브에서 스폰되는 적들
-    public List<StageSpawn> spawns = new List<StageSpawn>();
+    public List<StageSpawn> spawns = new();
 }
 
 [Serializable]
 public class StageSpawn
 {
-    public string monsterId;     // 전투진행시 ID->Prefab 매핑
+    public string monsterId;     // 전투진행시 ID -> Prefab 매핑
     public int count = 1;
-    public float spawnInterval = 0.5f;
 }
