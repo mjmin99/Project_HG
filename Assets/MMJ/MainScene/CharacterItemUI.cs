@@ -22,6 +22,8 @@ public class CharacterItemUI : MonoBehaviour
         cachedPartyUI = partyUI;
         cachedDetailPanel = detailPanel;
 
+        Debug.Log($"[CharacterItemUI] Setup - PartyUI: {partyUI}");
+
         var model = CharacterManager.Instance.models[id];
 
         // name → characterName으로 변경된 상태 반영
@@ -44,15 +46,15 @@ public class CharacterItemUI : MonoBehaviour
         // 2) 배치 버튼 → 파티 배치
         btnAssign.onClick.AddListener(() =>
         {
-            if (cachedPartyUI == null)
+            var partyUI = UIManager.Instance.CurrentPartyUI;
+
+            if (partyUI == null)
             {
-                Debug.LogWarning("PartyUI를 찾을 수 없습니다.");
+                Debug.LogWarning("[CharacterItemUI] PartyUI not found");
                 return;
             }
 
-            // PartyUI가 activeSlotIndex를 가지고 있으므로
-            // 슬롯 선택 안 했으면 PartyUI에서 경고 처리되게!
-            cachedPartyUI.AssignCharacter(characterId);
+            partyUI.AssignCharacter(characterId);
         });
     }
 }

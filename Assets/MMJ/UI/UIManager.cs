@@ -128,4 +128,17 @@ public class UIManager : MonoBehaviour
             Destroy(go);
         }
     }
+
+    public PartyUI CurrentPartyUI { get; private set; }
+
+    public void RegisterPartyUI(PartyUI partyUI)
+    {
+        CurrentPartyUI = partyUI;
+    }
+
+    public void UnregisterPartyUI(PartyUI partyUI)
+    {
+        if (CurrentPartyUI == partyUI)
+            CurrentPartyUI = null;
+    }
 }
