@@ -44,6 +44,10 @@ public class PartySlotSelectPopup : UIPopup
         PartyService.AssignToSlot(slotIndex, characterId);
         PartyAssignmentContext.Clear();
 
+        // 1) 슬롯 선택 팝업 닫기
+        UIManager.Instance.CloseTop();
+
+        // 2) 디테일 패널도 같이 닫기
         UIManager.Instance.CloseTop();
     }
 

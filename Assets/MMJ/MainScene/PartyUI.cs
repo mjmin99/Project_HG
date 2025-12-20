@@ -89,6 +89,6 @@ public class PartyUI : MonoBehaviour
 
     private void HighlightSlot(int index)
     {
-        // 선택 강조는 이번 범위 밖이면 비워도 OK
+        // 선택 강조 추가 위한 자리
     }
 }

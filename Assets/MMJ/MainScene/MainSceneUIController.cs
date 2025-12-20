@@ -17,7 +17,6 @@ public class MainSceneUIController : MonoBehaviour
 
     public void OpenCharacterUI()
     {
-        //  열고 싶은 패널은 CharacterListUI가 아니라, 그걸 포함한 UIPanel 래퍼
         UIManager.Instance.OpenUI<CharacterListPanel>("CharacterListPanel");
     }
 
