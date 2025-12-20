@@ -121,4 +121,41 @@ public class CharacterManager : MonoBehaviour
     {
         return level * 5;
     }
+
+    public bool CanEquipAbility(int characterId, AbilityInstance ability)
+    {
+        if (!models.TryGetValue(characterId, out var model))
+            return false;
+
+        if (!instances.TryGetValue(characterId, out var inst))
+            return false;
+
+        // 슬롯 수 초과 체크
+        if (inst.abilities.Count >= model.AbilitySlotCount)
+            return false;
+
+        // 중복 장착 방지 (같은 AbilityId)
+        if (inst.abilities.Exists(a => a.abilityId == ability.abilityId))
+            return false;
+
+        return true;
+    }
+
+    public bool EquipAbility(int characterId, AbilityInstance ability)
+    {
+        if (!CanEquipAbility(characterId, ability))
+            return false;
+
+        instances[characterId].abilities.Add(ability);
+        return true;
+    }
+
+    public bool UnequipAbility(int characterId, int abilityId)
+    {
+        if (!instances.TryGetValue(characterId, out var inst))
+            return false;
+
+        int removed = inst.abilities.RemoveAll(a => a.abilityId == abilityId);
+        return removed > 0;
+    }
 }

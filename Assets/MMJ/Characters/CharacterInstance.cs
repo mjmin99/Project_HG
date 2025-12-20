@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -11,6 +12,9 @@ public class CharacterInstance
     public int exp = 0;
 
     public int shard = 0;  // 조각(중복 보상)
+
+    // 어빌리티
+    public List<AbilityInstance> abilities = new List<AbilityInstance>();
 
     public CharacterStats GetStats(CharacterModel model)
     {
