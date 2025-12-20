@@ -23,6 +23,9 @@ public class CharacterDetailPanel : UIPanel
     [SerializeField] private TMP_Text critDmgText;
     [SerializeField] private TMP_Text rangeText;
 
+    [Header("Actions")]
+    [SerializeField] private Button btnAssign;
+
     private int currentCharacterId = -1;
 
     /// <summary>
@@ -64,15 +67,26 @@ public class CharacterDetailPanel : UIPanel
 
     public override void OnOpen()
     {
-        base.OnOpen();
-        // 열릴 때 currentCharacterId가 이미 세팅되어 있으면 즉시 갱신
-        if (currentCharacterId != -1)
-            Refresh();
+        btnAssign.onClick.RemoveAllListeners();
+        btnAssign.onClick.AddListener(OnClickAssign);
     }
 
     public override void OnClose()
     {
         currentCharacterId = -1;
         base.OnClose();
+    }
+
+    private void OnClickAssign()
+    {
+        if (currentCharacterId < 0)
+        {
+            Debug.LogWarning("[CharacterDetailPanel] characterId invalid");
+            return;
+        }
+
+        PartyAssignmentContext.Begin(currentCharacterId);
+
+        UIManager.Instance.OpenUI<PartySlotSelectPopup>("PartySlotSelectPopup");
     }
 }

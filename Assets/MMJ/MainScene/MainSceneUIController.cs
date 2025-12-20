@@ -3,24 +3,26 @@ using UnityEngine.UI;
 
 public class MainSceneUIController : MonoBehaviour
 {
-    [SerializeField] private Button characterUIButton;
-    [SerializeField] private Button exitButton;
+    [SerializeField]private Button characterUIButton;
+    [SerializeField]private Button exitButton;
 
     private void Awake()
     {
+        characterUIButton.onClick.RemoveAllListeners();
+        exitButton.onClick.RemoveAllListeners();
+
         characterUIButton.onClick.AddListener(OpenCharacterUI);
         exitButton.onClick.AddListener(CloseCharacterUI);
     }
 
-    // 메인씬 캐릭터 버튼
     public void OpenCharacterUI()
     {
-        UIManager.Instance.OpenUI<PartySetupPanel>("PartySetupPanel");
+        //  열고 싶은 패널은 CharacterListUI가 아니라, 그걸 포함한 UIPanel 래퍼
+        UIManager.Instance.OpenUI<CharacterListPanel>("CharacterListPanel");
     }
 
-    // 닫기 버튼
     public void CloseCharacterUI()
     {
-        UIManager.Instance.CloseTop(); // PartySetupPanel 하나만 닫음
+        UIManager.Instance.CloseTop();
     }
 }

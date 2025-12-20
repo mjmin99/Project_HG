@@ -614,7 +614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d8bf9dcece23e743bda35c996924e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterListPanel
-  listUI: {fileID: 509512349444473048}
 --- !u!1 &7446332543923601123
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterListUI
   container: {fileID: 8626171447699276565}
-  itemPrefab: {fileID: 6148492982942376022, guid: 272ae4b49bc0fde4f8201fd321b87f40, type: 3}
+  itemPrefab: {fileID: 2731120669441861109, guid: 1fbca10cf52e9b343a861a3a5c63da8f, type: 3}
 --- !u!1 &7707915470938499035
 GameObject:
   m_ObjectHideFlags: 0
