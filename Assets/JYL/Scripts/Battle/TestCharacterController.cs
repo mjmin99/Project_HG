@@ -70,21 +70,38 @@ public class TestCharacterController : MonoBehaviour
             damage -= shieldDamage;
         }
 
-        if (damage > 0)
+        if (damage <= 0) return;
+        
+        hp -= damage;
+        
+        if (hp <= 0)
         {
-            hp -= damage;
+            hp = 0;
+            stateMachine.ChangeState(
+                stateDict[CharStateType.Dead]);
+        }
+        
+        else
+        {
+            stateMachine.ChangeState(
+                stateDict[CharStateType.Hit]);
         }
     }
 
-    public void Heal(float hp)
+    public void Heal(float amount)
     {
-        this.hp = Mathf.Clamp(this.hp + hp, 0, maxHp);
-        // 힐 이펙트 생성
+        int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - hp);
+        if (healAmount > 0)
+        {
+            hp += healAmount;
+            // 힐 이펙트 및 Toast UI 생성
+        }
     }
 
     public void GetShield(float amount)
     {
         shield += amount;
+        // 쉴드 증가 Toast UI 생성 
     }
     
     public void PlayAnimation(int animKey)
