@@ -40,15 +40,18 @@ public class LoginPanel : MonoBehaviour
             if (task.IsCanceled)
             {
                 Debug.LogError("로그인이 취소됨");
+                ToastUtil.Error("로그인이 취소되었습니다.");
                 return;
             }
             if (task.IsFaulted)
             {
+                ToastUtil.Error("로그인에 실패했습니다. 아이디/비밀번호를 확인하세요.");
                 Debug.LogError($"로그인이 실패함. 이유 : {task.Exception}");
                 return;
             }
 
             Debug.Log("로그인 성공");
+            ToastUtil.Success("로그인 성공!");
             // AuthResult result = task.Result;
             // FirebaseUser User = result.User;
             // Debug.Log($"-----유저 정보-----");
