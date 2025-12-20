@@ -26,6 +26,10 @@ public class CharacterDetailPanel : UIPanel
     [Header("Actions")]
     [SerializeField] private Button btnAssign;
 
+    [Header("Abilities")]
+    public Transform abilitySlotGroup;     // 슬롯 부모
+    public GameObject abilitySlotPrefab;   // 슬롯 프리팹
+
     private int currentCharacterId = -1;
 
     /// <summary>
@@ -63,6 +67,8 @@ public class CharacterDetailPanel : UIPanel
         critText.text = $"CRIT: {stats.critRate * 100:0.0}%";
         critDmgText.text = $"CRITDMG: {stats.critDamage * 100:0.0}%";
         rangeText.text = $"RANGE: {stats.attackRange:0.0}";
+
+        RefreshAbilitySlots(model, inst); // 어빌리티 슬롯 생성
     }
 
     public override void OnOpen()
@@ -88,5 +94,29 @@ public class CharacterDetailPanel : UIPanel
         PartyAssignmentContext.Begin(currentCharacterId);
 
         UIManager.Instance.OpenUI<PartySlotSelectPopup>("PartySlotSelectPopup");
+    }
+
+    void RefreshAbilitySlots(CharacterModel model, CharacterInstance inst)
+    {
+        // 기존 슬롯 제거
+        foreach (Transform child in abilitySlotGroup)
+            Destroy(child.gameObject);
+
+        int maxSlots = model.AbilitySlotCount;
+
+        for (int i = 0; i < maxSlots; i++)
+        {
+            var slotObj = Instantiate(abilitySlotPrefab, abilitySlotGroup);
+            var slotUI = slotObj.GetComponent<AbilitySlotUI>();
+
+            if (i < inst.abilities.Count)
+            {
+                slotUI.SetAbility(inst.abilities[i]);
+            }
+            else
+            {
+                slotUI.SetEmpty();
+            }
+        }
     }
 }
