@@ -27,6 +27,7 @@ public class SignUpPanel : MonoBehaviour
         if (passInput.text != passConfirmInput.text)
         {
             Debug.LogError("패스워드가 일치하지 않습니다.");
+            ToastUtil.Error("패스워드가 일치하지 않습니다.");
             return;
         }
 
