@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
@@ -10,7 +10,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         get
         {
             if (instance != null) return instance;
-            instance = FindObjectOfType<T>();
+            instance = FindFirstObjectByType<T>();
             if (instance != null) return instance;
             instance = new GameObject(typeof(T).Name).AddComponent<T>();
             DontDestroyOnLoad(instance.gameObject);
