@@ -102,20 +102,24 @@ public class CharacterDetailPanel : UIPanel
         foreach (Transform child in abilitySlotGroup)
             Destroy(child.gameObject);
 
-        int maxSlots = model.AbilitySlotCount;
+        int maxSlots = model.MaxAbilitySlotCount;
+        int unlockedSlots = inst.GetUnlockedAbilitySlotCount(model);
 
         for (int i = 0; i < maxSlots; i++)
         {
             var slotObj = Instantiate(abilitySlotPrefab, abilitySlotGroup);
             var slotUI = slotObj.GetComponent<AbilitySlotUI>();
 
-            if (i < inst.abilities.Count)
+            if (i < unlockedSlots)
             {
-                slotUI.SetAbility(inst.abilities[i]);
+                if (i < inst.abilities.Count)
+                    slotUI.SetAbility(inst.abilities[i]);
+                else
+                    slotUI.SetEmpty();
             }
             else
             {
-                slotUI.SetEmpty();
+                slotUI.SetLocked(); // 잠김 표시
             }
         }
     }

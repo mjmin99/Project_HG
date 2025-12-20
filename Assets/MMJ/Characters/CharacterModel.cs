@@ -17,7 +17,7 @@ public class CharacterModel
     public float baseCritDamage;
     public float attackRange;
 
-    public int AbilitySlotCount // 어빌리티 슬롯 카운트
+    public int MaxAbilitySlotCount // 어빌리티 슬롯 카운트
     {
         get
         {

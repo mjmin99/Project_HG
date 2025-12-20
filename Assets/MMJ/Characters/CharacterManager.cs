@@ -131,7 +131,9 @@ public class CharacterManager : MonoBehaviour
             return false;
 
         // 슬롯 수 초과 체크
-        if (inst.abilities.Count >= model.AbilitySlotCount)
+        int unlockedSlots = inst.GetUnlockedAbilitySlotCount(model);
+
+        if (inst.abilities.Count >= unlockedSlots)
             return false;
 
         // 중복 장착 방지 (같은 AbilityId)

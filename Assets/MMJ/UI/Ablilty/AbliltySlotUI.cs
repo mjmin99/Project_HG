@@ -26,4 +26,11 @@ public class AbilitySlotUI : MonoBehaviour
         icon.sprite = AbilityIconProvider.GetIcon(inst.abilityId);
         nameText.text = ability.Name;
     }
+
+    public void SetLocked()
+    {
+        icon.enabled = false;
+        nameText.text = "Locked";
+        // 아이콘이나 회색 처리 추천
+    }
 }

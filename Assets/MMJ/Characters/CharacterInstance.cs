@@ -33,4 +33,15 @@ public class CharacterInstance
 
         return stats;
     }
+
+    public int GetUnlockedAbilitySlotCount(CharacterModel model)
+    {
+        if (model == null) return 0;
+
+        // 시작 1개 + 레벨업당 1개
+        int unlocked = 1 + (level - 1);
+
+        // 최대치는 rarity
+        return Mathf.Clamp(unlocked, 1, model.MaxAbilitySlotCount);
+    }
 }
