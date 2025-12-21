@@ -1,6 +1,12 @@
+using UnityEngine;
+
 public class CharacterState : BaseState
 {
     protected TestCharacterController character;
+    
+    protected Ray ray;
+    protected static readonly int EnemyMask =  LayerMask.GetMask("Enemy");
+    
 
     protected CharacterState(TestCharacterController character)
     {

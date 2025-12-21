@@ -4,6 +4,7 @@ public abstract class BaseState
 {
     protected static readonly int Idle = Animator.StringToHash("Idle");
     protected static readonly int Run = Animator.StringToHash("Run");
+    protected static readonly int Rewind = Animator.StringToHash("Rewind");
     protected static readonly int Attack = Animator.StringToHash("Attack");
     protected static readonly int Hit = Animator.StringToHash("Hit");
     protected static readonly int Dead = Animator.StringToHash("Dead");

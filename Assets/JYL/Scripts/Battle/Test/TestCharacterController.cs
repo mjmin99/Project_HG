@@ -4,7 +4,7 @@ using UnityEngine;
 public class TestCharacterController : MonoBehaviour, IAttackable
 {
     [SerializeField] private int characterId;
-    [SerializeField] private float range;
+    [SerializeField] public float range;
     [SerializeField] private float fireSpeed;
     [SerializeField] private float hp;
     [SerializeField] private float shield;
@@ -17,7 +17,8 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     public Rigidbody rb;
     public BoxCollider col;
     public StateMachine stateMachine;
-    
+
+    public Collider[] rayHit;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
 
     private TestBulletController bulletPrefab;
@@ -27,6 +28,8 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     private float maxRecordTime;
     private float maxHp;
     
+    
+    
     public void Init(float recordTime)
     {
         rb = gameObject.GetOrAddComponent<Rigidbody>();
@@ -35,8 +38,9 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         
         col = gameObject.GetOrAddComponent<BoxCollider>();
         col.isTrigger = true;
-        
-        animator = Resources.Load<Animator>($"Test/{characterId}");
+
+        animator = gameObject.GetOrAddComponent<Animator>();
+        animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"Test/{characterId}_AnimController"); 
         
         maxHp = hp;
         maxRecordTime =  recordTime;

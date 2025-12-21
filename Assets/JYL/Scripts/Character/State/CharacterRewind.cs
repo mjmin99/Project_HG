@@ -19,8 +19,8 @@ public class CharacterRewind : CharacterState
         character.rb.isKinematic = true;
         character.col.enabled = false;
 
-        character.animator.speed = -1f * REWIND_SPEED;
-        character.PlayAnimation(Run);
+        character.PlayAnimation(Rewind);
+        character.animator.speed = 1f * REWIND_SPEED;
 
         startInfo = new TestTimeInfo(character.transform, 0, 0);
         
@@ -31,6 +31,7 @@ public class CharacterRewind : CharacterState
 
     public override void Update()
     {
+        
         if (!character.HasHistory() && lerpTime >= 1f)
         {
             character.stateMachine.ChangeState(character.stateDict[CharStateType.Idle]);
@@ -65,6 +66,7 @@ public class CharacterRewind : CharacterState
     {
         character.SetHp(targetInfo.hp);
         character.SetShield(targetInfo.shield);
+        
     }
 
     public override void Exit()
