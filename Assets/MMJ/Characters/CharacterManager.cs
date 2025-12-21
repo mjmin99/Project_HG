@@ -122,42 +122,76 @@ public class CharacterManager : MonoBehaviour
         return level * 5;
     }
 
-    public bool CanEquipAbility(int characterId, AbilityInstance ability)
+    // 장착과 해제용으로 만들었는데 더이상 안쓰게 됨
+    //public bool CanEquipAbility(int characterId, AbilityInstance ability)
+    //{
+    //    if (!models.TryGetValue(characterId, out var model))
+    //        return false;
+    //
+    //    if (!instances.TryGetValue(characterId, out var inst))
+    //        return false;
+    //
+    //    // 슬롯 수 초과 체크
+    //    int unlockedSlots = inst.GetUnlockedAbilitySlotCount(model);
+    //
+    //    if (inst.abilities.Count >= unlockedSlots)
+    //        return false;
+    //
+    //    // 중복 장착 방지 (같은 AbilityId)
+    //    if (inst.abilities.Exists(a => a.abilityId == ability.abilityId))
+    //        return false;
+    //
+    //    return true;
+    //}
+    // public bool EquipAbility(int characterId, AbilityInstance ability)
+    // {
+    //     if (!CanEquipAbility(characterId, ability))
+    //         return false;
+    // 
+    //     instances[characterId].abilities.Add(ability);
+    //     return true;
+    // }
+    // 
+    // public bool UnequipAbility(int characterId, int abilityId)
+    // {
+    //     if (!instances.TryGetValue(characterId, out var inst))
+    //         return false;
+    // 
+    //     int removed = inst.abilities.RemoveAll(a => a.abilityId == abilityId);
+    //     return removed > 0;
+    // }
+
+    public bool TryRerollAbilities(int characterId)
     {
+        if (!instances.TryGetValue(characterId, out var inst))
+            return false;
+
         if (!models.TryGetValue(characterId, out var model))
             return false;
 
-        if (!instances.TryGetValue(characterId, out var inst))
+        // 비용 10골드
+        if (!SaveManager.Instance.TrySpendGold(10))
             return false;
 
-        // 슬롯 수 초과 체크
-        int unlockedSlots = inst.GetUnlockedAbilitySlotCount(model);
+        inst.SyncAbilitySlots(model); // 슬롯 수 보정(레벨 기반)
 
-        if (inst.abilities.Count >= unlockedSlots)
-            return false;
+        var pool = AbilityDatabase.GetPoolFor(model);
 
-        // 중복 장착 방지 (같은 AbilityId)
-        if (inst.abilities.Exists(a => a.abilityId == ability.abilityId))
-            return false;
+        foreach (var slot in inst.abilitySlots)
+        {
+            if (slot.isLocked)
+                continue;
 
+            slot.ability = GetRandomAbility(pool);
+        }
+
+        SaveManager.Instance.SaveCurrentUser();
         return true;
     }
 
-    public bool EquipAbility(int characterId, AbilityInstance ability)
+    private AbilityInstance GetRandomAbility(List<AbilityInstance> pool)
     {
-        if (!CanEquipAbility(characterId, ability))
-            return false;
-
-        instances[characterId].abilities.Add(ability);
-        return true;
-    }
-
-    public bool UnequipAbility(int characterId, int abilityId)
-    {
-        if (!instances.TryGetValue(characterId, out var inst))
-            return false;
-
-        int removed = inst.abilities.RemoveAll(a => a.abilityId == abilityId);
-        return removed > 0;
+        int index = Random.Range(0, pool.Count);
+        return pool[index];
     }
 }

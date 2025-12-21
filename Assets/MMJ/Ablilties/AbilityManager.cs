@@ -18,19 +18,25 @@ public class AbilityManager : MonoBehaviour
     }
 
     // 캐릭터 인스턴스를 받아서 AbilityRunner 생성
+    // 슬롯 기반 AbilityRunner 생성
     public AbilityRunner CreateRunnerFor(ICombatActor actor, CharacterInstance character)
     {
         var runner = new AbilityRunner(actor);
 
-        if (character.abilities == null)
+        if (character == null || character.abilitySlots == null)
             return runner;
 
-        foreach (var inst in character.abilities)
+        foreach (var slot in character.abilitySlots)
         {
-            if (!inst.isUnlocked)
+            // 빈 슬롯은 무시
+            if (slot.ability == null)
                 continue;
 
-            var ability = AbilityFactory.Create(inst.abilityId, inst.rarity);
+            var ability = AbilityFactory.Create(
+                slot.ability.abilityId,
+                slot.ability.rarity
+            );
+
             if (ability == null)
                 continue;
 

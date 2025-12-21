@@ -7,7 +7,8 @@ public class AbilityInstance
     public int abilityId;
     public AbilityRarity rarity;
 
-    public bool isUnlocked;
+    public bool isUnlocked = true; // 어빌리티 자체 보유 여부
+    public bool isLocked = false;  // 슬롯에서 잠금 여부
 
     public AbilityInstance(int id, AbilityRarity rarity)
     {

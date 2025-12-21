@@ -18,6 +18,9 @@ public struct AbilityContext
     public int attackIndex;      // (예: 매 3번째 공격) 카운트 기반용
     public float deltaTime;      // Tick 이벤트에서 사용
 
+    public bool cancel;        // 이번 처리를 막음(예: 상태이상 저항 성공)
+    public ICombatActor redirectTarget; // 피해/효과를 대신 받을 대상(기사의 맹세)
+
     public static AbilityContext Create(
         BattleEventType type,
         ICombatActor owner,

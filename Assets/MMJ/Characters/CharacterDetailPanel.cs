@@ -98,7 +98,12 @@ public class CharacterDetailPanel : UIPanel
 
     void RefreshAbilitySlots(CharacterModel model, CharacterInstance inst)
     {
-        // 기존 슬롯 제거
+        if (abilitySlotGroup == null || abilitySlotPrefab == null)
+            return;
+
+        // 슬롯 수 보정 (레벨 기준)
+        inst.SyncAbilitySlots(model);
+
         foreach (Transform child in abilitySlotGroup)
             Destroy(child.gameObject);
 
@@ -110,17 +115,35 @@ public class CharacterDetailPanel : UIPanel
             var slotObj = Instantiate(abilitySlotPrefab, abilitySlotGroup);
             var slotUI = slotObj.GetComponent<AbilitySlotUI>();
 
-            if (i < unlockedSlots)
+            if (slotUI == null)
+                continue;
+
+            // 아직 레벨 부족 → 슬롯 자체가 잠김
+            if (i >= unlockedSlots)
             {
-                if (i < inst.abilities.Count)
-                    slotUI.SetAbility(inst.abilities[i]);
-                else
-                    slotUI.SetEmpty();
+                slotUI.SetLockedSlot();
+                continue;
+            }
+
+            var slot = inst.abilitySlots[i];
+
+            // 빈 슬롯
+            if (slot.ability == null)
+            {
+                slotUI.SetEmptySlot();
             }
             else
             {
-                slotUI.SetLocked(); // 잠김 표시
+                slotUI.SetAbility(slot.ability, slot.isLocked);
             }
+
+            // 슬롯 인덱스 전달 (잠금 토글용)
+            int slotIndex = i;
+            slotUI.SetOnLockToggle(() =>
+            {
+                slot.isLocked = !slot.isLocked;
+                RefreshAbilitySlots(model, inst);
+            });
         }
     }
 }
