@@ -13,7 +13,6 @@ public class TestMapPresenter : MonoBehaviour
 
    private readonly Queue<Transform> mapQueue = new();
 
-   private bool isFirstQueue = true;
    private void Awake()
    {
       var map = Resources.Load<GameObject>(gameManager.GetTestStageData().mapPrefabPath);

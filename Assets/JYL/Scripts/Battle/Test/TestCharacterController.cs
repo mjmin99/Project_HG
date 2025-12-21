@@ -34,8 +34,9 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         rb.freezeRotation = true;
         
         col = gameObject.GetOrAddComponent<BoxCollider>();
-        col.isTrigger = true;        
-        animator = gameObject.GetOrAddComponent<Animator>();
+        col.isTrigger = true;
+        
+        animator = Resources.Load<Animator>($"Test/{characterId}");
         
         maxHp = hp;
         maxRecordTime =  recordTime;

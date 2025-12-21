@@ -1,16 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TestBattleManager : MonoBehaviour
 {
-    [SerializeField] private List<TestCharacterController> characters;
-    
+    private List<TestCharacterController> characters;
+    [SerializeField] private TestGameManager gameManager;
     
     void Awake()
     {
+        characters = gameManager.GetParty().ToList();
         foreach (var c in characters)
         {
-            c.Init();
+            c.Init(15f);
         }
     }
     
