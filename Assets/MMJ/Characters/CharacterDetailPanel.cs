@@ -13,6 +13,9 @@ public class CharacterDetailPanel : UIPanel
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text shardText;
 
+    [Header("Stars")]
+    [SerializeField] private Image[] stars; // size = 5
+
     [Header("Stats")]
     [SerializeField] private TMP_Text hpText;
     [SerializeField] private TMP_Text atkText;
@@ -58,6 +61,8 @@ public class CharacterDetailPanel : UIPanel
         nameText.text = model.characterName;
         roleText.text = model.role.ToString();
 
+        RefreshStars(model);
+
         levelText.text = $"Lv. {inst.level}";
         shardText.text = $"Shard: {inst.shard}";
 
@@ -71,6 +76,20 @@ public class CharacterDetailPanel : UIPanel
         rangeText.text = $"RANGE: {stats.attackRange:0.0}";
 
         RefreshAbilitySlots(model, inst); // 어빌리티 슬롯 생성
+
+        // 업데이트에 할 필요 없는 이유가 여기에 두면 슬롯 버튼 누를 때 호출됨
+        int cost = GetRerollCost(inst);
+        rerollCostText.text = $"Cost: {cost}"; 
+    }
+
+    private void RefreshStars(CharacterModel model)
+    {
+        int rarity = Mathf.Clamp(model.rarity, 1, stars.Length);
+
+        for (int i = 0; i < stars.Length; i++)
+        {
+            stars[i].gameObject.SetActive(i < rarity);
+        }
     }
 
     public override void OnOpen()
@@ -140,54 +159,15 @@ public class CharacterDetailPanel : UIPanel
         }
     }
 
-    //void RefreshAbilitySlots(CharacterModel model, CharacterInstance inst)
-    //{
-    //    if (abilitySlotGroup == null || abilitySlotPrefab == null)
-    //        return;
+    private int GetRerollCost(CharacterInstance inst)
+    {
+        int locked = 0;
+        foreach (var slot in inst.abilitySlots)
+        {
+            if (slot.isLocked)
+                locked++;
+        }
 
-    //    // 슬롯 수 보정 (레벨 기준)
-    //    inst.SyncAbilitySlots(model);
-
-    //    foreach (Transform child in abilitySlotGroup)
-    //        Destroy(child.gameObject);
-
-    //    int maxSlots = model.MaxAbilitySlotCount;
-    //    int unlockedSlots = inst.GetUnlockedAbilitySlotCount(model);
-
-    //    for (int i = 0; i < maxSlots; i++)
-    //    {
-    //        var slotObj = Instantiate(abilitySlotPrefab, abilitySlotGroup);
-    //        var slotUI = slotObj.GetComponent<AbilitySlotUI>();
-
-    //        if (slotUI == null)
-    //            continue;
-
-    //        // 아직 레벨 부족 → 슬롯 자체가 잠김
-    //        if (i >= unlockedSlots)
-    //        {
-    //            slotUI.SetLockedSlot();
-    //            continue;
-    //        }
-
-    //        var slot = inst.abilitySlots[i];
-
-    //        // 빈 슬롯
-    //        if (slot.ability == null)
-    //        {
-    //            slotUI.SetEmptySlot();
-    //        }
-    //        else
-    //        {
-    //            slotUI.SetAbility(slot.ability, slot.isLocked);
-    //        }
-
-    //        // 슬롯 인덱스 전달 (잠금 토글용)
-    //        int slotIndex = i;
-    //        slotUI.SetOnLockToggle(() =>
-    //        {
-    //            slot.isLocked = !slot.isLocked;
-    //            RefreshAbilitySlots(model, inst);
-    //        });
-    //    }
-    //}
+        return 10 + locked * 10;
+    }
 }

@@ -169,11 +169,21 @@ public class CharacterManager : MonoBehaviour
         if (!models.TryGetValue(characterId, out var model))
             return false;
 
-        // 비용 10골드
-        if (!SaveManager.Instance.TrySpendGold(10))
+        inst.SyncAbilitySlots(model); // 슬롯 수 보정(레벨 기반)
+
+        // 어빌리티 재설정에 드는 비용 로직
+        int lockedCount = CountLockedSlots(inst);
+        int cost = 10 + lockedCount * 10;
+
+        // 만약 골드로 하고 싶다면 아래
+        if (!SaveManager.Instance.TrySpendGold(cost))
             return false;
 
-        inst.SyncAbilitySlots(model); // 슬롯 수 보정(레벨 기반)
+        // 만약 캐릭터 중복 뽑기 재화로 돌리고 싶다면 아래-> ui는 뭐 상관 없음 ㅋ 호환 가능
+        // if (inst.shard < cost)
+        //    return false;
+        //
+        // inst.shard -= cost;
 
         var pool = AbilityDatabase.GetPoolFor(model);
 
@@ -182,7 +192,14 @@ public class CharacterManager : MonoBehaviour
             if (slot.isLocked)
                 continue;
 
-            slot.ability = GetRandomAbility(pool);
+            if (pool.Count == 0)
+            {
+                slot.ability = null;
+                continue;
+            }
+
+            int index = Random.Range(0, pool.Count);
+            slot.ability = pool[index];
         }
 
         SaveManager.Instance.SaveCurrentUser();
@@ -193,5 +210,18 @@ public class CharacterManager : MonoBehaviour
     {
         int index = Random.Range(0, pool.Count);
         return pool[index];
+    }
+
+    private int CountLockedSlots(CharacterInstance inst)
+    {
+        int count = 0;
+
+        foreach (var slot in inst.abilitySlots)
+        {
+            if (slot.isLocked)
+                count++;
+        }
+
+        return count;
     }
 }

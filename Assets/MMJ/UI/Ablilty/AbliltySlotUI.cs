@@ -88,7 +88,7 @@ public class AbilitySlotUI : MonoBehaviour
         {
             icon.enabled = true;
             icon.sprite = AbilityIconProvider.GetIcon(slot.ability.abilityId);
-            nameText.text = slot.ability.abilityId.ToString();
+            nameText.text = AbilityNameProvider.GetName(slot.ability.abilityId);
         }
     }
 
