@@ -1,20 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
+using JetBrains.Annotations;
 using UnityEngine;
 
-public class TestCharacterController : MonoBehaviour
+public class TestCharacterController : MonoBehaviour, IAttackable
 {
     [SerializeField] private int characterId;
     [SerializeField] private float range;
+    [SerializeField] private float fireSpeed;
     [SerializeField] private float hp;
     [SerializeField] private float shield;
     [SerializeField] public AttackType atkType;
     [SerializeField] private float atk;
     [SerializeField] private float def;
+    [SerializeField] private bool isPoison;
 
     public Rigidbody rb;
     public BoxCollider col;
-    
+
+    private TestBulletController bulletPrefab;
     private StateMachine stateMachine;
     private Animator animator;
     
@@ -35,6 +40,10 @@ public class TestCharacterController : MonoBehaviour
         stateDict.Add(CharStateType.Hit, new CharacterHit(this));
         stateDict.Add(CharStateType.Dead, new CharacterDead(this));
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
+        if (atkType == AttackType.Ranged)
+        {
+            bulletPrefab = Resources.Load<TestBulletController>("Test/TestBullet");
+        }
     }
 
     void Update()
@@ -52,14 +61,26 @@ public class TestCharacterController : MonoBehaviour
         stateMachine.LateUpdate();
     }
 
-    void OnCollisionEnter(Collision collision)
+    public void Attack(TestEnemyController controller)
     {
-        if (collision.gameObject.layer != LayerMask.NameToLayer($"Enemy")) return;
-        var info = collision.gameObject.GetComponent<EnemyAttackInfo>();
-        TakeHit(info);
+        switch (atkType)
+        {
+            case AttackType.Melee:
+                var info = new AttackInfo(gameObject.layer, atk, isPoison);
+                controller.TakeHit(info);
+                break;
+            case AttackType.Ranged:
+                var bullet = Instantiate(bulletPrefab, gameObject.transform);
+                bullet.Init(gameObject.layer, atk, isPoison);
+                bullet.FireToPosition(controller.transform.position);
+                break;
+            default:
+                Debug.Log("어택 타입 안정해짐");
+                break;
+        }
     }
-
-    private void TakeHit(EnemyAttackInfo attackInfo)
+    
+    public void TakeHit(AttackInfo attackInfo)
     {
         int damage = (int)(attackInfo.atk * (1 - def / 100));
         // 해당 데미지를 Toast UI로 표현
