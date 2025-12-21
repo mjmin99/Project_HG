@@ -101,6 +101,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
 
     public void FinishRewind()
     {
+        timeRecorder.Clear();
         stateMachine.ChangeState(stateDict[CharStateType.Idle]);
     }
     

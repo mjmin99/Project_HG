@@ -32,7 +32,7 @@ public class TestBattleManager : MonoBehaviour
         foreach (var c in characters)
         {
             if(c.gameObject.activeSelf) 
-                c.stateMachine.ChangeState(c.stateDict[CharStateType.Rewind]);
+                c.RewindTime();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -10,6 +11,7 @@ public class TestMapPresenter : MonoBehaviour
    [SerializeField] private int mapCount = 3;
 
    private Vector3 translatePos;
+   private List<float> hitList = new();
 
    private readonly Queue<Transform> mapQueue = new();
 
@@ -40,11 +42,18 @@ public class TestMapPresenter : MonoBehaviour
 
    private void TranslateMap(Collider hitCol) // hitCol은 충돌한 상대 물체
    {
-      if (hitCol.CompareTag("Player"))
+      if (!hitCol.CompareTag("Player")) return;
+      if (hitList.Count > 0)
       {
-         var t = mapQueue.Dequeue();
-         t.Translate(translatePos);
-         mapQueue.Enqueue(t);
+         foreach (float x in hitList)
+         {
+            var abs = Math.Abs(x - hitCol.bounds.center.x);
+            if (abs <= 1) return;
+         }
       }
+      hitList.Add(hitCol.bounds.center.x);
+      var t = mapQueue.Dequeue();
+      t.Translate(translatePos);
+      mapQueue.Enqueue(t);
    }
 }

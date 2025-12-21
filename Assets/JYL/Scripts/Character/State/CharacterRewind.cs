@@ -34,7 +34,7 @@ public class CharacterRewind : CharacterState
         
         if (!character.HasHistory() && lerpTime >= 1f)
         {
-            character.stateMachine.ChangeState(character.stateDict[CharStateType.Idle]);
+            character.FinishRewind();
             return;
         }
         
