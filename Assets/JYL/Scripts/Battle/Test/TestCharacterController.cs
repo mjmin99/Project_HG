@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class TestCharacterController : MonoBehaviour, IAttackable
@@ -16,22 +13,35 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     [SerializeField] private float def;
     [SerializeField] private bool isPoison;
 
+    public Animator animator;
     public Rigidbody rb;
     public BoxCollider col;
+    public StateMachine stateMachine;
+    
+    public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
 
     private TestBulletController bulletPrefab;
-    private StateMachine stateMachine;
-    private Animator animator;
     
+    private TimeRecorder timeRecorder;
+    
+    private float maxRecordTime;
     private float maxHp;
     
-    private readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
-    public void Init()
+    public void Init(float recordTime)
     {
         rb = gameObject.GetOrAddComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+        
         col = gameObject.GetOrAddComponent<BoxCollider>();
+        col.isTrigger = true;        
         animator = gameObject.GetOrAddComponent<Animator>();
+        
         maxHp = hp;
+        maxRecordTime =  recordTime;
+        
+        timeRecorder = new TimeRecorder(maxRecordTime, Time.fixedDeltaTime);
+        
         stateMachine = new StateMachine();
         stateDict.Add(CharStateType.Idle, new CharacterIdle(this) );
         stateDict.Add(CharStateType.Run, new CharacterRun(this));
@@ -39,28 +49,56 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
         stateDict.Add(CharStateType.Hit, new CharacterHit(this));
         stateDict.Add(CharStateType.Dead, new CharacterDead(this));
+        stateDict.Add(CharStateType.Rewind, new CharacterRewind(this));
+        
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
+        
         if (atkType == AttackType.Ranged)
         {
             bulletPrefab = Resources.Load<TestBulletController>("Test/TestBullet");
         }
     }
 
-    void Update()
+    private void Update()
     {
         stateMachine.Update();
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         stateMachine.FixedUpdate();
+        if (stateMachine.CurrentState != stateDict[CharStateType.Rewind])
+        {
+            RecordTime();
+        }
     }
-
-    void LateUpdate()
+    
+    private void LateUpdate()
     {
         stateMachine.LateUpdate();
     }
 
+    private void RecordTime()
+    {
+        timeRecorder.Record(new TestTimeInfo(transform, hp, shield));
+    }
+    
+    public bool HasHistory() => timeRecorder.HasHistory();
+
+    public TestTimeInfo PopHistory() => timeRecorder.Pop();
+
+    public TestTimeInfo PeekHistory() => timeRecorder.Peek();
+
+    public void RewindTime()
+    {
+        stateMachine.ChangeState(stateDict[CharStateType.Rewind]);
+    }
+
+    public void FinishRewind()
+    {
+        stateMachine.ChangeState(stateDict[CharStateType.Idle]);
+    }
+    
     public void Attack(TestEnemyController controller)
     {
         switch (atkType)
@@ -82,6 +120,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     
     public void TakeHit(AttackInfo attackInfo)
     {
+        if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
         int damage = (int)(attackInfo.atk * (1 - def / 100));
         // 해당 데미지를 Toast UI로 표현
         if (shield > 0 && damage > 0)
@@ -117,6 +156,16 @@ public class TestCharacterController : MonoBehaviour, IAttackable
             hp += healAmount;
             // 힐 이펙트 및 Toast UI 생성
         }
+    }
+
+    public void SetHp(float value)
+    {
+        hp = value;
+    }
+
+    public void SetShield(float value)
+    {
+        shield = value;
     }
 
     public void GetShield(float amount)

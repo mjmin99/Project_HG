@@ -11,6 +11,8 @@ public class TestBulletController : MonoBehaviour
     {
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         col = gameObject.GetOrAddComponent<BoxCollider>();
+        col.isTrigger = true;
+        
         rb.isKinematic = true;
         rb.useGravity = false;
         info = new AttackInfo(attacker, firePower, isPoison);
@@ -22,9 +24,9 @@ public class TestBulletController : MonoBehaviour
         targetVec.Normalize();
         rb.AddForce(targetVec * fireSpeed, ForceMode.Impulse);
     }
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        var comp = collision.gameObject.GetComponent<IAttackable>();
+        var comp = other.gameObject.GetComponent<IAttackable>();
         comp.TakeHit(info);
     }
 }

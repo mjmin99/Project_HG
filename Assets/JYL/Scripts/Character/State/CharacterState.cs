@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class CharacterState : BaseState
 {
     protected TestCharacterController character;
@@ -25,5 +23,6 @@ public enum CharStateType{
     Attack,
     Skill,
     Hit,
-    Dead
+    Dead,
+    Rewind
 }
