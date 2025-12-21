@@ -198,10 +198,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -503,8 +503,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -190, y: -213.6}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -481, y: -472}
+  m_SizeDelta: {x: 423.115, y: 79.335}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &126306330
 MonoBehaviour:
@@ -1018,8 +1018,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 146, y: -213.6}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 407.54187, y: -472.00012}
+  m_SizeDelta: {x: 423.115, y: 79.335}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &219390213
 MonoBehaviour:
@@ -1867,7 +1867,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainSceneUIController
   characterUIButton: {fileID: 219390215}
-  exitButton: {fileID: 0}
 --- !u!4 &544594928
 Transform:
   m_ObjectHideFlags: 0
@@ -2946,10 +2945,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 55.2
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3083,10 +3082,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.46
+  m_fontSize: 55.2
   m_fontSizeBase: 20.46
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3484,8 +3483,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -21, y: -213.6}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -34.083954, y: -471.99982}
+  m_SizeDelta: {x: 423.115, y: 79.335}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &990508899
 MonoBehaviour:
@@ -4517,8 +4516,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -190, y: -173.6}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -481, y: -366.2209}
+  m_SizeDelta: {x: 423.115, y: 79.335}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1154756701
 GameObject:
@@ -6511,10 +6510,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 66.5
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -6598,8 +6597,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 356.8, y: -213.6}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 964.9956, y: -472.00012}
+  m_SizeDelta: {x: 528.894, y: 132.224}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1759745666
 MonoBehaviour:
@@ -6648,10 +6647,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -7445,10 +7444,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 66.5
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -9337,6 +9336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d8bf9dcece23e743bda35c996924e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterListPanel
+  partyPreviewSlots: []
 --- !u!224 &2314819089875328633
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10460,6 +10460,10 @@ MonoBehaviour:
   critDmgText: {fileID: 6595234211010338295}
   rangeText: {fileID: 112637302506400864}
   btnAssign: {fileID: 0}
+  abilitySlotGroup: {fileID: 0}
+  abilitySlotPrefab: {fileID: 0}
+  btnReroll: {fileID: 0}
+  rerollCostText: {fileID: 0}
 --- !u!114 &4757793815105949987
 MonoBehaviour:
   m_ObjectHideFlags: 0
