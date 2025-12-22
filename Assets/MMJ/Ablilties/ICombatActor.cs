@@ -3,13 +3,13 @@
 public interface ICombatActor
 {
     int Id { get; }                // 캐릭터 ID 등
-    CharacterRole Role { get; }    // Tank/Dealer/Healer(=Supporter로 쓸 수도)
+    CharacterRole Role { get; }    // Tank/Dealer/Healer
     AttackType AttackType { get; } // Melee/Ranged
 
     bool IsBoss { get; }           // 대상이 보스인지 여부(보스 추가피해 등)
     bool IsAlive { get; }
 
-    // 현재 체력/최대체력은 네 전투 구현에서 맞춰주면 됨
+    // 현재 체력/최대체력
     float CurrentHP { get; }
     float MaxHP { get; }
 
