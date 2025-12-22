@@ -18,7 +18,6 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     public BoxCollider col;
     public StateMachine stateMachine;
 
-    public Collider[] rayHit;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
 
     private TestBulletController bulletPrefab;
@@ -27,8 +26,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     
     private float maxRecordTime;
     private float maxHp;
-    
-    
+    public RaycastHit hitInfo; // 어택 시 사용하는 정보
     
     public void Init(float recordTime)
     {
@@ -38,6 +36,8 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         
         col = gameObject.GetOrAddComponent<BoxCollider>();
         col.isTrigger = true;
+        col.center = new Vector3(0f, 0.25f, 0f);
+        col.size = new Vector3(0.5f, 0.5f, 0.2f);
 
         animator = gameObject.GetOrAddComponent<Animator>();
         animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"Test/{characterId}_AnimController"); 
@@ -105,18 +105,18 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         stateMachine.ChangeState(stateDict[CharStateType.Idle]);
     }
     
-    public void Attack(TestEnemyController controller)
+    public void Attack()
     {
         switch (atkType)
         {
             case AttackType.Melee:
                 var info = new AttackInfo(gameObject.layer, atk, isPoison);
-                controller.TakeHit(info);
+                hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 break;
             case AttackType.Ranged:
                 var bullet = Instantiate(bulletPrefab, gameObject.transform);
                 bullet.Init(gameObject.layer, atk, isPoison);
-                bullet.FireToPosition(controller.transform.position);
+                bullet.FireToPosition(hitInfo.transform.position);
                 break;
             default:
                 Debug.Log("어택 타입 안정해짐");
