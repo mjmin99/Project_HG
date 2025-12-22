@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResultPanelController : MonoBehaviour
+public class GachaResultPopup : UIPopup
 {
     [Header("Root")]
     public GameObject panel;
@@ -61,7 +61,7 @@ public class ResultPanelController : MonoBehaviour
 
     public void Hide()
     {
-        panel.SetActive(false);
+        OnClose();
         ClearItems();
     }
 }
