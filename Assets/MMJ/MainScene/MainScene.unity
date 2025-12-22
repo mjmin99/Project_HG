@@ -485,7 +485,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &126306329
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4416,7 +4416,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1142458916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6681,7 +6681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1759745665
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9437,6 +9437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d8bf9dcece23e743bda35c996924e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterListPanel
+  animDuration: 0.25
   partyPreviewSlots: []
 --- !u!224 &2314819089875328633
 RectTransform:
@@ -10547,11 +10548,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5276696c0505ae548a4b4090136491c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterDetailPanel
+  animDuration: 0.25
   icon: {fileID: 6794587157532844057}
   nameText: {fileID: 3040905378316016237}
   roleText: {fileID: 424716806269760868}
   levelText: {fileID: 8640564971706662200}
   shardText: {fileID: 2108503616928712517}
+  stars: []
   hpText: {fileID: 8497043841594751175}
   atkText: {fileID: 6203791583654911531}
   matkText: {fileID: 6196895091236810634}
@@ -10561,6 +10564,10 @@ MonoBehaviour:
   critDmgText: {fileID: 6595234211010338295}
   rangeText: {fileID: 112637302506400864}
   btnAssign: {fileID: 0}
+  expSlider: {fileID: 0}
+  expText: {fileID: 0}
+  btnEnhance: {fileID: 0}
+  enhanceCostText: {fileID: 0}
   abilitySlotGroup: {fileID: 0}
   abilitySlotPrefab: {fileID: 0}
   btnReroll: {fileID: 0}

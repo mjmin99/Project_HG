@@ -174,7 +174,6 @@ public class CharacterDetailPanel : UIPanel
 
             ui.Bind(model, inst, i, () =>
             {
-                //RefreshAbilitySlots(model, inst);
                 Refresh();
             });
         }

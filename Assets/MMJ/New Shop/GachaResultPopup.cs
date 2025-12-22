@@ -18,8 +18,10 @@ public class GachaResultPopup : UIPopup
 
     private readonly List<GameObject> spawned = new();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake(); // 부모 Awake 반드시 호출
+
         okButton.onClick.AddListener(Hide);
     }
 

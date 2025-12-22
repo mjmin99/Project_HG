@@ -11,6 +11,8 @@ public abstract class UIBase : MonoBehaviour
     [SerializeField] protected float animDuration = 0.25f;
     protected Sequence sequence;
 
+    private bool _isClosing = false;
+
     protected virtual void Awake()
     {
         rect = transform as RectTransform;
@@ -27,6 +29,9 @@ public abstract class UIBase : MonoBehaviour
 
     public virtual void OnClose()
     {
+        if (_isClosing) return;
+        _isClosing = true;
+
         PlayCloseAnimation();
     }
 
@@ -47,14 +52,12 @@ public abstract class UIBase : MonoBehaviour
     protected virtual void PlayOpenAnimation()
     {
         KillSequence();
-    
-        if (canvasGroup == null)
-            return;
-    
+
+        if (canvasGroup == null) return;
+
         canvasGroup.alpha = 0f;
-    
-        sequence = DOTween.Sequence();
-        sequence.Append(canvasGroup.DOFade(1f, animDuration));
+        sequence = DOTween.Sequence()
+            .Append(canvasGroup.DOFade(1f, animDuration));
     }
 
     //protected virtual void PlayCloseAnimation()
@@ -70,19 +73,19 @@ public abstract class UIBase : MonoBehaviour
     protected virtual void PlayCloseAnimation()
     {
         KillSequence();
-    
+
         if (canvasGroup == null)
         {
             Destroy(gameObject);
             return;
         }
-    
-        sequence = DOTween.Sequence();
-        sequence.Append(canvasGroup.DOFade(0f, animDuration));
-        sequence.OnComplete(() =>
-        {
-            Destroy(gameObject);
-        });
+
+        sequence = DOTween.Sequence()
+            .Append(canvasGroup.DOFade(0f, animDuration))
+            .OnComplete(() =>
+            {
+                Destroy(gameObject);
+            });
     }
 
     protected void KillSequence()
