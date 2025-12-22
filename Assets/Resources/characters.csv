@@ -1,7 +1,7 @@
 ﻿id,name,rareity,role,baseHP,baseAttack,baseMagicAttack,baseDefense,baseAttackSpeed,baseCritRate,baseCritDamage,attackRange,attackType
-0,manjun,5,Tank,300,5,20,5,3,2,1.5,200,Ranged
-1,manjun1,2,Dealer,300,3,21,5,3,2,1.5,100,Melee
-2,jinyoung,3,Healer,350,4,53,5,3,1,1.5,100,Melee
-3,jinyoung1,4,Tank,400,6,12,5,2,2,1.5,100,Melee
-4,guyjin,5,Dealer,643,3,43,5,2,4,1.5,300,Ranged
-5,guyjin1,1,Healer,324,2,13,5,3,2,1.5,300,Ranged
+0,manjun,5,Tank,300,5,20,5,3,0.1,1.5,200,Ranged
+1,manjun1,2,Dealer,300,3,21,5,3,0.2,1.5,100,Melee
+2,jinyoung,3,Healer,350,4,53,5,3,0.3,1.5,100,Melee
+3,jinyoung1,4,Tank,400,6,12,5,2,0.4,1.5,100,Melee
+4,guyjin,5,Dealer,643,3,43,5,2,0.5,1.5,300,Ranged
+5,guyjin1,1,Healer,324,2,13,5,3,1,2,300,Ranged
