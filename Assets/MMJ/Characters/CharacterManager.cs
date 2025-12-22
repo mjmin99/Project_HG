@@ -117,7 +117,7 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
-    private int RequiredExp(int level)
+    public int RequiredExp(int level)
     {
         return level * 5;
     }
@@ -223,5 +223,18 @@ public class CharacterManager : MonoBehaviour
         }
 
         return count;
+    }
+
+    public bool TryEnhanceCharacter(int characterId)
+    {
+        const int COST_GOLD = 100;
+        const int EXP_GAIN = 100;
+
+        if (!SaveManager.Instance.TrySpendGold(COST_GOLD))
+            return false;
+
+        AddExp(characterId, EXP_GAIN);
+        SaveManager.Instance.SaveCurrentUser();
+        return true;
     }
 }
