@@ -17,16 +17,14 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     public Rigidbody rb;
     public BoxCollider col;
     public StateMachine stateMachine;
-
     public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
-
+    public RaycastHit hitInfo; // 어택 시 사용하는 정보
+    public bool isRewinding;
+    
     private TestBulletController bulletPrefab;
-    
     private TimeRecorder timeRecorder;
-    
     private float maxRecordTime;
     private float maxHp;
-    public RaycastHit hitInfo; // 어택 시 사용하는 정보
     
     public void Init(float recordTime)
     {
@@ -58,10 +56,12 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
         
-        if (atkType == AttackType.Ranged)
+        if (atkType != AttackType.Melee)
         {
             bulletPrefab = Resources.Load<TestBulletController>("Test/TestBullet");
         }
+
+        isRewinding = false;
     }
 
     private void Update()
@@ -72,10 +72,9 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     private void FixedUpdate()
     {
         stateMachine.FixedUpdate();
-        if (stateMachine.CurrentState != stateDict[CharStateType.Rewind])
-        {
-            RecordTime();
-        }
+        
+        if (!isRewinding) 
+            timeRecorder.Record(transform.position, hp, shield);
     }
     
     private void LateUpdate()
@@ -83,10 +82,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         stateMachine.LateUpdate();
     }
 
-    private void RecordTime()
-    {
-        timeRecorder.Record(new TestTimeInfo(transform, hp, shield));
-    }
+        
     
     public bool HasHistory() => timeRecorder.HasHistory();
 
@@ -118,6 +114,8 @@ public class TestCharacterController : MonoBehaviour, IAttackable
                 bullet.Init(gameObject.layer, atk, isPoison);
                 bullet.FireToPosition(hitInfo.transform.position);
                 break;
+            case AttackType.Lazer:
+                // OnTriggerEnter로 알아서 처리됨
             default:
                 Debug.Log("어택 타입 안정해짐");
                 break;

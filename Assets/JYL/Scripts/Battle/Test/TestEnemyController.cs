@@ -1,44 +1,59 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TestEnemyController : MonoBehaviour, IAttackable
 {
-    private float hp = 1000f;
-    private float shield = 100f;
+    private float hp = 50f;
+    private float shield = 25f;
     private float def = 7f;
-    private const float HIT_TIMER = 0.5f;
-    private float timer;
 
     [SerializeField] private TestDamageUI damageUi;
     [SerializeField] private RectTransform uiCanvas;
 
     private Animator animator;
     private BoxCollider col;
-    
-    public void Awake()
+
+    public StateMachine stateMachine;
+    public readonly Dictionary<CharStateType, BaseState> stateDict = new();
+
+    public void Init()
     {
-        animator = GetComponent<Animator>();
-        col = GetComponent<BoxCollider>();
+        animator = gameObject.GetOrAddComponent<Animator>();
+        col = gameObject.GetComponent<BoxCollider>();
         
         animator.Play("idle");
         col.center = new Vector3(0, 0.25f, 0);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
         
         damageUi.Init(uiCanvas);
+        
+        stateMachine = new StateMachine();
+        stateDict.Add(CharStateType.Idle, new EnemyIdle(this));
+        stateDict.Add(CharStateType.Attack, new EnemyAttack(this));
+        stateDict.Add(CharStateType.Hit, new EnemyHit(this));
+        stateDict.Add(CharStateType.Dead, new EnemyDead(this));
+        stateMachine.Initialize(stateDict[CharStateType.Idle]);
     }
 
-    public void FixedUpdate()
+    public void PlayAnimation(int key) => animator.Play(key);
+    
+    private void Update()
     {
-        if (timer > HIT_TIMER)
-        {
-            timer = 0f;
-            animator.Play("idle");
-        }
-        else
-        {
-            timer += Time.fixedDeltaTime;
-        }
+        stateMachine.Update();
     }
+
+    private void FixedUpdate()
+    {
+        stateMachine.FixedUpdate();
+    }
+    private void LateUpdate()
+    {
+        stateMachine.LateUpdate();
+    }
+
+    public void ChangeState(CharStateType state) => stateMachine.ChangeState(stateDict[state]);
+    
     public void TakeHit(AttackInfo info)
     {
         animator.Play("hit");

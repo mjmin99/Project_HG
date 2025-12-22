@@ -12,18 +12,24 @@ public class TestBulletController : MonoBehaviour
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         col = gameObject.GetOrAddComponent<BoxCollider>();
         col.isTrigger = true;
-        
-        rb.isKinematic = true;
+        gameObject.transform.position += Vector3.up * 0.25f;
+        rb.isKinematic = false;
         rb.useGravity = false;
         info = new AttackInfo(attacker, firePower, isPoison);
     }
 
     public void FireToPosition(Vector3 pos)
     {
-        var targetVec = pos - transform.position;
+        var targetVec = pos + Vector3.up * 0.25f - transform.position;
         targetVec.Normalize();
         rb.AddForce(targetVec * fireSpeed, ForceMode.Impulse);
     }
+
+    public void LazerFire()
+    {
+        // TODO : 레이저 발사 구현 및 테스트
+    }
+    
     void OnTriggerEnter(Collider other)
     {
         var comp = other.gameObject.GetComponent<IAttackable>();

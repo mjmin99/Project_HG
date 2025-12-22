@@ -12,7 +12,7 @@ public class TestBattleManager : MonoBehaviour
         characters = gameManager.GetParty().ToList();
         foreach (var c in characters)
         {
-            if(c.gameObject.activeSelf) c.Init(15f);
+            if(c.gameObject.activeSelf) c.Init(3f);
         }
     }
     

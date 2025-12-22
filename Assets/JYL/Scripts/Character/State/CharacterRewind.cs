@@ -16,13 +16,14 @@ public class CharacterRewind : CharacterState
 
     public override void Enter()
     {
+        character.isRewinding = true;
         character.rb.isKinematic = true;
         character.col.enabled = false;
 
         character.PlayAnimation(Rewind);
         character.animator.speed = 1f * REWIND_SPEED;
 
-        startInfo = new TestTimeInfo(character.transform, 0, 0);
+        startInfo = new TestTimeInfo(character.transform.position, 0, 0);
         
         targetInfo = character.HasHistory() ? character.PopHistory() : startInfo;
 
@@ -58,8 +59,6 @@ public class CharacterRewind : CharacterState
         }
         
         character.transform.position = Vector3.Lerp(startInfo.position, targetInfo.position, lerpTime);
-        character.transform.rotation = Quaternion.Lerp(startInfo.rotation, targetInfo.rotation, lerpTime);
-        
     }
 
     public override void FixedUpdate()
@@ -71,6 +70,7 @@ public class CharacterRewind : CharacterState
 
     public override void Exit()
     {
+        character.isRewinding = false;
         character.rb.isKinematic = false;
         character.col.enabled = true;
         character.animator.speed = 1f;

@@ -20,9 +20,11 @@ public class TimeRecorder
     }
 
     // 기록하기 (Push) - O(1)
-    public void Record(TestTimeInfo info)
+    public void Record(Vector3 position, float hp, float shield)
     {
-        buffer[head] = info;
+        buffer[head].position = position;
+        buffer[head].hp = hp;
+        buffer[head].shield = shield;
         
         // 원형으로 돌기 위해 모듈러 연산 (%) 사용
         // head가 capacity - 1 과 일치한다는 것은 꽉찼다는 뜻

@@ -46,7 +46,7 @@ public class TestDamageUI : MonoBehaviour
         newText.rectTransform.anchoredPosition = Vector2.zero;
         
         // 랜덤 오프셋 설정
-        float randX = Random.Range(-0.3f, 0.3f); // UnityEngine.Random이 더 간편하면서 성능상 문제 없음
+        float randX = Random.Range(0.1f, 0.4f); // UnityEngine.Random이 더 간편하면서 성능상 문제 없음
         Vector2 endPos = new Vector2(randX, 0.3f);
         
         // 이전 Tween이 실행 중이라면 제거
