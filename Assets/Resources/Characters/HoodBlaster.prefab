@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2405467010508511290}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.36}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -68,8 +68,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainSceneCharacter
   moveSpeed: 1.5
-  minX: -17
-  maxX: 17
+  minX: -9.5
+  maxX: 9.5
   spriteRenderer: {fileID: 8596280148080356827}
   animator: {fileID: 1255639897614869040}
 --- !u!1 &5744927335923592480
@@ -99,9 +99,9 @@ Transform:
   m_GameObject: {fileID: 5744927335923592480}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.85, y: 0, z: -0.64}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0.117, y: -0.389, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5902131489537794566}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
