@@ -1,70 +1,66 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class PartySlotUI : MonoBehaviour
 {
     [Header("UI")]
-    public Image icon;
-    public TMP_Text nameText;
+    [SerializeField] private Image icon;
+    [SerializeField] private TMP_Text nameText;
 
-    [Header("슬롯 정보")]
-    public int slotIndex;       // 0, 1, 2 이런 식으로 인스펙터에서 설정
-    public PartyUI partyUI;     // 인스펙터에 연결 안 해도 자동으로 찾게 해둘거임
+    [Header("Slot")]
+    [SerializeField] private int slotIndex; // 0,1,2 (프리팹에 숫자만 세팅)
+
+    public int SlotIndex => slotIndex;
+
+    // 외부(PartyUI)가 구독할 클릭 이벤트
+    public event Action<int> OnSlotClicked;
+
+    private Button btn;
 
     private void Awake()
     {
-        // PartyUI 자동 찾기 (인스펙터에 안 넣어도 동작하게)
-        if (partyUI == null)
+        btn = GetComponent<Button>();
+        if (btn == null)
         {
-            partyUI = FindFirstObjectByType<PartyUI>();
-            if (partyUI == null)
-            {
-                Debug.LogError("[PartySlotUI] 씬에서 PartyUI를 찾을 수 없습니다!");
-            }
-        }
-
-        // Button 컴포넌트 가져와서 클릭 이벤트 연결
-        var btn = GetComponent<Button>();
-        if (btn != null)
-        {
-            btn.onClick.AddListener(OnClickSlot);
-        }
-        else
-        {
-            Debug.LogWarning("[PartySlotUI] Button 컴포넌트가 없습니다.");
-        }
-    }
-
-    private void OnClickSlot()
-    {
-        if (partyUI == null)
-        {
-            Debug.LogWarning("[PartySlotUI] partyUI가 null이라 슬롯 선택을 처리할 수 없습니다.");
+            Debug.LogError("[PartySlotUI] Button 컴포넌트가 없습니다.");
             return;
         }
 
-        partyUI.SelectSlot(slotIndex);
-        Debug.Log($"[PartySlotUI] {slotIndex}번 슬롯 클릭됨 → PartyUI.SelectSlot 호출");
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(() => OnSlotClicked?.Invoke(slotIndex));
+
+        ClearSlot();
     }
 
-    public void SetCharacter(int id)
+    public void SetCharacter(string characterName, Sprite characterIcon)
     {
-        var model = Manager.Character.models[id];
+        if (nameText != null)
+        {
+            nameText.enabled = true;
+            nameText.text = characterName;
+        }
 
-        nameText.enabled = true;
-        icon.enabled = true;
-
-        nameText.text = model.characterName;
-        icon.sprite = model.Icon;
+        if (icon != null)
+        {
+            icon.enabled = true;
+            icon.sprite = characterIcon;
+        }
     }
 
     public void ClearSlot()
     {
-        nameText.text = "";
-        icon.sprite = null;
+        if (nameText != null)
+        {
+            nameText.text = "";
+            nameText.enabled = false;
+        }
 
-        nameText.enabled = false;
-        icon.enabled = false;
+        if (icon != null)
+        {
+            icon.sprite = null;
+            icon.enabled = false;
+        }
     }
 }

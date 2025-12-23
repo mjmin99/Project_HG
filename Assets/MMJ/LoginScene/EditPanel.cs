@@ -53,14 +53,17 @@ public class EditPanel : MonoBehaviour
                 if (task.IsCanceled)
                 {
                     Debug.LogError("닉네임 변경 취소");
+                    ToastUtil.Error("닉네임 변경이 취소되었습니다.");
                     return;
                 }
                 if (task.IsFaulted)
                 {
                     Debug.LogError($"닉네임 변경 실패. 이유 : {task.Exception}");
+                    ToastUtil.Error("닉네임 변경에 실패했습니다.");
                     return;
                 }
                 Debug.Log("닉네임 변경 완료");
+                ToastUtil.Success("닉네임 변경 완료!");
             });
         
     }
@@ -70,6 +73,7 @@ public class EditPanel : MonoBehaviour
         if (passInput.text != passConfirmInput.text)
         {
             Debug.LogError("비밀번호가 비밀번호 확인과 일치하지 않음");
+            ToastUtil.Error("비밀번호가 서로 일치하지 않습니다.");
             return;
         }
 
