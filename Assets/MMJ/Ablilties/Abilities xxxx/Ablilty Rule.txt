@@ -1,0 +1,20 @@
+숫자 규칙을 지켜서 어빌리티를 만들면 관리가 편하다
+
+
+1xxx: 공용
+2xxx: 딜러
+3xxx: 탱커
+4xxx: 서포터
+
+예외만 딜러의 근접과 원거리 구분인데
+
+[예시]
+public const int CritBonusDamage = 2001;
+public const int RangedAttackUp = 2101;
+
+위에 보이는 것 처럼 
+
+근거리는 2xxx
+원거리는 21xx
+
+로 나타낸다.

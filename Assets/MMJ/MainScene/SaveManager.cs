@@ -19,7 +19,7 @@ public class SaveManager : Singleton<SaveManager>
         else
             Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
     }
-    
+
     protected override void Awake()
     {
         base.Awake();
@@ -98,7 +98,7 @@ public class SaveManager : Singleton<SaveManager>
                     Debug.Log("[SaveManager] Firebase에 세이브 저장 성공!");
             });
     }
-    
+
     public bool TrySpendGold(int amount)
     {
         if (CurrentData.gold < amount)

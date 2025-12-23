@@ -1,11 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public struct CharacterStats
 {
     public float hp;
-    public float maxHp;
     public float attack;
     public float magicAttack;
     public float defense;
@@ -15,4 +14,5 @@ public struct CharacterStats
     public float critDamage;
 
     public float attackRange;
+    public float skillDamageMultiplier; // 어빌리티 스킬 데미지 배율
 }

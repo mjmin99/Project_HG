@@ -1,6 +1,6 @@
 ﻿// using UnityEngine;
-//
-//
+// 
+// 
 // // 테스트용 EnemyController
 // // - 전투 로직 없음
 // // - Enemy(Model) 주입 구조 검증용
@@ -13,7 +13,7 @@
 //     public void Init(Enemy enemyModel)
 //     {
 //         model = enemyModel;
-//
+// 
 //         // 디버그 확인용 로그
 //         Debug.Log(
 //             $"[EnemyController:Test] Init → " +
@@ -23,11 +23,11 @@
 //             $"Range={model.attackRange}, " +
 //             $"Type={model.attackType}"
 //         );
-//
+// 
 //         // 보기 편하게 오브젝트 이름 변경
 //         gameObject.name = $"Enemy_{model.name}";
 //     }
-//
+// 
 //     private void Start()
 //     {
 //         // 테스트용: 씬에서 눈에 보이게 살짝 랜덤 이동
@@ -36,10 +36,10 @@
 //             0f,
 //             Random.Range(-1.5f, 1.5f)
 //         );
-//
+// 
 //         transform.position += offset;
 //     }
-//
+// 
 //     private void OnDestroy()
 //     {
 //         if (model != null)

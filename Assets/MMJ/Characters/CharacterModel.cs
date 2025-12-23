@@ -17,6 +17,15 @@ public class CharacterModel
     public float baseCritDamage;
     public float attackRange;
 
+    public int MaxAbilitySlotCount // 어빌리티 슬롯 카운트
+    {
+        get
+        {
+            // rarity: 1~5
+            return Mathf.Clamp(rarity, 1, 5);
+        }
+    }
+
     public AttackType attackType; // Melee / Ranged
 
     public GameObject prefab;
@@ -43,6 +52,6 @@ public enum CharacterRole
 public enum AttackType
 {
     Melee,
-    Lazer,
-    Ranged
+    Ranged,
+    Lazer
 }
