@@ -368,11 +368,11 @@ Transform:
   m_GameObject: {fileID: 60427088}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 957541721}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &68909172
 GameObject:
@@ -3288,7 +3288,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 957541721}
-  - component: {fileID: 957541720}
   m_Layer: 0
   m_Name: BackGroundRoot
   m_TagString: Untagged
@@ -3296,21 +3295,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &957541720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 957541719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f0dc94bbd98b94786e2428ae9a3939, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BackgroundDragController
-  dragSpeed: 0.01
-  minX: -9.5
-  maxX: 9.5
 --- !u!4 &957541721
 Transform:
   m_ObjectHideFlags: 0
@@ -3325,7 +3309,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 68909173}
-  - {fileID: 60427089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &960354183
@@ -3477,6 +3460,7 @@ GameObject:
   - component: {fileID: 961739752}
   - component: {fileID: 961739751}
   - component: {fileID: 961739750}
+  - component: {fileID: 961739754}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3602,6 +3586,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &961739754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 961739749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee737ddce006f734e9d394e6729a92c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraDragController
+  dragSpeed: 0.01
+  minX: -9.5
+  maxX: 9
 --- !u!1 &975975149
 GameObject:
   m_ObjectHideFlags: 0
@@ -7665,7 +7664,7 @@ GameObject:
   - component: {fileID: 1987070235}
   - component: {fileID: 1987070236}
   m_Layer: 0
-  m_Name: "ChatGPT Image 2025\uB144 12\uC6D4 22\uC77C \uC624\uD6C4 10_22_28"
+  m_Name: "\uC0C1\uC810\uAC00 \uBC30\uACBD"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13859,4 +13858,5 @@ SceneRoots:
   - {fileID: 544594928}
   - {fileID: 1691417223}
   - {fileID: 957541721}
+  - {fileID: 60427089}
   - {fileID: 2070117617}

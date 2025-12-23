@@ -43,6 +43,6 @@ public static class AbilityNameProvider
         return names.TryGetValue(abilityId, out var name)
             ? name
             // : $"Unknown Ability ({abilityId})"; 
-            : $"어빌리티 없음!";
+            : $"Empty";
     }
 }

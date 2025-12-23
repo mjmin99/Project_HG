@@ -1,25 +1,37 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class MainSceneCharacterSpawner : MonoBehaviour
 {
-    [Header("Spawn")]
-    [SerializeField] private Transform characterParent;
-    [SerializeField] private Vector2 spawnXRange = new Vector2(-4f, 4f);
+    [Header("Spawn Range")]
+    [SerializeField] private float spawnMinX = -17f;
+    [SerializeField] private float spawnMaxX = 17f;
     [SerializeField] private float spawnY = 0f;
-    [SerializeField] private float spacing = 1.5f;
+
+    [Header("Spawn Spacing")]
+    [SerializeField] private float minSpacing = 1.5f;
+
+    [Header("Spawn Feel")]
+    [Range(0f, 1f)]
+    [SerializeField] private float idleSpawnChance = 0.3f; // 처음에 멈춰 있을 확률
+
+    [SerializeField] private Transform characterRoot;
+
+    private readonly List<float> usedXPositions = new List<float>();
 
     private void Start()
     {
         SpawnOwnedCharacters();
     }
 
+    // ==============================
+    // Main
+    // ==============================
+
     private void SpawnOwnedCharacters()
     {
         var models = CharacterManager.Instance.models;
         var instances = CharacterManager.Instance.instances;
-
-        float currentX = spawnXRange.x;
 
         foreach (var pair in instances)
         {
@@ -33,26 +45,78 @@ public class MainSceneCharacterSpawner : MonoBehaviour
 
             if (model.prefab == null)
             {
-                Debug.LogWarning($"[Spawner] 캐릭터 {inst.id} prefab 없음");
+                Debug.LogWarning($"[Spawner] prefab 없음 : {model.characterName}");
                 continue;
             }
 
-            Vector3 pos = new Vector3(currentX, spawnY, 0f);
+            float spawnX = GetRandomSpawnX();
+            Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
 
-            GameObject obj = Instantiate(model.prefab, pos, Quaternion.identity, characterParent);
+            GameObject obj = Instantiate(
+                model.prefab,
+                spawnPos,
+                Quaternion.identity,
+                characterRoot
+            );
 
-            // MainSceneCharacter 붙어있는지 확인
-            var mainChar = obj.GetComponent<MainSceneCharacter>();
-            if (mainChar == null)
+            ApplyInitialFeel(obj.GetComponent<MainSceneCharacter>());
+        }
+    }
+
+    // ==============================
+    // Position
+    // ==============================
+
+    private float GetRandomSpawnX()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            float x = Random.Range(spawnMinX, spawnMaxX);
+
+            bool tooClose = false;
+            foreach (float used in usedXPositions)
             {
-                Debug.LogError($"[Spawner] prefab에 MainSceneCharacter 없음: {model.characterName}");
+                if (Mathf.Abs(used - x) < minSpacing)
+                {
+                    tooClose = true;
+                    break;
+                }
             }
 
-            currentX += spacing;
+            if (!tooClose)
+            {
+                usedXPositions.Add(x);
+                return x;
+            }
+        }
 
-            // 화면 밖으로 나가면 다시 왼쪽부터
-            if (currentX > spawnXRange.y)
-                currentX = spawnXRange.x;
+        // fallback (겹쳐도 그냥 배치)
+        float fallback = Random.Range(spawnMinX, spawnMaxX);
+        usedXPositions.Add(fallback);
+        return fallback;
+    }
+
+    // ==============================
+    // Initial Feel
+    // ==============================
+
+    private void ApplyInitialFeel(MainSceneCharacter character)
+    {
+        if (character == null)
+            return;
+
+        // 랜덤 방향 설정
+        int dir = Random.value < 0.5f ? -1 : 1;
+        character.SetDirection(dir);
+
+        // 랜덤 상태 (이미 걷거나 / 멈춰있던 느낌)
+        if (Random.value < idleSpawnChance)
+        {
+            character.StopMove();   // Idle
+        }
+        else
+        {
+            character.StartMove();  // Run
         }
     }
 }

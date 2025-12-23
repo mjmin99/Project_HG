@@ -100,13 +100,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainSceneCharacter
   moveSpeed: 1.5
-  minX: -9.5
-  maxX: 9.5
+  minX: -17
+  maxX: 17
   spriteRenderer: {fileID: 1325751287064433589}
   animator: {fileID: 150317746787761402}
   speechBubblePrefab: {fileID: 4225949701974798922, guid: ef428ef9027a4a14aba9fbc2ccb6d592, type: 3}
   bubbleAnchor: {fileID: 8521427298961673061}
   talkDuration: 2
+  runTimeRange: {x: 2, y: 5}
+  idleTimeRange: {x: 1, y: 3}
+  debugPingPong: 0
+  testMinX: -5
+  testMaxX: 5
 --- !u!1 &8057412089685032265
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,18 +1,25 @@
 ﻿using UnityEngine;
 
-public class BackgroundDragController : MonoBehaviour
+public class CameraDragController : MonoBehaviour
 {
     [Header("Drag")]
     [SerializeField] private float dragSpeed = 0.01f;
 
-    [Header("Limit")]
-    [SerializeField] private float minX;
-    [SerializeField] private float maxX;
+    [Header("Limit (World X)")]
+    [SerializeField] private float minX = -10f;
+    [SerializeField] private float maxX = 10f;
 
     private Vector3 lastMousePos;
     private bool isDragging;
 
-    void Update()
+    private Camera cam;
+
+    private void Awake()
+    {
+        cam = GetComponent<Camera>();
+    }
+
+    private void Update()
     {
         HandleDrag();
     }
@@ -36,12 +43,11 @@ public class BackgroundDragController : MonoBehaviour
         Vector3 delta = Input.mousePosition - lastMousePos;
         lastMousePos = Input.mousePosition;
 
-        float moveX = delta.x * dragSpeed;
+        // 마우스를 오른쪽으로 끌면 화면은 왼쪽으로 이동
+        float moveX = -delta.x * dragSpeed;
 
         Vector3 pos = transform.position;
-        pos.x += moveX;
-        pos.x = Mathf.Clamp(pos.x, minX, maxX);
-
+        pos.x = Mathf.Clamp(pos.x + moveX, minX, maxX);
         transform.position = pos;
     }
 }
