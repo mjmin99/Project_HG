@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ public class TestBattleManager : MonoBehaviour
 
     private void Awake()
     {
-
+        Init();
     }
 
     private void Init()
