@@ -87,7 +87,7 @@ public class LobbyPanel : MonoBehaviour
         gameStartButton.interactable = false;
 
         // 1단계: CSV 로드
-        if (Manager.Character.models.Count == 0)
+        if (CharacterManager.Instance.models.Count == 0)
         {
             Debug.Log("[LobbyPanel] CSV 로드 시작");
             var models = CharacterCSVLoader.Load();
@@ -100,10 +100,10 @@ public class LobbyPanel : MonoBehaviour
                 yield break;
             }
 
-            Manager.Character.LoadModels(models);
+            CharacterManager.Instance.LoadModels(models);
 
             // Prefab 연결
-            foreach (var model in Manager.Character.models.Values)
+            foreach (var model in CharacterManager.Instance.models.Values)
             {
                 model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
                 if (model.prefab == null)
@@ -141,7 +141,7 @@ public class LobbyPanel : MonoBehaviour
         // 3단계: Firebase 세이브 로드
         bool loadComplete = false;
 
-        Manager.Save.InitForUser(user.UserId, () =>
+        SaveManager.Instance.InitForUser(user.UserId, () =>
         {
             loadComplete = true;
         });

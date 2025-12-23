@@ -4,26 +4,26 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-public class SaveManager : Singleton<SaveManager>
+public class SaveManager : MonoBehaviour
 {
+    public static SaveManager Instance;
+
     public SaveData CurrentData { get; private set; }
 
     private DatabaseReference db;
 
-    // 유저 세이브 시 사용되는 함수
-    public void SaveCurrentUser()
+    private void Awake()
     {
-        var user = FirebaseManager.Auth.CurrentUser;
-        if (user != null)
-            SaveToFirebase(user.UserId);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            db = FirebaseDatabase.DefaultInstance.RootReference;
+        }
         else
-            Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
-    }
-    
-    protected override void Awake()
-    {
-        base.Awake();
-        db = FirebaseDatabase.DefaultInstance.RootReference;
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void InitForUser(string userId, System.Action onComplete)
@@ -31,7 +31,7 @@ public class SaveManager : Singleton<SaveManager>
         LoadFromFirebase(userId, onComplete);
     }
 
-    private void LoadFromFirebase(string userId, System.Action onComplete)
+    public void LoadFromFirebase(string userId, System.Action onComplete)
     {
         Debug.Log($"[SaveManager] Firebase 로드 시작: users/{userId}/saveData");
 
@@ -82,7 +82,7 @@ public class SaveManager : Singleton<SaveManager>
             });
     }
 
-    private void SaveToFirebase(string userId)
+    public void SaveToFirebase(string userId)
     {
         SyncFromCharacterManager();
 
@@ -98,7 +98,16 @@ public class SaveManager : Singleton<SaveManager>
                     Debug.Log("[SaveManager] Firebase에 세이브 저장 성공!");
             });
     }
-    
+
+    public void SaveCurrentUser()
+    {
+        var user = FirebaseManager.Auth.CurrentUser;
+        if (user != null)
+            SaveToFirebase(user.UserId);
+        else
+            Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
+    }
+
     public bool TrySpendGold(int amount)
     {
         if (CurrentData.gold < amount)
@@ -129,17 +138,16 @@ public class SaveManager : Singleton<SaveManager>
 
     private SaveData CreateDefaultSaveData()
     {
-        var stages = Resources.LoadAll<StageDataSO>($"Stage/");
-        SaveData data = new SaveData(stages);
+        SaveData data = new SaveData();
 
-        if (Manager.Character.models.Count == 0)
+        if (CharacterManager.Instance.models.Count == 0)
         {
             Debug.LogError("[SaveManager] CharacterManager.models가 비어있음! CSV를 먼저 로드해야 합니다!");
             return data;
         }
 
         // ID 순서로 정렬해서 생성
-        foreach (var pair in Manager.Character.models.OrderBy(x => x.Key))
+        foreach (var pair in CharacterManager.Instance.models.OrderBy(x => x.Key))
         {
             var model = pair.Value;
 
@@ -164,7 +172,7 @@ public class SaveManager : Singleton<SaveManager>
 
     private void ApplyToCharacterManager()
     {
-        Manager.Character.LoadUserInstances(CurrentData.characters);
+        CharacterManager.Instance.LoadUserInstances(CurrentData.characters);
         Debug.Log($"[SaveManager] CharacterManager에 {CurrentData.characters.Count}개 캐릭터 적용");
     }
 
@@ -173,7 +181,7 @@ public class SaveManager : Singleton<SaveManager>
         CurrentData.characters.Clear();
 
         // ID 순서로 정렬해서 동기화
-        var sortedInstances = Manager.Character.instances
+        var sortedInstances = CharacterManager.Instance.instances
             .OrderBy(x => x.Key)
             .Select(x => x.Value);
 

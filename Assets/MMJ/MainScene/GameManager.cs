@@ -12,13 +12,13 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        if (Manager.Character.models.Count == 0)
+        if (CharacterManager.Instance.models.Count == 0)
         {
             Debug.LogError("[GameManager] CharacterManager.models가 비어있음! LobbyPanel을 먼저 거쳐야 합니다.");
             return;
         }
 
-        Debug.Log($"[GameManager] 캐릭터 모델 {Manager.Character.models.Count}개 확인됨");
+        Debug.Log($"[GameManager] 캐릭터 모델 {CharacterManager.Instance.models.Count}개 확인됨");
     }
 
     private void OnEnable()
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator WaitAndLoadParty()
     {
-        while (Manager.Save.CurrentData == null)
+        while (SaveManager.Instance.CurrentData == null)
             yield return null;
 
         LoadParty();
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadParty()
     {
-        int[] party = Manager.Save.CurrentData.partySet;
+        int[] party = SaveManager.Instance.CurrentData.partySet;
 
         Debug.Log($"[GameManager] 파티 데이터: [{party[0]}, {party[1]}, {party[2]}]");
 
@@ -66,19 +66,19 @@ public class GameManager : MonoBehaviour
                 continue;
             }
 
-            if (!Manager.Character.models.ContainsKey(id))
+            if (!CharacterManager.Instance.models.ContainsKey(id))
             {
                 Debug.LogError($"[GameManager] 모델에 ID {id} 없음");
                 continue;
             }
 
-            if (!Manager.Character.instances.ContainsKey(id))
+            if (!CharacterManager.Instance.instances.ContainsKey(id))
             {
                 Debug.LogError($"[GameManager] CharacterInstance에 ID {id} 없음");
                 continue;
             }
 
-            CharacterStats stats = Manager.Character.GetStats(id);
+            CharacterStats stats = CharacterManager.Instance.GetStats(id);
             players[i].ApplyCharacter(id, stats);
         }
 

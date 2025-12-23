@@ -13,7 +13,7 @@ public class CharacterListItem : MonoBehaviour
     public void Setup(int id)
     {
         characterId = id;
-        var model = Manager.Character.models[characterId];
+        var model = CharacterManager.Instance.models[characterId];
         if (nameText != null) nameText.text = model.characterName;
         if (icon != null) icon.sprite = model.Icon;
 

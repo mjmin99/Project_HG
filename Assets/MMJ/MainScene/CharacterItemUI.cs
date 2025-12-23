@@ -15,7 +15,7 @@ public class CharacterItemUI : MonoBehaviour
     {
         characterId = id;
 
-        var model = Manager.Character.models[id];
+        var model = CharacterManager.Instance.models[id];
         nameText.text = model.characterName;
         icon.sprite = model.Icon;
 

@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // 모델 불러오기
-        var model = Manager.Character.models[id];
+        var model = CharacterManager.Instance.models[id];
         if (model.prefab != null)
         {
             currentModelObject = Instantiate(model.prefab, modelRoot);

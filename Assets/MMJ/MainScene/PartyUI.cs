@@ -77,7 +77,7 @@ public class PartyUI : MonoBehaviour
             return;
         }
 
-        if (!Manager.Character.models.TryGetValue(characterId, out var model))
+        if (!CharacterManager.Instance.models.TryGetValue(characterId, out var model))
         {
             Debug.LogWarning($"[PartyUI] 캐릭터 모델 없음: {characterId}");
             slot.ClearSlot();
