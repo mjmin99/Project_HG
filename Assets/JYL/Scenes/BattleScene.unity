@@ -453,11 +453,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestCharacterController
   characterId: 3
-  range: 1
+  range: 2
   fireSpeed: 3
   hp: 200
   shield: 0
-  atkType: 0
+  atkType: 1
   atk: 3
   def: 30
   isPoison: 0
@@ -465,6 +465,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   col: {fileID: 0}
   isRewinding: 0
+  isDead: 0
 --- !u!212 &691429459
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -616,7 +617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestCharacterController
   characterId: 2
-  range: 10
+  range: 1.5
   fireSpeed: 5
   hp: 70
   shield: 0
@@ -628,6 +629,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   col: {fileID: 0}
   isRewinding: 0
+  isDead: 0
 --- !u!212 &826694280
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1008,10 +1010,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee8cd4dbf1cc5ac4ba4b6616b134d308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestEnemyController
+  atk: 15
   damageUi: {fileID: 2414620437417163177}
   uiCanvas: {fileID: 3179389130914203356}
   animator: {fileID: 0}
   col: {fileID: 0}
+  isDead: 0
 --- !u!95 &1136218771
 Animator:
   serializedVersion: 7
@@ -1490,6 +1494,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   col: {fileID: 0}
   isRewinding: 0
+  isDead: 0
 --- !u!212 &2129231509
 SpriteRenderer:
   m_ObjectHideFlags: 0

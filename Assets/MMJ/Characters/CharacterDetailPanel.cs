@@ -39,13 +39,13 @@ public class CharacterDetailPanel : UIPanel
 
     private void Refresh()
     {
-        if (!CharacterManager.Instance.models.TryGetValue(currentCharacterId, out var model))
+        if (!Manager.Character.models.TryGetValue(currentCharacterId, out var model))
             return;
 
-        if (!CharacterManager.Instance.instances.TryGetValue(currentCharacterId, out var inst))
+        if (!Manager.Character.instances.TryGetValue(currentCharacterId, out var inst))
             return;
 
-        var stats = CharacterManager.Instance.GetStats(currentCharacterId);
+        var stats = Manager.Character.GetStats(currentCharacterId);
 
         // ===== 기존 표시 로직 그대로 =====
         icon.sprite = model.Icon;
