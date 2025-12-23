@@ -407,7 +407,7 @@ GameObject:
   - component: {fileID: 9055232520151387547}
   - component: {fileID: 1821010056425546587}
   - component: {fileID: 2421404742419629045}
-  - component: {fileID: 907853968173404396}
+  - component: {fileID: -1346427363540151690}
   m_Layer: 5
   m_Name: ShopPanel
   m_TagString: Untagged
@@ -473,7 +473,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &907853968173404396
+--- !u!114 &-1346427363540151690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -482,7 +482,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3820985546506236743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1833256b5f08e544bb46f6aaea2f48b9, type: 3}
+  m_Script: {fileID: 11500000, guid: ad0505a77189b394d947755c87ad1b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopPanel
   animDuration: 0.25
@@ -1755,7 +1755,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 907853968173404396}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ShopPanel, Assembly-CSharp
         m_MethodName: OnClose
         m_Mode: 1
