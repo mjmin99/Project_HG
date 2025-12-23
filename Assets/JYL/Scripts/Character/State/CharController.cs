@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class CharController : MonoBehaviour
 {
     
     public Rigidbody2D rb;

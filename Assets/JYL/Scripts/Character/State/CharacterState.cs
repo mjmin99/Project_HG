@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class CharacterState : BaseState
 {
-    protected TestCharacterController character;
+    protected TestCharController @char;
     
     protected Ray ray;
     protected static readonly int EnemyMask =  LayerMask.GetMask("Enemy");
     
 
-    protected CharacterState(TestCharacterController character)
+    protected CharacterState(TestCharController @char)
     {
-        this.character = character;
+        this.@char = @char;
     }
     public override void Enter() { }
 

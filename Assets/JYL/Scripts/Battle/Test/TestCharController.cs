@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestCharacterController : MonoBehaviour, IAttackable
+public class TestCharController : MonoBehaviour, IAttackable
 {
     [SerializeField] private int characterId;
     [SerializeField] public float range;

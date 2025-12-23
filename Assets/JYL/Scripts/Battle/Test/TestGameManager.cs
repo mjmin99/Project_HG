@@ -8,7 +8,7 @@ public class TestGameManager : MonoBehaviour
     // TODO: 임시 캐릭터 파티 편성.
     // 실제로는 GameManager측에서 CharacterInstance와 Model을 가지고
     // BattleManager 쪽에서 컨트롤러 생성해야 함
-    [SerializeField] private TestCharacterController[] characters;
+    [SerializeField] private TestCharController[] characters;
     [SerializeField] private TestEnemyController[] enemies;
 
     public int curStageWorld;
@@ -19,7 +19,7 @@ public class TestGameManager : MonoBehaviour
         curStageLevel = testStageData.stage;
     }
 
-    public TestCharacterController[] GetParty()
+    public TestCharController[] GetParty()
     {
         return characters;
     }

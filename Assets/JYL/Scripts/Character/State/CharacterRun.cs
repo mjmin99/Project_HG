@@ -3,28 +3,28 @@ using UnityEngine;
 public class CharacterRun : CharacterState
 {
     private const float MOVE_SPEED = 3f;
-    public CharacterRun(TestCharacterController character) : base(character) { }
+    public CharacterRun(TestCharController @char) : base(@char) { }
 
     public override void Enter()
     {
-        character.rb.linearVelocity = Vector3.right * MOVE_SPEED;
-        character.PlayAnimation(Run);
+        @char.rb.linearVelocity = Vector3.right * MOVE_SPEED;
+        @char.PlayAnimation(Run);
     }
     
     public override void Update()
     {
-        ray = new Ray(character.transform.position, Vector3.right);
-        bool isHit = Physics.Raycast(ray, character.range, EnemyMask);
-        Debug.DrawRay(ray.origin, ray.direction * character.range, Color.red);
+        ray = new Ray(@char.transform.position, Vector3.right);
+        bool isHit = Physics.Raycast(ray, @char.range, EnemyMask);
+        Debug.DrawRay(ray.origin, ray.direction * @char.range, Color.red);
 
         if (isHit)
         {
-            character.stateMachine.ChangeState(character.stateDict[CharStateType.Attack]);
+            @char.stateMachine.ChangeState(@char.stateDict[CharStateType.Attack]);
         }
     }
 
     public override void Exit()
     {
-        character.rb.linearVelocity = Vector3.zero;
+        @char.rb.linearVelocity = Vector3.zero;
     }
 }

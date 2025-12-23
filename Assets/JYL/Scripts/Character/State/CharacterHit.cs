@@ -5,14 +5,14 @@ public class CharacterHit : CharacterState
     private const float HIT_TIMER = 0.2f;
     private float timer;
     
-    public CharacterHit(TestCharacterController character) : base(character)
+    public CharacterHit(TestCharController @char) : base(@char)
     {
         RunFixedUpdate = true;
     }
 
     public override void Enter()
     {
-        character.PlayAnimation(Hit);
+        @char.PlayAnimation(Hit);
         timer = 0f;
     }
 
@@ -21,8 +21,8 @@ public class CharacterHit : CharacterState
         timer += Time.deltaTime;
         if (timer > HIT_TIMER)
         {
-            character.stateMachine
-                .ChangeState(character.stateDict[CharStateType.Idle]);
+            @char.stateMachine
+                .ChangeState(@char.stateDict[CharStateType.Idle]);
         }
     }
 

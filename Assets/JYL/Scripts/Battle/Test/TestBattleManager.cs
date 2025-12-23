@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TestBattleManager : MonoBehaviour
 {
-    private List<TestCharacterController> characters;
+    private List<TestCharController> characters;
     private List<TestEnemyController> enemies;
     [SerializeField] private TestGameManager gameManager;
 

@@ -8,25 +8,25 @@ public class CharacterRewind : CharacterState
 
     private const float REWIND_SPEED = 1.5f;
 
-    public CharacterRewind(TestCharacterController character) : base(character)
+    public CharacterRewind(TestCharController @char) : base(@char)
     {
-        this.character = character;
+        this.@char = @char;
         RunFixedUpdate = true;
     }
 
     public override void Enter()
     {
-        character.isRewinding = true;
-        character.rb.isKinematic = true;
-        character.col.enabled = false;
+        @char.isRewinding = true;
+        @char.rb.isKinematic = true;
+        @char.col.enabled = false;
 
-        if(!character.isDead) character.PlayAnimation(Rewind);
+        if(!@char.isDead) @char.PlayAnimation(Rewind);
         
-        character.animator.speed = 1f * REWIND_SPEED;
+        @char.animator.speed = 1f * REWIND_SPEED;
 
-        startInfo = new TestTimeInfo(character.transform.position, 0, 0);
+        startInfo = new TestTimeInfo(@char.transform.position, 0, 0);
         
-        targetInfo = character.HasHistory() ? character.PopHistory() : startInfo;
+        targetInfo = @char.HasHistory() ? @char.PopHistory() : startInfo;
 
         lerpTime = 0f;
     }
@@ -34,9 +34,9 @@ public class CharacterRewind : CharacterState
     public override void Update()
     {
         // 기록이 없으면 종료
-        if (!character.HasHistory() && lerpTime >= 1f)
+        if (!@char.HasHistory() && lerpTime >= 1f)
         {
-            character.FinishRewind();
+            @char.FinishRewind();
             return;
         }
         
@@ -46,14 +46,14 @@ public class CharacterRewind : CharacterState
 
         if (lerpTime >= 1f)
         {
-            if (character.HasHistory())
+            if (@char.HasHistory())
             {
                 startInfo = targetInfo;
-                targetInfo = character.PopHistory();
-                if (character.isDead && targetInfo.hp > 0)
+                targetInfo = @char.PopHistory();
+                if (@char.isDead && targetInfo.hp > 0)
                 {
-                    character.isDead = false;
-                    character.PlayAnimation(Rewind);
+                    @char.isDead = false;
+                    @char.PlayAnimation(Rewind);
                 }
 
                 lerpTime -= 1f;
@@ -64,21 +64,21 @@ public class CharacterRewind : CharacterState
             }
         }
         
-        character.transform.position = Vector3.Lerp(startInfo.position, targetInfo.position, lerpTime);
+        @char.transform.position = Vector3.Lerp(startInfo.position, targetInfo.position, lerpTime);
     }
 
     public override void FixedUpdate()
     {
-        character.SetHp(targetInfo.hp);
-        character.SetShield(targetInfo.shield);
+        @char.SetHp(targetInfo.hp);
+        @char.SetShield(targetInfo.shield);
         
     }
 
     public override void Exit()
     {
-        character.isRewinding = false;
-        character.rb.isKinematic = false;
-        character.col.enabled = true;
-        character.animator.speed = 1f;
+        @char.isRewinding = false;
+        @char.rb.isKinematic = false;
+        @char.col.enabled = true;
+        @char.animator.speed = 1f;
     }
 }

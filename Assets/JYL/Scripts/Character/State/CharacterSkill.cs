@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterSkill : CharacterState
 {
-    public CharacterSkill(TestCharacterController character) : base(character)
+    public CharacterSkill(TestCharController @char) : base(@char)
     {
         RunFixedUpdate = true;
     }
