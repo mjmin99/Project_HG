@@ -18,6 +18,9 @@ public class TestEnemyController : MonoBehaviour, IAttackable
     public RaycastHit hitInfo;
     public StateMachine stateMachine;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
+    private const float HIT_COOLDOWN = 3f;
+    private float hitCoolTimer;
+    public bool isDead;
 
     public void Init()
     {
@@ -43,6 +46,7 @@ public class TestEnemyController : MonoBehaviour, IAttackable
     private void Update()
     {
         stateMachine.Update();
+        if(hitCoolTimer > 0f) hitCoolTimer -= Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -87,11 +91,13 @@ public class TestEnemyController : MonoBehaviour, IAttackable
             hp = 0;
             Debug.Log("에너미 죽음");
             stateMachine.ChangeState(stateDict[CharStateType.Dead]);
+            isDead = true;
         }
         
-        else
+        else if(hitCoolTimer <= 0f)
         {
            stateMachine.ChangeState(stateDict[CharStateType.Hit]);
+           hitCoolTimer = HIT_COOLDOWN;
         }
     }
 }

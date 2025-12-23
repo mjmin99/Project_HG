@@ -26,6 +26,9 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     private TimeRecorder timeRecorder;
     private float maxRecordTime;
     private float maxHp;
+
+    private const float HIT_COOLDOWN = 3f;
+    private float hitTimer;
     
     public void Init(float recordTime)
     {
@@ -68,6 +71,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     private void Update()
     {
         stateMachine.Update();
+        if (hitTimer > 0f) hitTimer += Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -153,6 +157,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         {
             stateMachine.ChangeState(
                 stateDict[CharStateType.Hit]);
+            hitTimer = HIT_COOLDOWN;
         }
     }
 

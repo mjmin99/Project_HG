@@ -10,6 +10,11 @@ public class TestBattleManager : MonoBehaviour
 
     private void Awake()
     {
+
+    }
+
+    private void Init()
+    {
         characters = gameManager.GetParty().ToList();
         foreach (var c in characters)
         {
@@ -21,7 +26,6 @@ public class TestBattleManager : MonoBehaviour
             if (c.gameObject.activeSelf) c.Init();
         }
     }
-    
     void Start()
     {
         
@@ -31,6 +35,12 @@ public class TestBattleManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.R))
             TestTimeRewind();
+        foreach (var e in enemies)
+        {
+            if (!e.isDead) return;
+        }
+
+        StageClear();
     }
 
     public void TestTimeRewind()
@@ -40,5 +50,23 @@ public class TestBattleManager : MonoBehaviour
             if(c.gameObject.activeSelf) 
                 c.RewindTime();
         }
+    }
+
+    private void StageClear()
+    {
+        // 클리어 UI 출력
+        // 1. 보상 UI
+        // 2. 재시작, 메인씬으로 나가기
+    }
+
+    private void RestartStage()
+    {
+        // 스테이지 재시작
+        // 씬을 다시 불러오는 것으로 해결함. GameManager쪽으로 기능 이관
+    }
+
+    private void ExitStage()
+    {
+        // MainScene으로 씬 전환
     }
 }
