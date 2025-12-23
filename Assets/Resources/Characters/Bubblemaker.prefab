@@ -192,6 +192,7 @@ MonoBehaviour:
   runTimeRange: {x: 2, y: 5}
   idleTimeRange: {x: 1, y: 3}
   debugPingPong: 0
+  dialogueData: {fileID: 11400000, guid: 4ef921b83979cfe40b6e9e3b9f5c5fd2, type: 2}
   testMinX: -5
   testMaxX: 5
 --- !u!1 &6762064033071247969

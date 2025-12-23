@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0013, y: -0.0181}
-  m_SizeDelta: {x: 825.2258, y: 463.15}
+  m_AnchoredPosition: {x: -0.185, y: -0.065}
+  m_SizeDelta: {x: 560.457, y: 282.485}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6446418393615448544
 CanvasRenderer:
@@ -146,6 +146,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4193151282988610881}
+  - component: {fileID: -4824031775225854416}
   m_Layer: 0
   m_Name: SpeechBubble
   m_TagString: Untagged
@@ -169,6 +170,19 @@ Transform:
   - {fileID: 2727120962918776726}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-4824031775225854416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4225949701974798922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c239084bdafb441b8b0c1c71b5769d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpeechBubble
+  dialogueText: {fileID: 2226090507764085834}
 --- !u!1 &4505602811255069210
 GameObject:
   m_ObjectHideFlags: 0

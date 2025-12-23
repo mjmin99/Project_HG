@@ -24,6 +24,9 @@ public class MainSceneCharacter : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool debugPingPong = false;
 
+    [Header("Dialogue")]
+    [SerializeField] private CharacterDialogueData dialogueData;
+
     private float stateTimer = 0f;
     private float currentStateDuration = 0f;
 
@@ -130,7 +133,8 @@ public class MainSceneCharacter : MonoBehaviour
         StopMove();
 
         // 말풍선 표시
-        ShowSpeechBubble();
+        string text = GetDialogue();
+        ShowSpeechBubble(text);
 
         // 기존 코루틴 정리
         if (talkCoroutine != null)
@@ -139,7 +143,7 @@ public class MainSceneCharacter : MonoBehaviour
         talkCoroutine = StartCoroutine(TalkRoutine());
     }
 
-    private void ShowSpeechBubble()
+    private void ShowSpeechBubble(string text)
     {
         if (currentBubble != null)
             Destroy(currentBubble);
@@ -150,6 +154,9 @@ public class MainSceneCharacter : MonoBehaviour
             Quaternion.identity,
             bubbleAnchor
         );
+
+        var bubble = currentBubble.GetComponent<SpeechBubble>();
+        bubble.SetText(text);
     }
 
     private IEnumerator TalkRoutine()
@@ -192,11 +199,19 @@ public class MainSceneCharacter : MonoBehaviour
         currentStateDuration = Random.Range(runTimeRange.x, runTimeRange.y);
     }
 
+    private string GetDialogue()
+    {
+        if (dialogueData == null)
+            return "...";
+
+        return dialogueData.GetRandomDialogue();
+    }
+
+
     // 테스트용
 
     [SerializeField] private float testMinX = -17f;
     [SerializeField] private float testMaxX = 17f;
-
     private void UpdatePingPong()
     {
         // 항상 달리는 상태
