@@ -21,6 +21,16 @@ public class GameManager : MonoBehaviour
         Debug.Log($"[GameManager] 캐릭터 모델 {CharacterManager.Instance.models.Count}개 확인됨");
     }
 
+    private void OnEnable()
+    {
+        PartyService.OnPartyChanged += OnPartyChanged;
+    }
+
+    private void OnDisable()
+    {
+        PartyService.OnPartyChanged -= OnPartyChanged;
+    }
+
     private void Start()
     {
         StartCoroutine(WaitAndLoadParty());
@@ -29,10 +39,14 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitAndLoadParty()
     {
         while (SaveManager.Instance.CurrentData == null)
-        {
             yield return null;
-        }
 
+        LoadParty();
+    }
+
+    private void OnPartyChanged(int[] partySet, int changedSlot, int characterId)
+    {
+        // 메인씬에서도 즉시 반영
         LoadParty();
     }
 

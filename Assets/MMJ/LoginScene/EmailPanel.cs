@@ -30,6 +30,7 @@ public class EmailPanel : MonoBehaviour
                     Debug.Log($"인증 이메일 전송이 실패. 이유 : {task.Exception}");
                 }
                 Debug.Log("인증 이메일 전송 성공");
+                ToastUtil.Info("인증 이메일을 전송했습니다. 메일을 확인해주세요.");
 
                 emailVerificaionRoutine = StartCoroutine(EmailVerificaionRoutine());
                 
@@ -58,6 +59,7 @@ public class EmailPanel : MonoBehaviour
             if (user.IsEmailVerified)
             {
                 Debug.Log("인증완료");
+                ToastUtil.Success("이메일 인증이 완료되었습니다!");
                 nicknamePanel.SetActive(true);
                 gameObject.SetActive(false);
                 StopCoroutine(emailVerificaionRoutine);
@@ -65,6 +67,7 @@ public class EmailPanel : MonoBehaviour
             else 
             {
                 Debug.Log("인증 대기중...");
+                ToastUtil.Info("이메일 인증을 기다리는 중입니다...");
             }
         }
     }

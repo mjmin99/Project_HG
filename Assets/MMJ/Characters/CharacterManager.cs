@@ -53,7 +53,6 @@ public class CharacterManager : MonoBehaviour
             return new CharacterStats();
         }
 
-        // ⚠ 성급은 model.rarity만 사용
         return inst.GetStats(model);
     }
 
@@ -85,7 +84,7 @@ public class CharacterManager : MonoBehaviour
 
         if (!instances.TryGetValue(id, out var inst))
         {
-
+            // 신규 캐릭터 생성
             inst = new CharacterInstance
             {
                 id = id,
@@ -96,12 +95,13 @@ public class CharacterManager : MonoBehaviour
             };
 
             instances[id] = inst;
-            Debug.Log($"[CharacterManager] 신규 캐릭터 생성 & 획득 ID: {id}");
+            Debug.Log($"[CharacterManager] 신규 캐릭터 획득! ID: {id}");
             return;
         }
 
         if (!inst.isOwned)
         {
+            // 미소유 → 소유 전환
             inst.isOwned = true;
             inst.level = 1;
             inst.exp = 0;
@@ -111,12 +111,11 @@ public class CharacterManager : MonoBehaviour
         }
         else
         {
-            // 중복 캐릭터 → 조각 변환
+            // 중복 → 조각 지급
             inst.shard += 10;
             Debug.Log($"[CharacterManager] 중복 캐릭터! 조각 +10 (현재: {inst.shard})");
         }
     }
-
 
     private int RequiredExp(int level)
     {

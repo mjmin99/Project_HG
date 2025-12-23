@@ -6,34 +6,16 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogManager : MonoBehaviour
+public class DialogManager : Singleton<DialogManager>
 {
-    /// <summary>
-    /// 각 값들과 참조들을 정확히 연결해야 함
-    /// StartDialog()로 대화 시작
-    /// </summary>
-    [Header("Set Manager")]
-    [SerializeField] private AudioManager audioManager;
+    // StartDialog()로 대화 시작
 
+    private DialogUICanvas canvas;
+    private PortraitPrefab portraitPrefab;
+    
     [Header("Set Values")] 
     [SerializeField] private string csvPath = "CSV/TestDialog";
     [SerializeField][Range(0.01f, 0.1f)] private float outputTime = 0.04f;    
-    
-    [Header("Set UI References")]
-    [SerializeField] private Image fadeImage;
-    [SerializeField] private GameObject backGroundPanel;
-    [SerializeField] private Image backgroundImage;
-    [SerializeField] private GameObject characterContent;
-    [SerializeField] private PortraitUIPanel portraitUIPanel;
-    [SerializeField] private PortraitPrefab portraitPrefab;
-    [SerializeField] private TMP_Text nameField;
-    [SerializeField] private TMP_Text dialogText;
-    [SerializeField] private Button skipButton;
-   
-    // TODO: Dialog Test
-    [Header("For Test")]
-    [SerializeField] private Button testButton;
-    [SerializeField] private DialogKey testKey = DialogKey.Test1;
 
     // 텍스트 재생 변수
     private bool isTyping;
@@ -48,21 +30,22 @@ public class DialogManager : MonoBehaviour
     private Dictionary<DialogKey, Dialog> dialogs;
     
     #region Initialize
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         Init();
     }
 
     private void Init()
     {
-        backGroundPanel.gameObject.SetActive(false);
-        fadeImage.gameObject.SetActive(false);
+        canvas = Resources.Load<DialogUICanvas>($"UI/DialogCanvas");
+        canvas = Instantiate(canvas,transform);
+        canvas.Init();
+        portraitPrefab = Resources.Load<PortraitPrefab>($"UI/PortraitPrefab");
         GetDialogFromCsv();
-        testButton.OnClickAsObservable().Subscribe(_ => StartDialog(testKey).ToAsyncLazy());
-        originFadeImgColor = fadeImage.color;
+        originFadeImgColor = canvas.fadeImage.color;
         fadedImgColor = originFadeImgColor;
         fadedImgColor.a = 0f;
-        skipButton.OnClickAsObservable().Subscribe(_ => DialogSkip());
     }
 
     private void GetDialogFromCsv()
@@ -86,8 +69,8 @@ public class DialogManager : MonoBehaviour
     {
         Dialog dialog = GetDialog(key);
         Time.timeScale = 0f;
-        dialogText.text = "";
-        nameField.text = "";
+        canvas.dialogText.text = "";
+        canvas.nameField.text = "";
         
         foreach (DialogLine line in dialog.dialogContents)
         {
@@ -95,6 +78,12 @@ public class DialogManager : MonoBehaviour
         }
 
         await EndDialog();
+    }
+    
+    // 대화 스킵에 쓰이는 함수. 버튼에 달림
+    public void DialogSkip()
+    {
+        isSkip = true;
     }
     
     #region Inner Logic
@@ -115,15 +104,15 @@ public class DialogManager : MonoBehaviour
             typingTween.Kill();
             return;
         }
-        dialogText.text = content;
-        dialogText.maxVisibleCharacters = 0;
+        canvas.dialogText.text = content;
+        canvas.dialogText.maxVisibleCharacters = 0;
 
         int total = content.Length;
         isTyping = true;
 
         typingTween = DOTween.To(
-            () => dialogText.maxVisibleCharacters,
-            x => dialogText.maxVisibleCharacters = x, 
+            () => canvas.dialogText.maxVisibleCharacters,
+            x => canvas.dialogText.maxVisibleCharacters = x, 
             total,
             outputTime * total)
             .SetUpdate(true)
@@ -145,7 +134,7 @@ public class DialogManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 typingTween.Kill();
-                dialogText.maxVisibleCharacters = total;
+                canvas.dialogText.maxVisibleCharacters = total;
                 isTyping = false;
                 await UniTask.Yield(PlayerLoopTiming.Update);
                 break;
@@ -192,29 +181,29 @@ public class DialogManager : MonoBehaviour
                 break;
             case DialogType.CharacterIn:
                 // 현재 스프라이트 패널 UI에 요소로 신규 캐릭터 추가
-                await portraitUIPanel.AddPortrait(line.speakerId);
+                await canvas.portraitUIPanel.AddPortrait(line.speakerId);
                 break;
             case DialogType.CharacterOut:
                 // 현재 스프라이트 패널 UI에서 해당 캐릭터 뺌
-                await portraitUIPanel.RemovePortrait(line.speakerId);
+                await canvas.portraitUIPanel.RemovePortrait(line.speakerId);
                 break;
             case DialogType.NoVoice:
                 // 노 보이스는 나레이션임
-                nameField.text = "";
+                canvas.nameField.text = "";
                 // 이름 부분 UI 끄기
-                await portraitUIPanel.HighlightOff();
+                await canvas.portraitUIPanel.HighlightOff();
                 break;
             case DialogType.WithVoice:
                 // 보이스 찾아서 출력
-                audioManager.PlayVoice(line.lineId);
+                Manager.Audio.PlayVoice(line.lineId);
                 // 화자 이름 설정
-                nameField.text = line.speakerId;
+                canvas.nameField.text = line.speakerId;
                 // 화자 하이라이트
-                await portraitUIPanel.HighlightSpeaker(line.speakerId);
+                await canvas.portraitUIPanel.HighlightSpeaker(line.speakerId);
                 break;
             case DialogType.PlaySfx:
                 // 효과음 재생 기능
-                float delay = audioManager.PlaySfx(line.sfxKey);
+                float delay = Manager.Audio.PlaySfx(line.sfxKey);
                 await UniTask.Delay((int)delay*1000);
                 break;
         }
@@ -223,11 +212,11 @@ public class DialogManager : MonoBehaviour
     // 대화 UI 종료
     private async UniTask EndDialog()
     {
-        nameField.text = "";
-        dialogText.text = "";
+        canvas.nameField.text = "";
+        canvas.dialogText.text = "";
         
         await DialogFadeOut();
-        await portraitUIPanel.InitializeUI();
+        await canvas.portraitUIPanel.InitializeUI();
         
         Time.timeScale = 1f;
         isSkip = false;
@@ -240,9 +229,9 @@ public class DialogManager : MonoBehaviour
         var container = Resources.Load<SpriteContainer>($"Image/Background/{type}");
         
         // 처음 변경하는 경우
-        if (!backGroundPanel.gameObject.activeSelf)
+        if (!canvas.backGroundPanel.gameObject.activeSelf)
         {
-            backgroundImage.sprite = container.sprite;
+            canvas.backgroundImage.sprite = container.sprite;
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
 
@@ -250,7 +239,7 @@ public class DialogManager : MonoBehaviour
         else
         {
             await FadeOutBackUI();
-            backgroundImage.sprite = container.sprite;
+            canvas.backgroundImage.sprite = container.sprite;
             await FadeInBackUI();
         }
     }
@@ -258,7 +247,7 @@ public class DialogManager : MonoBehaviour
     // 대화 창 UI 페이드 인
     private async UniTask DialogFadeIn()
     {
-        backGroundPanel.SetActive(true);
+        canvas.backGroundPanel.SetActive(true);
         await FadeInBackUI();
         
         await UniTask.Yield(PlayerLoopTiming.Update);
@@ -268,50 +257,44 @@ public class DialogManager : MonoBehaviour
     private async UniTask DialogFadeOut()
     {
         await FadeOutBackUI();
-        backGroundPanel.SetActive(false);
+        canvas.backGroundPanel.SetActive(false);
         
         await UniTask.Yield(PlayerLoopTiming.Update);
     }
 
     private async UniTask FadeInBackUI()
     {
-        fadeImage.gameObject.SetActive(true);
-        fadeImage.color = originFadeImgColor;
+        canvas.fadeImage.gameObject.SetActive(true);
+        canvas.fadeImage.color = originFadeImgColor;
         
         await UniTask.Yield(PlayerLoopTiming.Update);
         
-        await fadeImage
+        await canvas.fadeImage
             .DOColor(fadedImgColor, 1f)
             .SetEase(Ease.Linear)
             .SetUpdate(true)
             .AsyncWaitForCompletion()
             .AsUniTask();
         
-        fadeImage.gameObject.SetActive(false);
+        canvas.fadeImage.gameObject.SetActive(false);
     }
 
     private async UniTask FadeOutBackUI()
     {
-        fadeImage.gameObject.SetActive(true);
-        fadeImage.color = fadedImgColor;
+        canvas.fadeImage.gameObject.SetActive(true);
+        canvas.fadeImage.color = fadedImgColor;
         
         
         await  UniTask.Yield(PlayerLoopTiming.Update);
         
-        await fadeImage.DOColor(originFadeImgColor, 1f)
+        await canvas.fadeImage.DOColor(originFadeImgColor, 1f)
             .SetEase(Ease.Linear)
             .SetUpdate(true)
             .AsyncWaitForCompletion()
             .AsUniTask();
         
         
-        fadeImage.gameObject.SetActive(false);
-    }
-    
-    // 대화 스킵에 쓰이는 함수. 버튼에 달림
-    private void DialogSkip()
-    {
-        isSkip = true;
+        canvas.fadeImage.gameObject.SetActive(false);
     }
     #endregion
 }
