@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MainSceneCharacter : MonoBehaviour
 {
@@ -11,18 +12,48 @@ public class MainSceneCharacter : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
 
-    private int moveDir = 1; // 1 = 오른쪽, -1 = 왼쪽
-    private bool isPaused = false;
+    [Header("Speech")]
+    [SerializeField] private GameObject speechBubblePrefab;
+    [SerializeField] private Transform bubbleAnchor; // 머리 위 위치
+    [SerializeField] private float talkDuration = 2f;
+
+    private GameObject currentBubble;
+    private Coroutine talkCoroutine;
+
+    private MainSceneCharacterState state = MainSceneCharacterState.Idle;
+    private int moveDir = 1;
+
+    private void Start()
+    {
+        ChangeState(MainSceneCharacterState.Run);
+    }
 
     private void Update()
     {
-        if (isPaused)
-            return;
-
-        Move();
+        if (state == MainSceneCharacterState.Run)
+            UpdateMove();
     }
 
-    private void Move()
+    // ==============================
+    // FSM
+    // ==============================
+
+    private void ChangeState(MainSceneCharacterState newState)
+    {
+        if (state == newState)
+            return;
+
+        state = newState;
+
+        // Animator는 상태를 "표현"만 함
+        animator.SetBool("IsRun", state == MainSceneCharacterState.Run);
+    }
+
+    // ==============================
+    // Move Logic
+    // ==============================
+
+    private void UpdateMove()
     {
         Vector3 pos = transform.position;
         pos.x += moveDir * moveSpeed * Time.deltaTime;
@@ -39,43 +70,67 @@ public class MainSceneCharacter : MonoBehaviour
         }
 
         transform.position = pos;
-
-        UpdateVisual();
     }
 
     private void SetDirection(int dir)
     {
         moveDir = dir;
-    }
-
-    private void UpdateVisual()
-    {
-        // 좌우 반전
         spriteRenderer.flipX = moveDir < 0;
-
-        // 애니메이션 파라미터 (있을 경우)
-        if (animator != null)
-        {
-            animator.SetBool("IsMoving", true);
-            animator.SetFloat("MoveDir", moveDir);
-        }
     }
 
-    // === 외부 제어용 ===
+    // ==============================
+    // External Control
+    // ==============================
 
-    public void PauseMove()
+    public void StartMove()
     {
-        isPaused = true;
-
-        if (animator != null)
-            animator.SetBool("IsMoving", false);
+        ChangeState(MainSceneCharacterState.Run);
     }
 
-    public void ResumeMove()
+    public void StopMove()
     {
-        isPaused = false;
+        ChangeState(MainSceneCharacterState.Idle);
+    }
 
-        if (animator != null)
-            animator.SetBool("IsMoving", true);
+    // ==============================
+    // Click
+    // ==============================
+
+    private void OnMouseDown()
+    {
+        // 이동 멈춤
+        StopMove();
+
+        // 말풍선 표시
+        ShowSpeechBubble();
+
+        // 기존 코루틴 정리
+        if (talkCoroutine != null)
+            StopCoroutine(talkCoroutine);
+
+        talkCoroutine = StartCoroutine(TalkRoutine());
+    }
+
+    private void ShowSpeechBubble()
+    {
+        if (currentBubble != null)
+            Destroy(currentBubble);
+
+        currentBubble = Instantiate(
+            speechBubblePrefab,
+            bubbleAnchor.position,
+            Quaternion.identity,
+            bubbleAnchor
+        );
+    }
+
+    private IEnumerator TalkRoutine()
+    {
+        yield return new WaitForSeconds(talkDuration);
+
+        if (currentBubble != null)
+            Destroy(currentBubble);
+
+        StartMove();
     }
 }

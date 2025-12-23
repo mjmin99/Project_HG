@@ -28,9 +28,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 8742083796151234973}
   - {fileID: 2771686166678830775}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -72,6 +73,40 @@ MonoBehaviour:
   maxX: 9.5
   spriteRenderer: {fileID: 2461560689053830297}
   animator: {fileID: 4501613263053001943}
+  speechBubblePrefab: {fileID: 4225949701974798922, guid: ef428ef9027a4a14aba9fbc2ccb6d592, type: 3}
+  bubbleAnchor: {fileID: 8742083796151234973}
+  talkDuration: 2
+--- !u!1 &3330270587872442304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8742083796151234973}
+  m_Layer: 0
+  m_Name: Speech point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8742083796151234973
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330270587872442304}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6799757336814362261}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4496179933476611374
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +208,7 @@ Animator:
   m_GameObject: {fileID: 4496179933476611374}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 22a370dde66b9d745810cad45e76b6c2, type: 2}
+  m_Controller: {fileID: 9100000, guid: 539107c5754d1c24bb5dc2f569975a39, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

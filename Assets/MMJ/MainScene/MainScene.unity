@@ -368,7 +368,7 @@ Transform:
   m_GameObject: {fileID: 60427088}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.5, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8070,7 +8070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainSceneCharacterSpawner
   characterParent: {fileID: 60427089}
   spawnXRange: {x: -9.5, y: 9.5}
-  spawnY: -2.5
+  spawnY: -1
   spacing: 1.5
 --- !u!4 &2070117617
 Transform:

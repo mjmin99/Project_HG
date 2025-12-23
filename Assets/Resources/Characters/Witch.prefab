@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &418093457560854702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 799620504077823435}
+  m_Layer: 0
+  m_Name: Speech point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &799620504077823435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418093457560854702}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2801787011749765653}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4815351539931014295
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,9 +59,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 799620504077823435}
   - {fileID: 103763556825744429}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -72,6 +104,9 @@ MonoBehaviour:
   maxX: 9.5
   spriteRenderer: {fileID: 4540324436928812229}
   animator: {fileID: 647703315756989477}
+  speechBubblePrefab: {fileID: 4225949701974798922, guid: ef428ef9027a4a14aba9fbc2ccb6d592, type: 3}
+  bubbleAnchor: {fileID: 799620504077823435}
+  talkDuration: 2
 --- !u!1 &8133162395743238545
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +208,7 @@ Animator:
   m_GameObject: {fileID: 8133162395743238545}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 17f7320633fd7aa4da888493d3a497ec, type: 2}
+  m_Controller: {fileID: 9100000, guid: aaffda222745531428da586015fb2671, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
