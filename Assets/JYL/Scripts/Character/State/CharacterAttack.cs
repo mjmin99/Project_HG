@@ -7,7 +7,6 @@ public class CharacterAttack : CharacterState
     public override void Enter()
     {
         controller.PlayAnimation(Attack);
-        Debug.Log($"들어올 때{controller.gameObject.name}");
     }
 
     public override void Update()

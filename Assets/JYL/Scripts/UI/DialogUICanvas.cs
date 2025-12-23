@@ -10,7 +10,7 @@ public class DialogUICanvas : MonoBehaviour
     public Image fadeImage;
     public GameObject backGroundPanel;
     public Image backgroundImage;
-    public GameObject portraitContent;
+    // public GameObject portraitContent;
     public PortraitUIPanel portraitUIPanel;
     public TMP_Text nameField;
     public TMP_Text dialogText;

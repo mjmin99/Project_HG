@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
@@ -12,6 +13,7 @@ public class TestMapPresenter : MonoBehaviour
 
    private Vector3 translatePos;
    private List<float> hitList = new();
+   private int playerLayer;
 
    private readonly Queue<Transform> mapQueue = new();
 
@@ -19,6 +21,7 @@ public class TestMapPresenter : MonoBehaviour
    {
       var map = Resources.Load<GameObject>(gameManager.GetTestStageData().mapPrefabPath);
       CreateMap(map);
+      playerLayer = LayerMask.NameToLayer("Player");
    }
 
    private void CreateMap(GameObject mapPrefab)
@@ -26,14 +29,15 @@ public class TestMapPresenter : MonoBehaviour
       for (int i = 0; i < mapCount; i++)
       {
          var map = 
-            Instantiate(mapPrefab, 
+            Instantiate(mapPrefab,
                new Vector3(posGap * i, 0, 0), 
                Quaternion.identity);
          mapQueue.Enqueue(map.transform);
          
          BoxCollider col = map.GetComponent<BoxCollider>();
-         col.OnTriggerEnterAsObservable().Skip(i == 0 ? 1 : 0)
-            .Subscribe(TranslateMap).AddTo(this);
+         col.OnTriggerEnterAsObservable()
+            .Subscribe(TranslateMap)
+            .AddTo(this);
       }
 
       translatePos = new Vector3(posGap * mapCount, 0, 0);
@@ -42,16 +46,18 @@ public class TestMapPresenter : MonoBehaviour
 
    private void TranslateMap(Collider hitCol) // hitCol은 충돌한 상대 물체
    {
-      if (!hitCol.CompareTag("Player")) return;
-      if (hitList.Count > 0)
-      {
-         foreach (float x in hitList)
-         {
-            var abs = Math.Abs(x - hitCol.bounds.center.x);
-            if (abs <= 1) return;
-         }
-      }
+      if (hitCol.gameObject.layer != playerLayer) return;
+      
       hitList.Add(hitCol.bounds.center.x);
+      Debug.Log(hitCol.bounds.center.x);
+      if (hitList.Count <= 1) return;
+      
+      foreach (float x in hitList.SkipLast(1) )
+      {
+         var abs = Math.Abs(x - hitCol.bounds.center.x);
+         if (abs <= 1) return;
+      }
+      
       var t = mapQueue.Dequeue();
       t.Translate(translatePos);
       mapQueue.Enqueue(t);

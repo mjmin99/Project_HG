@@ -433,7 +433,7 @@ GameObject:
   - component: {fileID: 691429460}
   - component: {fileID: 691429459}
   - component: {fileID: 691429458}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: TestCharacter3
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -597,7 +597,7 @@ GameObject:
   - component: {fileID: 826694281}
   - component: {fileID: 826694280}
   - component: {fileID: 826694279}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: TestCharacter2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -896,7 +896,7 @@ GameObject:
   - component: {fileID: 1136218769}
   - component: {fileID: 1136218770}
   - component: {fileID: 1136218771}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: TestEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1462,7 +1462,7 @@ GameObject:
   - component: {fileID: 2129231509}
   - component: {fileID: 2129231508}
   - component: {fileID: 2129231511}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: TestCharacter1
   m_TagString: Player
   m_Icon: {fileID: 0}
