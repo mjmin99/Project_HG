@@ -1,73 +1,75 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 
-public class CharacterDetailPanel : MonoBehaviour
+public class CharacterDetailPanel : UIPanel
 {
-    [Header("Root")]
-    public GameObject panelRoot;
-
-    [Header("Top")]
-    public Image icon;
-    public TMP_Text nameText;
-    public TMP_Text roleText;
-
-    [Header("Rarity Stars")]
-    public Transform starGroup;
+    [Header("Header")]
+    [SerializeField] private Image icon;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text roleText;
 
     [Header("Progress")]
-    public TMP_Text levelText;
-    public TMP_Text shardText;
+    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text shardText;
+
+    [Header("Stars")]
+    [SerializeField] private Image[] stars; // size = 5
 
     [Header("Stats")]
-    public TMP_Text hpText;
-    public TMP_Text atkText;
-    public TMP_Text matkText;
-    public TMP_Text defText;
-    public TMP_Text aspdText;
-    public TMP_Text critText;
-    public TMP_Text critDmgText;
-    public TMP_Text rangeText;
+    [SerializeField] private TMP_Text hpText;
+    [SerializeField] private TMP_Text atkText;
+    [SerializeField] private TMP_Text matkText;
+    [SerializeField] private TMP_Text defText;
+    [SerializeField] private TMP_Text aspdText;
+    [SerializeField] private TMP_Text critText;
+    [SerializeField] private TMP_Text critDmgText;
+    [SerializeField] private TMP_Text rangeText;
+
+    [Header("Actions")]
+    [SerializeField] private Button btnAssign;
+
+    [Header("Exp")]
+    [SerializeField] private Slider expSlider;
+    [SerializeField] private TMP_Text expText;
 
     [Header("Enhance")]
-    public Button enhanceButton;
-    public TMP_Text enhanceCostText;
+    [SerializeField] private Button btnEnhance;
+    [SerializeField] private TMP_Text enhanceCostText;
 
-    private const int ENHANCE_COST = 10;
+    [Header("Abilities")]
+    public Transform abilitySlotGroup;     // 슬롯 부모
+    public GameObject abilitySlotPrefab;   // 슬롯 프리팹
+    [SerializeField] private Button btnReroll;
+    [SerializeField] private TMP_Text rerollCostText;
+
     private int currentCharacterId = -1;
 
-    private void Awake()
-    {
-        panelRoot.SetActive(false);
-        enhanceButton.onClick.AddListener(OnClickEnhance);
-    }
-
-    public void Show(int characterId)
+    /// <summary>
+    /// 외부에서 캐릭터 선택 시 호출
+    /// </summary>
+    public void SetCharacter(int characterId)
     {
         currentCharacterId = characterId;
+        Refresh();
+    }
 
-        if (!CharacterManager.Instance.models.TryGetValue(characterId, out var model))
-        {
-            Debug.LogError($"[CharacterDetailPanel] 모델 ID {characterId} 없음");
+    private void Refresh()
+    {
+        if (!CharacterManager.Instance.models.TryGetValue(currentCharacterId, out var model))
             return;
-        }
 
-        if (!CharacterManager.Instance.instances.TryGetValue(characterId, out var inst))
-        {
-            Debug.LogError($"[CharacterDetailPanel] 인스턴스 ID {characterId} 없음");
+        if (!CharacterManager.Instance.instances.TryGetValue(currentCharacterId, out var inst))
             return;
-        }
 
-        var stats = CharacterManager.Instance.GetStats(characterId);
+        var stats = CharacterManager.Instance.GetStats(currentCharacterId);
 
-        panelRoot.SetActive(true);
-
+        // ===== 기존 표시 로직 그대로 =====
         icon.sprite = model.Icon;
         nameText.text = model.characterName;
         roleText.text = model.role.ToString();
 
-        for (int i = 0; i < starGroup.childCount; i++)
-            starGroup.GetChild(i).gameObject.SetActive(i < model.rarity);
+        RefreshStars(model);
 
         levelText.text = $"Lv. {inst.level}";
         shardText.text = $"Shard: {inst.shard}";
@@ -76,47 +78,133 @@ public class CharacterDetailPanel : MonoBehaviour
         atkText.text = $"ATK: {stats.attack:0}";
         matkText.text = $"MATK: {stats.magicAttack:0}";
         defText.text = $"DEF: {stats.defense:0}";
-
         aspdText.text = $"ASPD: {stats.attackSpeed:0.00}";
         critText.text = $"CRIT: {stats.critRate * 100:0.0}%";
         critDmgText.text = $"CRITDMG: {stats.critDamage * 100:0.0}%";
         rangeText.text = $"RANGE: {stats.attackRange:0.0}";
 
-        enhanceCostText.text = $"{ENHANCE_COST} Gold";
-        UpdateEnhanceButtonState();
+        RefreshAbilitySlots(model, inst); // 어빌리티 슬롯 생성
+
+        // 업데이트에 할 필요 없는 이유가 여기에 두면 슬롯 버튼 누를 때 호출됨
+        int cost = GetRerollCost(inst);
+        rerollCostText.text = $"Cost: {cost}";
+
+        int requiredExp = CharacterManager.Instance.RequiredExp(inst.level);
+
+        expSlider.minValue = 0;
+        expSlider.maxValue = requiredExp;
+        expSlider.value = inst.exp;
+
+        expText.text = $"{inst.exp} / {requiredExp}";
+        enhanceCostText.text = "Cost: 100G";
     }
 
-    void UpdateEnhanceButtonState()
+    private void RefreshStars(CharacterModel model)
     {
-        int gold = SaveManager.Instance.CurrentData.gold;
-        enhanceButton.interactable = (gold >= ENHANCE_COST);
+        int rarity = Mathf.Clamp(model.rarity, 1, stars.Length);
+
+        for (int i = 0; i < stars.Length; i++)
+        {
+            stars[i].gameObject.SetActive(i < rarity);
+        }
     }
 
-    public void OnClickEnhance()
+    public override void OnOpen()
+    {
+        btnAssign.onClick.RemoveAllListeners();
+        btnAssign.onClick.AddListener(OnClickAssign);
+
+        btnReroll.onClick.RemoveAllListeners();
+        btnReroll.onClick.AddListener(OnClickReroll);
+
+        btnEnhance.onClick.RemoveAllListeners();
+        btnEnhance.onClick.AddListener(OnClickEnhance);
+
+        rerollCostText.text = "Cost: 10";
+    }
+
+    public override void OnClose()
+    {
+        currentCharacterId = -1;
+        base.OnClose();
+    }
+
+    private void OnClickReroll()
     {
         if (currentCharacterId < 0)
             return;
 
-        if (!SaveManager.Instance.TrySpendGold(ENHANCE_COST))
+        bool result = CharacterManager.Instance.TryRerollAbilities(currentCharacterId);
+
+        if (!result)
         {
-            Debug.Log("[CharacterDetailPanel] 골드 부족");
+            Debug.Log("리롤 실패 (골드 부족 또는 오류)");
             return;
         }
 
-        CharacterManager.Instance.AddExp(currentCharacterId, 5);
-        SaveManager.Instance.SaveCurrentUser();
-
-        RefreshCurrentCharacterUI();
+        Refresh();
     }
 
-    void RefreshCurrentCharacterUI()
+    private void OnClickAssign()
     {
-        Show(currentCharacterId);
+        if (currentCharacterId < 0)
+        {
+            Debug.LogWarning("[CharacterDetailPanel] characterId invalid");
+            return;
+        }
+
+        PartyAssignmentContext.Begin(currentCharacterId);
+
+        UIManager.Instance.OpenUI<PartySlotSelectPopup>("PartySlotSelectPopup");
     }
 
-    public void Hide()
+    private void RefreshAbilitySlots(CharacterModel model, CharacterInstance inst)
     {
-        panelRoot.SetActive(false);
-        currentCharacterId = -1;
+        inst.SyncAbilitySlots(model);
+
+        foreach (Transform child in abilitySlotGroup)
+            Destroy(child.gameObject);
+
+        int max = model.MaxAbilitySlotCount;
+
+        for (int i = 0; i < max; i++)
+        {
+            var obj = Instantiate(abilitySlotPrefab, abilitySlotGroup);
+            var ui = obj.GetComponent<AbilitySlotUI>();
+
+            ui.Bind(model, inst, i, () =>
+            {
+                Refresh();
+            });
+        }
+    }
+
+    private int GetRerollCost(CharacterInstance inst)
+    {
+        int locked = 0;
+        foreach (var slot in inst.abilitySlots)
+        {
+            if (slot.isLocked)
+                locked++;
+        }
+
+        return 10 + locked * 10;
+    }
+
+    private void OnClickEnhance()
+    {
+        if (currentCharacterId < 0)
+            return;
+
+        bool result = CharacterManager.Instance
+            .TryEnhanceCharacter(currentCharacterId);
+
+        if (!result)
+        {
+            Debug.Log("강화 실패: 골드 부족");
+            return;
+        }
+
+        Refresh();
     }
 }

@@ -4,11 +4,10 @@ public class CharacterModel
 {
     public int id;
     public string characterName;
-    public int rarity; // 1~5
+    public int rarity; // 1~5 (고정, 태생부터 결정)
     public CharacterRole role;
 
     public int baseHP;
-    public AttackType attackType;   // Melee / Ranged
     public int baseAttack;
     public int baseMagicAttack;
     public int baseDefense;
@@ -18,9 +17,19 @@ public class CharacterModel
     public float baseCritDamage;
     public float attackRange;
 
+    public int MaxAbilitySlotCount // 어빌리티 슬롯 카운트
+    {
+        get
+        {
+            // rarity: 1~5
+            return Mathf.Clamp(rarity, 1, 5);
+        }
+    }
+
+    public AttackType attackType; // Melee / Ranged
+
     public GameObject prefab;
 
-    // 아이콘 캐싱용 (Resources.Load를 한 번만 실행하게 함)
     private Sprite _icon;
     public Sprite Icon
     {
@@ -31,11 +40,6 @@ public class CharacterModel
             return _icon;
         }
     }
-
-
-    // 여기에 스킬 모델 추가 가능(지금은 생략)
-    // public SkillModel passiveSkill;
-    // public SkillModel activeSkill;
 }
 
 public enum CharacterRole
@@ -50,4 +54,3 @@ public enum AttackType
     Melee,
     Ranged
 }
-

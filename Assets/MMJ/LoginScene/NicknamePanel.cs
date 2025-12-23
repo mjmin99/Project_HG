@@ -32,12 +32,15 @@ public class NicknamePanel : MonoBehaviour
                 if (task.IsCanceled)
                 {
                     Debug.LogError("유저 닉네임 설정 취소됨");
+                    ToastUtil.Error("닉네임 설정이 취소되었습니다.");
                 }
                 if (task.IsFaulted)
                 {
                     Debug.LogError($"유저 닉네임 설정 실패. 이유 : {task.Exception}");
+                    ToastUtil.Error("닉네임 설정에 실패했습니다.");
                 }
                 Debug.Log("유저 닉네임 설정 성공");
+                ToastUtil.Success("닉네임 설정 완료!");
                 lobbyPanel.SetActive(true);
                 gameObject.SetActive(false);
             });

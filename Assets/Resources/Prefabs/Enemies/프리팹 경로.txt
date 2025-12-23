@@ -1,0 +1,20 @@
+프리팹 경로
+Assets/
+ └ Resources/
+    └ Prefabs/
+       └ Enemies/
+          ├ Goblin.prefab
+          ├ Orc.prefab
+          ├ Slime.prefab
+          └ Mage.prefab
+
+---------------------------
+
+※ 중요한 규칙 ※
+
+프리팹 파일명 == EnemyTable.csv의 name 컬럼
+
+대소문자까지 정확히 일치해야 함
+
+name = Goblin
+→ Goblin.prefab
