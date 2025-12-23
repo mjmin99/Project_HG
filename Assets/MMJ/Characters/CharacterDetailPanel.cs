@@ -56,13 +56,13 @@ public class CharacterDetailPanel : UIPanel
 
     private void Refresh()
     {
-        if (!CharacterManager.Instance.models.TryGetValue(currentCharacterId, out var model))
+        if (!Manager.Character.models.TryGetValue(currentCharacterId, out var model))
             return;
 
-        if (!CharacterManager.Instance.instances.TryGetValue(currentCharacterId, out var inst))
+        if (!Manager.Character.instances.TryGetValue(currentCharacterId, out var inst))
             return;
 
-        var stats = CharacterManager.Instance.GetStats(currentCharacterId);
+        var stats = Manager.Character.GetStats(currentCharacterId);
 
         // ===== 기존 표시 로직 그대로 =====
         icon.sprite = model.Icon;
@@ -89,7 +89,7 @@ public class CharacterDetailPanel : UIPanel
         int cost = GetRerollCost(inst);
         rerollCostText.text = $"Cost: {cost}";
 
-        int requiredExp = CharacterManager.Instance.RequiredExp(inst.level);
+        int requiredExp = Manager.Character.RequiredExp(inst.level);
 
         expSlider.minValue = 0;
         expSlider.maxValue = requiredExp;
@@ -134,7 +134,7 @@ public class CharacterDetailPanel : UIPanel
         if (currentCharacterId < 0)
             return;
 
-        bool result = CharacterManager.Instance.TryRerollAbilities(currentCharacterId);
+        bool result = Manager.Character.TryRerollAbilities(currentCharacterId);
 
         if (!result)
         {
@@ -196,7 +196,7 @@ public class CharacterDetailPanel : UIPanel
         if (currentCharacterId < 0)
             return;
 
-        bool result = CharacterManager.Instance
+        bool result = Manager.Character
             .TryEnhanceCharacter(currentCharacterId);
 
         if (!result)

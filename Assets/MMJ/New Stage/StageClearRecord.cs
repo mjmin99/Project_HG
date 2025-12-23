@@ -13,10 +13,10 @@ public class StageClearRecord
     public string lastClearedAtUtc; // 필요없지만 일단 냅둬
 }
 
-[Serializable]
-public class StageProgressData
-{
-    // key: "W01-S005"
-    // Value: 해당 스테이지의 클리어 기록
-    public Dictionary<string, StageClearRecord> records = new Dictionary<string, StageClearRecord>();
-}
+// [Serializable]
+// public class StageProgressData
+// {
+//     // key: "W01-S005"
+//     // Value: 해당 스테이지의 클리어 기록
+//     public Dictionary<string, StageClearRecord> records = new Dictionary<string, StageClearRecord>();
+// }

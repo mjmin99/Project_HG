@@ -42,7 +42,7 @@ public class GachaResultPopup : UIPopup
 
         foreach (var r in results)
         {
-            if (!CharacterManager.Instance.models.TryGetValue(r.characterId, out var model))
+            if (!Manager.Character.models.TryGetValue(r.characterId, out var model))
                 continue;
 
             var item = Instantiate(itemPrefab, content);

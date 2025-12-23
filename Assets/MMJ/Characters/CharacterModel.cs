@@ -52,5 +52,6 @@ public enum CharacterRole
 public enum AttackType
 {
     Melee,
-    Ranged
+    Ranged,
+    Lazer
 }

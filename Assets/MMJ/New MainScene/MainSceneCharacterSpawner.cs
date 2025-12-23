@@ -30,8 +30,8 @@ public class MainSceneCharacterSpawner : MonoBehaviour
 
     private void SpawnOwnedCharacters()
     {
-        var models = CharacterManager.Instance.models;
-        var instances = CharacterManager.Instance.instances;
+        var models = Manager.Character.models;
+        var instances = Manager.Character.instances;
 
         foreach (var pair in instances)
         {
