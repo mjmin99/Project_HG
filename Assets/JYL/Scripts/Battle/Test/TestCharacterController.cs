@@ -20,6 +20,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
     public bool isRewinding;
+    public bool isDead;
     
     private TestBulletController bulletPrefab;
     private TimeRecorder timeRecorder;
@@ -103,6 +104,8 @@ public class TestCharacterController : MonoBehaviour, IAttackable
     
     public void Attack()
     {
+        if (hitInfo.collider == null) return;
+        
         switch (atkType)
         {
             case AttackType.Melee:
@@ -127,6 +130,7 @@ public class TestCharacterController : MonoBehaviour, IAttackable
         if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
         int damage = (int)(attackInfo.atk * (1 - def / 100));
         // 해당 데미지를 Toast UI로 표현
+        
         if (shield > 0 && damage > 0)
         {
             int shieldDamage = (int)Mathf.Clamp(damage, 0, shield);

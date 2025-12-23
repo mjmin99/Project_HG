@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnemyState : BaseState
 {
+    protected static readonly int PlayerMask = LayerMask.GetMask("Player");
+    
     protected TestEnemyController controller;
     protected EnemyState(TestEnemyController controller)
     {

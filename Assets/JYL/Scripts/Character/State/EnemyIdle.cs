@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemyIdle : EnemyState
 {
+    private Ray ray;
     public EnemyIdle(TestEnemyController controller) : base(controller) { }
 
     public override void Enter()
@@ -12,7 +13,12 @@ public class EnemyIdle : EnemyState
 
     public override void Update()
     {
-        
+        ray = new Ray(controller.transform.position, Vector3.left);
+        if (Physics.Raycast(ray, out var hit, 0.5f, PlayerMask))
+        {
+            controller.hitInfo = hit;
+            controller.ChangeState(CharStateType.Attack);
+        }
     }
     
     public override void Exit()

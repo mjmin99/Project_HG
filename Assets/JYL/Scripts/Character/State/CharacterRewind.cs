@@ -20,7 +20,8 @@ public class CharacterRewind : CharacterState
         character.rb.isKinematic = true;
         character.col.enabled = false;
 
-        character.PlayAnimation(Rewind);
+        if(!character.isDead) character.PlayAnimation(Rewind);
+        
         character.animator.speed = 1f * REWIND_SPEED;
 
         startInfo = new TestTimeInfo(character.transform.position, 0, 0);
@@ -32,7 +33,7 @@ public class CharacterRewind : CharacterState
 
     public override void Update()
     {
-        
+        // 기록이 없으면 종료
         if (!character.HasHistory() && lerpTime >= 1f)
         {
             character.FinishRewind();
@@ -49,6 +50,11 @@ public class CharacterRewind : CharacterState
             {
                 startInfo = targetInfo;
                 targetInfo = character.PopHistory();
+                if (character.isDead && targetInfo.hp > 0)
+                {
+                    character.isDead = false;
+                    character.PlayAnimation(Rewind);
+                }
 
                 lerpTime -= 1f;
             }

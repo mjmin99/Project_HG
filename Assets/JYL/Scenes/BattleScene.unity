@@ -735,6 +735,8 @@ MonoBehaviour:
   - {fileID: 2129231508}
   - {fileID: 826694279}
   - {fileID: 691429458}
+  enemies:
+  - {fileID: 1136218770}
   curStageWorld: 0
   curStageLevel: 0
 --- !u!4 &1111651262
@@ -1008,6 +1010,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TestEnemyController
   damageUi: {fileID: 2414620437417163177}
   uiCanvas: {fileID: 3179389130914203356}
+  animator: {fileID: 0}
+  col: {fileID: 0}
 --- !u!95 &1136218771
 Animator:
   serializedVersion: 7

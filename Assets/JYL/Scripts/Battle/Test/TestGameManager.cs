@@ -9,6 +9,7 @@ public class TestGameManager : MonoBehaviour
     // 실제로는 GameManager측에서 CharacterInstance와 Model을 가지고
     // BattleManager 쪽에서 컨트롤러 생성해야 함
     [SerializeField] private TestCharacterController[] characters;
+    [SerializeField] private TestEnemyController[] enemies;
 
     public int curStageWorld;
     public int curStageLevel;
@@ -21,6 +22,11 @@ public class TestGameManager : MonoBehaviour
     public TestCharacterController[] GetParty()
     {
         return characters;
+    }
+
+    public TestEnemyController[] GetEnemies()
+    {
+        return enemies;
     }
 
     public StageDataSO GetTestStageData()

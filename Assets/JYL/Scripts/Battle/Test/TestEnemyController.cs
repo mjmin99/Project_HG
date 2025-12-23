@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class TestEnemyController : MonoBehaviour, IAttackable
 {
-    private float hp = 50f;
+    [SerializeField] private float atk = 15f;
+    private float hp = 550f;
     private float shield = 25f;
     private float def = 7f;
 
     [SerializeField] private TestDamageUI damageUi;
     [SerializeField] private RectTransform uiCanvas;
 
-    private Animator animator;
-    private BoxCollider col;
-
+    public Animator animator;
+    public BoxCollider col;
+    
+    public RaycastHit hitInfo;
     public StateMachine stateMachine;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
 
@@ -22,7 +24,7 @@ public class TestEnemyController : MonoBehaviour, IAttackable
         animator = gameObject.GetOrAddComponent<Animator>();
         col = gameObject.GetComponent<BoxCollider>();
         
-        animator.Play("idle");
+        animator.Play("Idle");
         col.center = new Vector3(0, 0.25f, 0);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
         
@@ -53,15 +55,20 @@ public class TestEnemyController : MonoBehaviour, IAttackable
     }
 
     public void ChangeState(CharStateType state) => stateMachine.ChangeState(stateDict[state]);
+
+    public void Attack()
+    {
+        var attackInfo = new AttackInfo(LayerMask.NameToLayer("Enemy"), atk, false);
+        hitInfo.collider.GetComponent<IAttackable>().TakeHit(attackInfo);
+    }
     
     public void TakeHit(AttackInfo info)
     {
-        animator.Play("hit");
         if (info.layer != LayerMask.NameToLayer("Player")) return;
         
         int damage = (int)(info.atk * (1 - def / 100));
-        // 해당 데미지를 Toast UI로 표현
         
+        // 해당 데미지를 Toast UI로 표현
         damageUi.ShowDamageEffect(damage).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
         
         if (shield > 0 && damage > 0)
@@ -79,11 +86,12 @@ public class TestEnemyController : MonoBehaviour, IAttackable
         {
             hp = 0;
             Debug.Log("에너미 죽음");
+            stateMachine.ChangeState(stateDict[CharStateType.Dead]);
         }
         
         else
         {
-            // stateMachine.ChangeState(stateDict[CharStateType.Hit]);
+           stateMachine.ChangeState(stateDict[CharStateType.Hit]);
         }
     }
 }
