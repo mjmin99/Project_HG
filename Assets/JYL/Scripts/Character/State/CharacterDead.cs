@@ -8,22 +8,22 @@ public class CharacterDead : CharacterState
 
     private float deadTimer;
     private float timer;
-    public CharacterDead(TestCharController @char) : base(@char)
+    public CharacterDead(TestCharController controller) : base(controller)
     {
         RunFixedUpdate = true;
     }
 
     public override void Enter()
     {
-        @char.rb.linearVelocity = Vector3.zero;
+        controller.rb.linearVelocity = Vector3.zero;
         
-        @char.PlayAnimation(Dead);
-        @char.animator.Update(0f);
+        controller.PlayAnimation(Dead);
+        controller.animator.Update(0f);
 
-        deadTimer = @char.animator.GetCurrentAnimatorStateInfo(0).length;
+        deadTimer = controller.animator.GetCurrentAnimatorStateInfo(0).length;
         
-        @char.col.enabled = false;
-        @char.isDead = true;
+        controller.col.enabled = false;
+        controller.isDead = true;
         isMoving = false;
 
         timer = 0f;
@@ -37,25 +37,25 @@ public class CharacterDead : CharacterState
             return;
         }
 
-        ray = new Ray(@char.transform.position, Vector3.right);
+        ray = new Ray(controller.transform.position, Vector3.right);
         bool isHit = Physics.Raycast(ray, DEAD_RANGE, EnemyMask);
         Debug.DrawRay(ray.origin, ray.direction * DEAD_RANGE, Color.red);
 
         timer += Time.deltaTime;
         if (timer > 5f)
         {
-            @char.gameObject.SetActive(false);
+            controller.gameObject.SetActive(false);
             return;
         }
         if(isHit || isMoving) return;
         
-        @char.rb.linearVelocity = Vector3.right * MOVE_SPEED;
+        controller.rb.linearVelocity = Vector3.right * MOVE_SPEED;
         isMoving = true;
     }
 
     public override void Exit()
     {
-        @char.col.enabled = true;
-        @char.rb.linearVelocity = Vector3.zero;
+        controller.col.enabled = true;
+        controller.rb.linearVelocity = Vector3.zero;
     }
 }

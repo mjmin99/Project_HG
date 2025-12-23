@@ -155,9 +155,9 @@ public class TestCharController : MonoBehaviour, IAttackable
         
         else
         {
-            stateMachine.ChangeState(
-                stateDict[CharStateType.Hit]);
+            if (hitTimer > 0) return;
             hitTimer = HIT_COOLDOWN;
+            stateMachine.ChangeState(stateDict[CharStateType.Hit]);
         }
     }
 

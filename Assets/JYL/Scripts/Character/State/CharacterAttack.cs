@@ -2,27 +2,22 @@ using UnityEngine;
 
 public class CharacterAttack : CharacterState
 {
-    private float timer = 0f;
-    private const float RETURN_TIME = 0.2f;
-    public CharacterAttack(TestCharController @char) : base(@char) { }
+    public CharacterAttack(TestCharController controller) : base(controller) { }
 
     public override void Enter()
     {
-        @char.PlayAnimation(Attack);
-        timer = 0f;
+        controller.PlayAnimation(Attack);
+        Debug.Log($"들어올 때{controller.gameObject.name}");
     }
 
     public override void Update()
     {
-        ray = new Ray(@char.transform.position, Vector3.right);
-        bool isHit = Physics.Raycast(ray, out var hitInfo,@char.range, EnemyMask);
-        Debug.DrawRay(ray.origin, ray.direction * @char.range, Color.red);
-        @char.hitInfo = hitInfo;
+        ray = new Ray(controller.transform.position, Vector3.right);
+        bool isHit = Physics.Raycast(ray, out var hitInfo,controller.range, EnemyMask);
+        Debug.DrawRay(ray.origin, ray.direction * controller.range, Color.red);
+        controller.hitInfo = hitInfo;
         if (isHit) return;
-        timer += Time.deltaTime;
-        if (timer >= RETURN_TIME)
-        {
-            @char.stateMachine.ChangeState(@char.stateDict[CharStateType.Run]);
-        }
+
+        controller.stateMachine.ChangeState(controller.stateDict[CharStateType.Run]);
     }
 }
