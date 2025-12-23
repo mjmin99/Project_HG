@@ -41,7 +41,7 @@ public class MainScenePresenter : MonoBehaviour
 
     public void GoToShop() // 배틀씬 버튼 처럼 나중에 버튼에 직접 달아서 움직이게 역할 주는 것도 괜찮을듯
     {
-        SceneManager.LoadScene("ShopScene");
+        UIManager.Instance.OpenUI<UIPanel>("ShopPanel");
         // 또는 SceneChanger.Instance.LoadScene("ShopScene");
     }
 
