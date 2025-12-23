@@ -50,7 +50,7 @@ public class CharacterListPanel : UIPanel
             }
             else
             {
-                var model = CharacterManager.Instance.models[party[i]];
+                var model = Manager.Character.models[party[i]];
                 partyPreviewSlots[i].SetCharacter(
                     model.characterName,
                     model.Icon

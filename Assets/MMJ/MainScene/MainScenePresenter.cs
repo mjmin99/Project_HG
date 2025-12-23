@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainSceneManager : MonoBehaviour
+public class MainScenePresenter : MonoBehaviour
 {
     public TMP_Text goldText;
     public Button shopButton;
@@ -22,10 +22,10 @@ public class MainSceneManager : MonoBehaviour
         Debug.Log("<color=lime>MainScene 시작</color>");
 
         // 보유 캐릭터 로그 찍어보기
-        foreach (var pair in CharacterManager.Instance.instances)
+        foreach (var pair in Manager.Character.instances)
         {
             var inst = pair.Value;
-            var model = CharacterManager.Instance.models[inst.id];
+            var model = Manager.Character.models[inst.id];
             string ownedStr = inst.isOwned ? "보유" : "미보유";
             Debug.Log($"캐릭터 id={inst.id}, name={model.characterName}, 상태={ownedStr}, 레벨={inst.level}");
         }
@@ -35,7 +35,7 @@ public class MainSceneManager : MonoBehaviour
 
     public void UpdateGoldUI()
     {
-        int gold = SaveManager.Instance.CurrentData.gold;
+        int gold = Manager.Save.CurrentData.gold;
         goldText.text = gold.ToString();
     }
 

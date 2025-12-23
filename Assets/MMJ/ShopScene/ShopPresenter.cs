@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class ShopManager : MonoBehaviour
+public class ShopPresenter : MonoBehaviour
 {
     [Header("UI")]
     public TMP_Text goldText;
@@ -29,12 +29,12 @@ public class ShopManager : MonoBehaviour
 
     void UpdateGoldUI()
     {
-        goldText.text = SaveManager.Instance.CurrentData.gold.ToString();
+        goldText.text = Manager.Save.CurrentData.gold.ToString();
     }
 
     public void OnClickDrawOne()
     {
-        if (!SaveManager.Instance.TrySpendGold(DRAW_ONE_COST))
+        if (!Manager.Save.TrySpendGold(DRAW_ONE_COST))
         {
             Debug.Log("[ShopManager] 골드 부족");
             return;
@@ -43,20 +43,20 @@ public class ShopManager : MonoBehaviour
         UpdateGoldUI();
 
         int id = DrawCharacter();
-        CharacterModel model = CharacterManager.Instance.models[id];
+        CharacterModel model = Manager.Character.models[id];
 
-        bool isNew = !CharacterManager.Instance.instances.ContainsKey(id)
-                     || !CharacterManager.Instance.instances[id].isOwned;
+        bool isNew = !Manager.Character.instances.ContainsKey(id)
+                     || !Manager.Character.instances[id].isOwned;
 
-        CharacterManager.Instance.GiveCharacter(id);
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Character.GiveCharacter(id);
+        Manager.Save.SaveCurrentUser();
 
         resultPanel.Show(model, isNew);
     }
 
     int DrawCharacter()
     {
-        var models = CharacterManager.Instance.models.Values.ToList();
+        var models = Manager.Character.models.Values.ToList();
 
         if (models.Count == 0)
         {
