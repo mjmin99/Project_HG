@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class AbilitySlotUI : MonoBehaviour
 {
-    public Image icon;
     public TMP_Text nameText;
     public Button lockButton;
+    [SerializeField] private TMP_Text lockButtonText;
     public GameObject lockIcon;
 
     private int slotIndex;
@@ -35,22 +35,18 @@ public class AbilitySlotUI : MonoBehaviour
 
     public void SetAbility(AbilityInstance ability, bool isLocked)
     {
-        icon.enabled = true;
-        icon.sprite = AbilityIconProvider.GetIcon(ability.abilityId);
         nameText.text = ability.abilityId.ToString();
         lockIcon.SetActive(isLocked);
     }
 
     public void SetEmptySlot()
     {
-        icon.enabled = false;
         nameText.text = "Empty";
         lockIcon.SetActive(false);
     }
 
     public void SetLockedSlot()
     {
-        icon.enabled = false;
         nameText.text = "Locked";
         lockIcon.SetActive(true);
     }
@@ -67,7 +63,6 @@ public class AbilitySlotUI : MonoBehaviour
         // 아직 해방되지 않은 슬롯
         if (slotIndex >= unlocked)
         {
-            icon.enabled = false;
             nameText.text = "Locked";
             lockIcon.SetActive(true);
             lockButton.interactable = false;
@@ -79,15 +74,14 @@ public class AbilitySlotUI : MonoBehaviour
         lockButton.interactable = true;
         lockIcon.SetActive(slot.isLocked);
 
+        RefreshLockButton(slot.isLocked);
+
         if (slot.ability == null)
         {
-            icon.enabled = false;
             nameText.text = "Empty";
         }
         else
         {
-            icon.enabled = true;
-            icon.sprite = AbilityIconProvider.GetIcon(slot.ability.abilityId);
             nameText.text = AbilityNameProvider.GetName(slot.ability.abilityId);
         }
     }
@@ -98,5 +92,10 @@ public class AbilitySlotUI : MonoBehaviour
         slot.isLocked = !slot.isLocked;
 
         onChanged?.Invoke();
+    }
+
+    private void RefreshLockButton(bool isLocked)
+    {
+        lockButtonText.text = isLocked ? "풀기" : "잠그기";
     }
 }
