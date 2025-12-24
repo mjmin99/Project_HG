@@ -43,6 +43,9 @@ public class CharacterDetailPanel : UIPanel
     [SerializeField] private Button btnReroll;
     [SerializeField] private TMP_Text rerollCostText;
 
+    [Header("Visual")]
+    [SerializeField] private Image standingImage;
+
     private int currentCharacterId = -1;
 
     /// <summary>
@@ -97,6 +100,10 @@ public class CharacterDetailPanel : UIPanel
 
         expText.text = $"{inst.exp} / {requiredExp}";
         enhanceCostText.text = "Cost: 100G";
+
+        standingImage.sprite = model.StandingSprite;
+        standingImage.preserveAspect = true;
+        standingImage.SetNativeSize();
     }
 
     private void RefreshStars(CharacterModel model)

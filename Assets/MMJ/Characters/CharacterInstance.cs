@@ -20,18 +20,21 @@ public class CharacterInstance
 
     public CharacterStats GetStats(CharacterModel model)
     {
-        CharacterStats stats = new()
-        {
-            atkType = model.attackType,
-            hp = model.baseHP + level * 10,
-            attack = model.baseAttack + level * 2,
-            magicAttack = model.baseMagicAttack + level * 3,
-            defense = model.baseDefense + level,
-            attackSpeed = model.baseAttackSpeed,
-            critRate = model.baseCritRate,
-            critDamage = model.baseCritDamage,
-            attackRange = model.attackRange
-        };
+        CharacterStats stats = new CharacterStats();
+
+        stats.atkType = model.attackType;
+        stats.hp = model.baseHP + level * 10;
+        stats.attack = model.baseAttack + level * 2;
+        stats.magicAttack = model.baseMagicAttack + level * 3;
+        stats.defense = model.baseDefense + level;
+
+        stats.attackSpeed = model.baseAttackSpeed;
+        stats.critRate = model.baseCritRate;
+        stats.critDamage = model.baseCritDamage;
+
+        stats.attackRange = model.attackRange;
+
+        ApplyAbilityStatModifiers(ref stats);
 
         return stats;
     }
@@ -58,6 +61,53 @@ public class CharacterInstance
                 ability = null,
                 isLocked = false
             });
+        }
+    }
+
+    private void ApplyAbilityStatModifiers(ref CharacterStats stats)
+    {
+        if (abilitySlots == null)
+            return;
+
+        foreach (var slot in abilitySlots)
+        {
+            if (slot.ability == null)
+                continue;
+
+            var ability = slot.ability;
+
+            switch (ability.abilityId)
+            {
+                case AbilityIds.MaxHPUp:
+                    stats.hp += AbilityTiers.Value(
+                        ability.rarity,
+                        50, 100, 200
+                    );
+                    break;
+
+                case AbilityIds.AttackUp:
+                    stats.attack += AbilityTiers.Value(
+                        ability.rarity,
+                        5, 10, 20
+                    );
+                    break;
+
+                case AbilityIds.AttackSpeedUp:
+                    stats.attackSpeed += AbilityTiers.Value(
+                        ability.rarity,
+                        0.05f, 0.1f, 0.2f
+                    );
+                    break;
+
+                case AbilityIds.CritRateUp:
+                    stats.critRate += AbilityTiers.Value(
+                        ability.rarity,
+                        0.05f, 0.1f, 0.15f
+                    );
+                    break;
+
+                    // 필요하면 계속 추가
+            }
         }
     }
 }
