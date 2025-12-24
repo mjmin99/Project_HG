@@ -113,20 +113,42 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK 1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 3208
-        width: 1397
-        height: 668
+        x: 23
+        y: 456
+        width: 462
+        height: 466
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 77, y: 77, z: 78, w: 77}
+      pivot: {x: 0, y: 0}
+      border: {x: 72, y: 72, z: 72, w: 72}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8984cae86bcd7e4b9b4d6536451cdeb
-      internalID: -773197978
+      spriteID: 528c38968d79cce43b807fea34d42465
+      internalID: -320846819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1-bit_UI_byBatuhanK 1_1
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 513
+        width: 399
+        height: 403
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 40, y: 40, z: 40, w: 40}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d306333a3a965e4cbd784d64c159f65
+      internalID: -508877758
       vertices: []
       indices: 
       edges: []
@@ -135,7 +157,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b858e1a9f9bb3af49aa1897a54cd6cea
+    spriteID: 987cab0c1e867b44785bdc6a7da2ba1a
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +167,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      1-bit_UI_byBatuhanK 1_0: -773197978
+      1-bit_UI_byBatuhanK 1_0: -320846819
+      1-bit_UI_byBatuhanK 1_1: -508877758
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
