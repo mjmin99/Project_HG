@@ -8,7 +8,7 @@ public class CharacterDead : CharacterState
 
     private float deadTimer;
     private float timer;
-    public CharacterDead(TestCharController controller) : base(controller)
+    public CharacterDead(CharController controller) : base(controller)
     {
         RunFixedUpdate = true;
     }

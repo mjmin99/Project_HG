@@ -4,6 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public struct CharacterStats
 {
+    public AttackType atkType;
     public float hp;
     public float attack;
     public float magicAttack;

@@ -20,18 +20,18 @@ public class CharacterInstance
 
     public CharacterStats GetStats(CharacterModel model)
     {
-        CharacterStats stats = new CharacterStats();
-
-        stats.hp = model.baseHP + level * 10;
-        stats.attack = model.baseAttack + level * 2;
-        stats.magicAttack = model.baseMagicAttack + level * 3;
-        stats.defense = model.baseDefense + level;
-
-        stats.attackSpeed = model.baseAttackSpeed;
-        stats.critRate = model.baseCritRate;
-        stats.critDamage = model.baseCritDamage;
-
-        stats.attackRange = model.attackRange; // ⭐ 이 줄 추가
+        CharacterStats stats = new()
+        {
+            atkType = model.attackType,
+            hp = model.baseHP + level * 10,
+            attack = model.baseAttack + level * 2,
+            magicAttack = model.baseMagicAttack + level * 3,
+            defense = model.baseDefense + level,
+            attackSpeed = model.baseAttackSpeed,
+            critRate = model.baseCritRate,
+            critDamage = model.baseCritDamage,
+            attackRange = model.attackRange
+        };
 
         return stats;
     }
