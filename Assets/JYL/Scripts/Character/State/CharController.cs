@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class CharController : MonoBehaviour
+public class CharController : MonoBehaviour, IAttackable
 {
     public CharacterStats stats;
     public AttackType atkType;
@@ -11,7 +11,8 @@ public class CharController : MonoBehaviour
     public Rigidbody rb;
     public BoxCollider col;
     public StateMachine stateMachine;
-    public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
+    public readonly Dictionary<CharStateType, BaseState> stateDict = new();
+    
     
     // 컨트롤러 전용 스탯
     private float maxHp;
@@ -69,6 +70,7 @@ public class CharController : MonoBehaviour
                     $"Prefab/Bullet/Character/{characterId}");
         }
         isRewinding = false;
+
     }
     private void Update()
     {
