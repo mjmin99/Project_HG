@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterRun : CharacterState
 {
     private const float MOVE_SPEED = 3f;
-    public CharacterRun(TestCharController controller) : base(controller) { }
+    public CharacterRun(CharController controller) : base(controller) { }
 
     public override void Enter()
     {
@@ -14,8 +14,8 @@ public class CharacterRun : CharacterState
     public override void Update()
     {
         ray = new Ray(controller.transform.position, Vector3.right);
-        bool isHit = Physics.Raycast(ray, controller.range, EnemyMask);
-        Debug.DrawRay(ray.origin, ray.direction * controller.range, Color.red);
+        bool isHit = Physics.Raycast(ray, controller.stats.attackRange, EnemyMask);
+        Debug.DrawRay(ray.origin, ray.direction * controller.stats.attackRange, Color.red);
 
         if (isHit)
         {
