@@ -13,12 +13,24 @@ public class SaveManager : Singleton<SaveManager>
     // 유저 세이브 시 사용되는 함수
     public void SaveCurrentUser()
     {
+        Debug.Log("[SaveManager] SaveCurrentUser START");
+
+        if (CurrentData == null)
+        {
+            Debug.LogError("[SaveManager] CurrentData is NULL");
+            return;
+        }
+
         var user = FirebaseManager.Auth.CurrentUser;
-        if (user != null)
-            SaveToFirebase(user.UserId);
-        else
-            Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
+        if (user == null)
+        {
+            Debug.LogWarning("[SaveManager] 로그인된 유저 없음 → 저장 취소");
+            return;
+        }
+
+        SaveToFirebase(user.UserId);
     }
+
 
     protected override void Awake()
     {

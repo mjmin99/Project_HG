@@ -17,7 +17,7 @@ public class StageSelectUIController : MonoBehaviour
     private void Awake()
     {
         closeButton.onClick.AddListener(Close);
-        stageSave = FindObjectOfType<StageSaveService>();
+        stageSave = FindAnyObjectByType<StageSaveService>();
     }
 
     public void Open()
