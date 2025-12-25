@@ -78,7 +78,7 @@ public class CharacterDetailPanel : UIPanel
 
         RefreshStars(model);
 
-        levelText.text = $"{inst.level}";
+        levelText.text = $"LV. {inst.level}";
         shardText.text = $"{inst.shard}";
 
         hpText.text = $"{stats.hp:0}";
@@ -102,8 +102,8 @@ public class CharacterDetailPanel : UIPanel
         expSlider.maxValue = requiredExp;
         expSlider.value = inst.exp;
 
-        expText.text = $"{inst.exp} / {requiredExp}";
-        enhanceCostText.text = "비용 : 100G";
+        expText.text = $"{inst.exp} / <color=#AAAAAA>{requiredExp}</color>";
+        enhanceCostText.text = "비용 : 100";
 
         standingImage.sprite = model.StandingSprite;
         standingImage.preserveAspect = true;
@@ -150,7 +150,7 @@ public class CharacterDetailPanel : UIPanel
         btnEnhance.onClick.RemoveAllListeners();
         btnEnhance.onClick.AddListener(OnClickEnhance);
 
-        rerollCostText.text = "Cost: 10";
+        rerollCostText.text = "비용: 10";
     }
 
     public override void OnClose()
@@ -234,7 +234,7 @@ public class CharacterDetailPanel : UIPanel
         if (!result)
         {
             UIManager.Instance.ShowToast("SimpleToast","골드가 부족합니다");
-            Debug.Log("강화 실패: 골드 부족");
+            Debug.Log("강화 실패 : 골드 부족");
             return;
         }
 
@@ -247,7 +247,7 @@ public class CharacterDetailPanel : UIPanel
         int cost = Manager.Character
             .GetEnhanceCost(currentCharacterId);
 
-        enhanceCostText.text = $"Cost: {cost}G";
+        enhanceCostText.text = $"비용 : {cost}";
     }
 
     private void PlayShardChangedAnim()

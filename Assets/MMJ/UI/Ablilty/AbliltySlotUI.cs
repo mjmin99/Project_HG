@@ -6,15 +6,26 @@ public class AbilitySlotUI : MonoBehaviour
 {
     public TMP_Text nameText;
     public Button lockButton;
-    [SerializeField] private TMP_Text lockButtonText;
-    public GameObject lockIcon;
+
+    [Header("Lock Button Sprites")]
+    [SerializeField] private Sprite unlockSprite; 
+    [SerializeField] private Sprite lockSprite;   
+
+    private Image lockButtonImage;
 
     private int slotIndex;
     private CharacterInstance inst;
     private CharacterModel model;
     private System.Action onChanged;
 
-    private System.Action onToggleLock;
+    private static readonly Color LOCKED_COLOR = new Color(1f, 0.55f, 0f); // 주황색
+    private static readonly Color UNLOCKED_COLOR = Color.white;
+
+
+    private void Awake()
+    {
+        lockButtonImage = lockButton.GetComponent<Image>();
+    }
 
     public void Bind(
         CharacterModel model,
@@ -33,29 +44,6 @@ public class AbilitySlotUI : MonoBehaviour
         Refresh();
     }
 
-    public void SetAbility(AbilityInstance ability, bool isLocked)
-    {
-        nameText.text = ability.abilityId.ToString();
-        lockIcon.SetActive(isLocked);
-    }
-
-    public void SetEmptySlot()
-    {
-        nameText.text = "Empty";
-        lockIcon.SetActive(false);
-    }
-
-    public void SetLockedSlot()
-    {
-        nameText.text = "Locked";
-        lockIcon.SetActive(true);
-    }
-
-    public void SetOnLockToggle(System.Action action)
-    {
-        onToggleLock = action;
-    }
-
     public void Refresh()
     {
         int unlocked = inst.GetUnlockedAbilitySlotCount(model);
@@ -64,7 +52,6 @@ public class AbilitySlotUI : MonoBehaviour
         if (slotIndex >= unlocked)
         {
             nameText.text = "Locked";
-            lockIcon.SetActive(true);
             lockButton.interactable = false;
             return;
         }
@@ -72,18 +59,19 @@ public class AbilitySlotUI : MonoBehaviour
         var slot = inst.abilitySlots[slotIndex];
 
         lockButton.interactable = true;
-        lockIcon.SetActive(slot.isLocked);
 
-        RefreshLockButton(slot.isLocked);
+        RefreshLockButtonImage(slot.isLocked);
 
         if (slot.ability == null)
-        {
             nameText.text = "Empty";
-        }
         else
-        {
             nameText.text = AbilityNameProvider.GetName(slot.ability.abilityId);
-        }
+    }
+
+    private void RefreshLockButtonImage(bool isLocked)
+    {
+        lockButtonImage.sprite = isLocked ? lockSprite : unlockSprite;
+        lockButtonImage.color = isLocked ? LOCKED_COLOR : UNLOCKED_COLOR;
     }
 
     private void OnClickLock()
@@ -91,11 +79,6 @@ public class AbilitySlotUI : MonoBehaviour
         var slot = inst.abilitySlots[slotIndex];
         slot.isLocked = !slot.isLocked;
 
-        onChanged?.Invoke();
-    }
-
-    private void RefreshLockButton(bool isLocked)
-    {
-        lockButtonText.text = isLocked ? "풀기" : "잠그기";
+        onChanged?.Invoke(); // → 상위에서 Refresh 다시 호출
     }
 }
