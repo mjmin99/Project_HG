@@ -61,10 +61,10 @@ public class WorldStageList : MonoBehaviour
             return;
         }
 
-        // 2. 이미 클리어한 스테이지면 중복 처리 방지
+        // 2. 이미 클리어한 스테이지일 경우 빠지는 경로 -> 여기 그냥 입장 가능하게 바꿔서 넣어야할듯
         if (stageSave.IsCleared(world, stage))
         {
-            UIManager.Instance.ShowToast("Toast", "이미 클리어한 스테이지입니다");
+            UIManager.Instance.ShowToast("SimpleToast", "이미 클리어한 스테이지입니다");
             return;
         }
 
