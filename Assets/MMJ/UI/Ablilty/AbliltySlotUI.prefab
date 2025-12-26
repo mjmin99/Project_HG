@@ -64,6 +64,7 @@ MonoBehaviour:
   lockButton: {fileID: 8090781282116433728}
   unlockSprite: {fileID: -1906406704, guid: 6e9d65bf016a79c43b30ac5d3097437a, type: 3}
   lockSprite: {fileID: -469534905, guid: 6e9d65bf016a79c43b30ac5d3097437a, type: 3}
+  backgroundImage: {fileID: 4067941097364601685}
 --- !u!1 &3464968032898418418
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,15 +199,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8773585, g: 0.5856639, b: 0.053800307, a: 1}
+  m_Color: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1857149172, guid: 6e9d65bf016a79c43b30ac5d3097437a, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: -469534905, guid: 6e9d65bf016a79c43b30ac5d3097437a, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -359,7 +360,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
