@@ -46,6 +46,7 @@ public class SignUpPanel : MonoBehaviour
                 }
                 
                 Debug.Log("이메일 가입 성공!");
+                ToastUtil.Success("이메일 가입 성공!");
                 loginPanel.SetActive(true);
                 signUpPanel.SetActive(false);
             });

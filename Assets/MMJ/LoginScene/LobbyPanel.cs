@@ -53,27 +53,33 @@ public class LobbyPanel : MonoBehaviour
 
     private void DeleteUser()
     {
-        FirebaseUser user = FirebaseManager.Auth.CurrentUser;
-        user.DeleteAsync()
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCanceled)
-                {
-                    Debug.LogError("[LobbyPanel] 유저 삭제 취소됨");
-                    return;
-                }
-                if (task.IsFaulted)
-                {
-                    Debug.LogError($"[LobbyPanel] 유저 삭제 실패: {task.Exception}");
-                    return;
-                }
-
-                Debug.Log("[LobbyPanel] 유저 삭제 성공");
-                FirebaseManager.Auth.SignOut();
-                loginPanel.SetActive(true);
-                gameObject.SetActive(false);
-            });
+        UIManager.Instance.OpenUI<UIPopup>("ConfirmDeleteUserPopup");
     }
+
+    // 옛날 유저 삭제
+    // private void DeleteUser()
+    // {
+    //     FirebaseUser user = FirebaseManager.Auth.CurrentUser;
+    //     user.DeleteAsync()
+    //         .ContinueWithOnMainThread(task =>
+    //         {
+    //             if (task.IsCanceled)
+    //             {
+    //                 Debug.LogError("[LobbyPanel] 유저 삭제 취소됨");
+    //                 return;
+    //             }
+    //             if (task.IsFaulted)
+    //             {
+    //                 Debug.LogError($"[LobbyPanel] 유저 삭제 실패: {task.Exception}");
+    //                 return;
+    //             }
+    // 
+    //             Debug.Log("[LobbyPanel] 유저 삭제 성공");
+    //             FirebaseManager.Auth.SignOut();
+    //             loginPanel.SetActive(true);
+    //             gameObject.SetActive(false);
+    //         });
+    // }
 
     private void GameStart()
     {
