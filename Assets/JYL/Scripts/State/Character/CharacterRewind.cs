@@ -20,7 +20,7 @@ public class CharacterRewind : CharacterState
         controller.rb.isKinematic = true;
         controller.col.enabled = false;
 
-        if(!controller.isDead) controller.PlayAnimation(Rewind);
+        if(!controller.isDead.Value) controller.PlayAnimation(Rewind);
         
         controller.animator.speed = 1f * REWIND_SPEED;
 
@@ -50,9 +50,9 @@ public class CharacterRewind : CharacterState
             {
                 startInfo = targetInfo;
                 targetInfo = controller.PopHistory();
-                if (controller.isDead && targetInfo.hp > 0)
+                if (controller.isDead.Value && targetInfo.hp > 0)
                 {
-                    controller.isDead = false;
+                    controller.isDead.Value = false;
                     controller.PlayAnimation(Rewind);
                 }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UniRx;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,13 +14,13 @@ public class CharController : MonoBehaviour, IAttackable
     public StateMachine stateMachine;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
     
-    
     // 컨트롤러 전용 스탯
     private float maxHp;
     public float curHp { get; private set; }
     public float shield;
     public bool isRewinding;
-    public bool isDead;
+    
+    public ReactiveProperty<bool> isDead;
     
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
     
@@ -72,11 +73,13 @@ public class CharController : MonoBehaviour, IAttackable
         isRewinding = false;
 
     }
+    
     private void Update()
     {
         stateMachine.Update();
         if (hitTimer > 0f) hitTimer += Time.deltaTime;
     }
+    
     private void FixedUpdate()
     {
         stateMachine.FixedUpdate();
@@ -94,10 +97,12 @@ public class CharController : MonoBehaviour, IAttackable
     public bool HasHistory() => timeRecorder.HasHistory();
     public TestTimeInfo PopHistory() => timeRecorder.Pop();
     public TestTimeInfo PeekHistory() => timeRecorder.Peek();
+    
     public void RewindTime()
     {
         stateMachine.ChangeState(stateDict[CharStateType.Rewind]);
     }
+    
     public void FinishRewind()
     {
         timeRecorder.Clear();
@@ -157,6 +162,7 @@ public class CharController : MonoBehaviour, IAttackable
             stateMachine.ChangeState(stateDict[CharStateType.Hit]);
         }
     }
+    
     public void Heal(float amount)
     {
         int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp);
@@ -166,14 +172,17 @@ public class CharController : MonoBehaviour, IAttackable
             // 힐 이펙트 및 Toast UI 생성
         }
     }
+    
     public void SetHp(float value)
     {
         curHp = value;
     }
+    
     public void SetShield(float value)
     {
         shield = value;
     }
+    
     public void GetShield(float amount)
     {
         shield += amount;

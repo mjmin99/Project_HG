@@ -4,7 +4,7 @@ public class EnemyHit : EnemyState
 {
     private const float HIT_TIMER = 0.3f;
     private float timer;
-    public EnemyHit(TestEnemyController controller) : base(controller) { }
+    public EnemyHit(EnemyController controller) : base(controller) { }
 
     public override void Enter()
     {

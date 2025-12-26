@@ -23,7 +23,7 @@ public class CharacterDead : CharacterState
         deadTimer = controller.animator.GetCurrentAnimatorStateInfo(0).length;
         
         controller.col.enabled = false;
-        controller.isDead = true;
+        controller.isDead.Value = true;
         isMoving = false;
 
         timer = 0f;

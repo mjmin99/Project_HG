@@ -4,7 +4,7 @@ public class EnemyAttack : EnemyState
 {
     private Ray ray;
     private const float ATK_RANGE = 0.25f;
-    public EnemyAttack(TestEnemyController controller) : base(controller) { }
+    public EnemyAttack(EnemyController controller) : base(controller) { }
 
     public override void Enter()
     {

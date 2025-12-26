@@ -1,17 +1,16 @@
 ﻿using System;
 using UnityEngine;
-using System.Linq;
 
 // 스테이지 진행 로직 전담
 // - 클리어 기록 갱신
 // - 최고 기록 비교
 // - 스테이지 입장 가능 여부 판단
 
-public class StageSaveService : MonoBehaviour
+public class StageSaveService
 {
     private StageProgressData data;
 
-    private void Awake()
+    public void Init()
     {
         data = Manager.Save.CurrentData.stageProgress; 
     }
@@ -53,6 +52,7 @@ public class StageSaveService : MonoBehaviour
         record.cleared = true;
         record.clearCount += 1;
         record.lastClearedAtUtc = DateTime.UtcNow.ToString("o");
+        
         if(record.bestClearTimeMs == 0 || clearTime <  record.bestClearTimeMs) record.bestClearTimeMs = clearTime;
         if (score > record.bestScore) record.bestScore = score;
         if (stars > record.bestStars) record.bestStars = stars;

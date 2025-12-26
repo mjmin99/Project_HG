@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyIdle : EnemyState
 {
     private Ray ray;
-    public EnemyIdle(TestEnemyController controller) : base(controller) { }
+    public EnemyIdle(EnemyController controller) : base(controller) { }
 
     public override void Enter()
     {

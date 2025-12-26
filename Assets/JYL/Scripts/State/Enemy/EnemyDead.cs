@@ -5,7 +5,7 @@ public class EnemyDead : EnemyState
 {
     private float timer;
     private float deathTime;
-    public EnemyDead(TestEnemyController controller) : base(controller) { }
+    public EnemyDead(EnemyController controller) : base(controller) { }
 
     public override void Enter()
     {

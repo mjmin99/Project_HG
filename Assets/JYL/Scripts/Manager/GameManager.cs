@@ -5,11 +5,13 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private StageDataSO stageData;
 
-    public StageSaveService saveService;
+    public StageSaveService stageService;
 
-    public void ()
+    protected override void Awake()
     {
-        
+        base.Awake();
+        stageService = new StageSaveService();
+        stageService.Init();
     }
 
 
