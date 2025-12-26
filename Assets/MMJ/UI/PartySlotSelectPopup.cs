@@ -63,7 +63,7 @@ public class PartySlotSelectPopup : UIPopup
             }
             else
             {
-                var model = CharacterManager.Instance.models[party[i]];
+                var model = Manager.Character.models[party[i]];
                 previews[i].SetCharacter(model.characterName, model.Icon);
             }
         }

@@ -17,6 +17,15 @@ public class CharacterModel
     public float baseCritDamage;
     public float attackRange;
 
+    public int MaxAbilitySlotCount // 어빌리티 슬롯 카운트
+    {
+        get
+        {
+            // rarity: 1~5
+            return Mathf.Clamp(rarity, 1, 5);
+        }
+    }
+
     public AttackType attackType; // Melee / Ranged
 
     public GameObject prefab;
@@ -31,6 +40,25 @@ public class CharacterModel
             return _icon;
         }
     }
+
+    private Sprite _standingSprite;
+    public Sprite StandingSprite
+    {
+        get
+        {
+            if (_standingSprite == null)
+            {
+                _standingSprite = Resources.Load<Sprite>(
+                    $"Stands/{characterName}"
+                );
+
+                if (_standingSprite == null)
+                    Debug.LogError($"[StandingSprite Load Fail] {characterName}");
+            }
+
+            return _standingSprite;
+        }
+    }
 }
 
 public enum CharacterRole
@@ -43,5 +71,6 @@ public enum CharacterRole
 public enum AttackType
 {
     Melee,
-    Ranged
+    Ranged,
+    Lazer
 }

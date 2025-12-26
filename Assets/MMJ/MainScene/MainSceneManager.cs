@@ -22,10 +22,10 @@ public class MainSceneManager : MonoBehaviour
         Debug.Log("<color=lime>MainScene 시작</color>");
 
         // 보유 캐릭터 로그 찍어보기
-        foreach (var pair in CharacterManager.Instance.instances)
+        foreach (var pair in Manager.Character.instances)
         {
             var inst = pair.Value;
-            var model = CharacterManager.Instance.models[inst.id];
+            var model = Manager.Character.models[inst.id];
             string ownedStr = inst.isOwned ? "보유" : "미보유";
             Debug.Log($"캐릭터 id={inst.id}, name={model.characterName}, 상태={ownedStr}, 레벨={inst.level}");
         }
@@ -35,13 +35,13 @@ public class MainSceneManager : MonoBehaviour
 
     public void UpdateGoldUI()
     {
-        int gold = SaveManager.Instance.CurrentData.gold;
+        int gold = Manager.Save.CurrentData.gold;
         goldText.text = gold.ToString();
     }
 
     public void GoToShop() // 배틀씬 버튼 처럼 나중에 버튼에 직접 달아서 움직이게 역할 주는 것도 괜찮을듯
     {
-        SceneManager.LoadScene("ShopScene");
+        UIManager.Instance.OpenUI<UIPanel>("ShopPanel");
         // 또는 SceneChanger.Instance.LoadScene("ShopScene");
     }
 

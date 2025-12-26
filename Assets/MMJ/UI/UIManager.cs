@@ -28,7 +28,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (uiStack.Count > 0) CloseTop();
-            else OpenUI<UIPopup>("OptionPopup");
+            else OpenUI<UIPanel>("OptionPanel");
         }
     }
 
@@ -96,13 +96,22 @@ public class UIManager : MonoBehaviour
 
     public void CloseTop()
     {
-        if (uiStack.Count == 0) return;
+        while (uiStack.Count > 0)
+        {
+            var top = uiStack.Peek();
 
-        UIBase top = uiStack.Peek();
-        if (!top.CanCloseByESC) return;
+            if (top == null || top.gameObject == null)
+            {
+                uiStack.Pop();
+                continue;
+            }
 
-        uiStack.Pop();
-        top.OnClose(); // Destroy는 UIBase가 담당
+            if (!top.CanCloseByESC) return;
+
+            uiStack.Pop();
+            top.OnClose();
+            return;
+        }
     }
 
 

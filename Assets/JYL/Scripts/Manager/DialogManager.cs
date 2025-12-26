@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using TMPro;
-using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DialogManager : Singleton<DialogManager>
 {

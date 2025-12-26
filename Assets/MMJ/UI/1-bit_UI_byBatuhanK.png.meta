@@ -113,13 +113,13 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_0
       rect:
         serializedVersion: 2
-        x: 91
-        y: 203
-        width: 30
-        height: 45
+        x: 275
+        y: 17
+        width: 166
+        height: 75
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 22, z: 4, w: 22}
       customData: 
       outline: []
       physicsShape: []
@@ -135,10 +135,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_1
       rect:
         serializedVersion: 2
-        x: 132
-        y: 239
-        width: 22
-        height: 9
+        x: 458
+        y: 107
+        width: 164
+        height: 73
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,104 +154,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 1-bit_UI_byBatuhanK_2
-      rect:
-        serializedVersion: 2
-        x: 132
-        y: 205
-        width: 22
-        height: 29
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e3123b50b7fed8c49b96115df783dd96
-      internalID: 1682437631
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1-bit_UI_byBatuhanK_3
-      rect:
-        serializedVersion: 2
-        x: 90
-        y: 181
-        width: 53
-        height: 19
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6d70aaa213f2f6140aae4e3aaf68e0e3
-      internalID: -1875104931
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1-bit_UI_byBatuhanK_4
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 162
-        width: 39
-        height: 14
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2c5942a273f32f24797856681c39ba05
-      internalID: -469534905
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 1-bit_UI_byBatuhanK_5
-      rect:
-        serializedVersion: 2
-        x: 150
-        y: 162
-        width: 38
-        height: 9
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4dfbd9f40c4e13143b911fa6b8bdd6ad
-      internalID: -1906406704
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: 1-bit_UI_byBatuhanK_6
       rect:
         serializedVersion: 2
         x: 271
-        y: 57
+        y: 102
         width: 174
         height: 83
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 9, y: 9, z: 9, w: 9}
       customData: 
       outline: []
       physicsShape: []
