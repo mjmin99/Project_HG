@@ -8,7 +8,7 @@ public static class PartyService
 
     public static int[] GetPartySet()
     {
-        return SaveManager.Instance.CurrentData.partySet;
+        return Manager.Save.CurrentData.partySet;
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ public static class PartyService
     /// </summary>
     public static void AssignToSlot(int slotIndex, int characterId)
     {
-        if (SaveManager.Instance == null || SaveManager.Instance.CurrentData == null)
+        if (Manager.Save == null || Manager.Save.CurrentData == null)
         {
             Debug.LogError("[PartyService] SaveManager/CurrentData not ready.");
             return;
@@ -32,7 +32,7 @@ public static class PartyService
             return;
         }
 
-        var party = SaveManager.Instance.CurrentData.partySet;
+        var party = Manager.Save.CurrentData.partySet;
 
         // 이미 파티에 있는 캐릭터면 기존 슬롯 비우기 (중복 방지)
         for (int i = 0; i < party.Length; i++)
@@ -51,21 +51,21 @@ public static class PartyService
         OnPartyChanged?.Invoke(party, slotIndex, characterId);
 
         // 저장 (안 하면 재실행 시 원복됨)
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Save.SaveCurrentUser();
     }
 
     public static void ClearSlot(int slotIndex)
     {
-        if (SaveManager.Instance == null || SaveManager.Instance.CurrentData == null)
+        if (Manager.Save == null || Manager.Save.CurrentData == null)
             return;
 
-        var party = SaveManager.Instance.CurrentData.partySet;
+        var party = Manager.Save.CurrentData.partySet;
 
         if (slotIndex < 0 || slotIndex >= party.Length)
             return;
 
         party[slotIndex] = -1;
         OnPartyChanged?.Invoke(party, slotIndex, -1);
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Save.SaveCurrentUser();
     }
 }

@@ -956,7 +956,7 @@ GameObject:
   - component: {fileID: 6632497999901497289}
   - component: {fileID: 2424427314220192233}
   - component: {fileID: 701075917517346420}
-  - component: {fileID: 3117338207903045645}
+  - component: {fileID: 5826037701713818206}
   m_Layer: 5
   m_Name: GachaResultPopup
   m_TagString: Untagged
@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3117338207903045645
+--- !u!114 &5826037701713818206
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1033,9 +1033,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5541262223037740237}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53a8003038d24284692a6359e77b6f9c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a1bf3cd6bbfe514ab80ba11402a763d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ResultPanelController
+  m_EditorClassIdentifier: Assembly-CSharp::GachaResultPopup
   animDuration: 0.25
   panel: {fileID: 5541262223037740237}
   okButton: {fileID: 5172769159685591456}

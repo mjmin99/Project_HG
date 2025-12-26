@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraDragController : MonoBehaviour
 {
@@ -26,6 +27,13 @@ public class CameraDragController : MonoBehaviour
 
     private void HandleDrag()
     {
+        //UI 위에 있으면 드래그 막음
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
+        {
+            isDragging = false;
+            return;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             isDragging = true;

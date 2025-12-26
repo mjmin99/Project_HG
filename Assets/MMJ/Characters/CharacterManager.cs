@@ -1,25 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterManager : MonoBehaviour
+public class CharacterManager : Singleton<CharacterManager>
 {
-    public static CharacterManager Instance;
-
     public Dictionary<int, CharacterModel> models = new();
     public Dictionary<int, CharacterInstance> instances = new();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     public void LoadModels(List<CharacterModel> list)
     {
@@ -176,7 +162,7 @@ public class CharacterManager : MonoBehaviour
         int cost = 10 + lockedCount * 10;
 
         // 만약 골드로 하고 싶다면 아래
-        if (!SaveManager.Instance.TrySpendGold(cost))
+        if (!Manager.Save.TrySpendGold(cost))
             return false;
 
         // 만약 캐릭터 중복 뽑기 재화로 돌리고 싶다면 아래-> ui는 뭐 상관 없음 ㅋ 호환 가능
@@ -202,7 +188,7 @@ public class CharacterManager : MonoBehaviour
             slot.ability = pool[index];
         }
 
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Save.SaveCurrentUser();
         return true;
     }
 
@@ -230,11 +216,11 @@ public class CharacterManager : MonoBehaviour
         const int COST_GOLD = 100;
         const int EXP_GAIN = 100;
 
-        if (!SaveManager.Instance.TrySpendGold(COST_GOLD))
+        if (!Manager.Save.TrySpendGold(COST_GOLD))
             return false;
 
         AddExp(characterId, EXP_GAIN);
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Save.SaveCurrentUser();
         return true;
     }
 }

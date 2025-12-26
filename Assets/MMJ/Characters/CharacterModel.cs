@@ -40,6 +40,25 @@ public class CharacterModel
             return _icon;
         }
     }
+
+    private Sprite _standingSprite;
+    public Sprite StandingSprite
+    {
+        get
+        {
+            if (_standingSprite == null)
+            {
+                _standingSprite = Resources.Load<Sprite>(
+                    $"Stands/{characterName}"
+                );
+
+                if (_standingSprite == null)
+                    Debug.LogError($"[StandingSprite Load Fail] {characterName}");
+            }
+
+            return _standingSprite;
+        }
+    }
 }
 
 public enum CharacterRole
@@ -52,5 +71,6 @@ public enum CharacterRole
 public enum AttackType
 {
     Melee,
-    Ranged
+    Ranged,
+    Lazer
 }

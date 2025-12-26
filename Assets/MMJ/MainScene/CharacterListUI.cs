@@ -16,7 +16,7 @@ public class CharacterListUI : MonoBehaviour
         foreach (Transform child in container)
             Destroy(child.gameObject);
 
-        foreach (var pair in CharacterManager.Instance.instances)
+        foreach (var pair in Manager.Character.instances)
         {
             int id = pair.Key;
             var inst = pair.Value;

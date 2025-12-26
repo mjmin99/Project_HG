@@ -31,8 +31,8 @@ public class ShopPanel : UIPanel
     {
         // 도메인 서비스 생성
         gacha = new GachaService(
-            SaveManager.Instance,
-            CharacterManager.Instance
+            Manager.Save,
+            Manager.Character
         );
 
         // 버튼 바인딩
@@ -130,9 +130,9 @@ public class ShopPanel : UIPanel
 
     private void UpdateGoldUI()
     {
-        if (goldText != null && SaveManager.Instance.CurrentData != null)
+        if (goldText != null && Manager.Save.CurrentData != null)
         {
-            goldText.text = SaveManager.Instance.CurrentData.gold.ToString();
+            goldText.text = Manager.Save.CurrentData.gold.ToString();
         }
     }
 
@@ -142,8 +142,8 @@ public class ShopPanel : UIPanel
 
     private void AddTestGold()
     {
-        SaveManager.Instance.AddGold(10000);
-        SaveManager.Instance.SaveCurrentUser();
+        Manager.Save.AddGold(10000);
+        Manager.Save.SaveCurrentUser();
         UpdateGoldUI();
 
         Debug.Log("[DEV] 테스트 골드 +10000 지급");
