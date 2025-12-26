@@ -78,36 +78,86 @@ public class CharacterInstance
 
             switch (ability.abilityId)
             {
+                // ===== 기본 스탯 =====
+
                 case AbilityIds.MaxHPUp:
                     stats.hp += AbilityTiers.Value(
                         ability.rarity,
-                        50, 100, 200
+                        50,    // Tier1
+                        100,   // Tier2
+                        200    // Tier3
                     );
                     break;
 
                 case AbilityIds.AttackUp:
                     stats.attack += AbilityTiers.Value(
                         ability.rarity,
-                        5, 10, 20
+                        5,
+                        10,
+                        20
+                    );
+                    break;
+
+                case AbilityIds.MagicAttackUp:
+                    stats.magicAttack += AbilityTiers.Value(
+                        ability.rarity,
+                        6,
+                        12,
+                        25
+                    );
+                    break;
+
+                case AbilityIds.DefenseUp:
+                    stats.defense += AbilityTiers.Value(
+                        ability.rarity,
+                        5,
+                        10,
+                        20
                     );
                     break;
 
                 case AbilityIds.AttackSpeedUp:
                     stats.attackSpeed += AbilityTiers.Value(
                         ability.rarity,
-                        0.05f, 0.1f, 0.2f
+                        0.05f,
+                        0.10f,
+                        0.20f
+                    );
+                    break;
+
+                case AbilityIds.AttackRangeUp:
+                    stats.attackRange += AbilityTiers.Value(
+                        ability.rarity,
+                        0.5f,
+                        1.0f,
+                        1.5f
                     );
                     break;
 
                 case AbilityIds.CritRateUp:
                     stats.critRate += AbilityTiers.Value(
                         ability.rarity,
-                        0.05f, 0.1f, 0.15f
+                        0.05f,
+                        0.10f,
+                        0.15f
                     );
                     break;
 
-                    // 필요하면 계속 추가
+                case AbilityIds.CritDamageUp:
+                    stats.critDamage += AbilityTiers.Value(
+                        ability.rarity,
+                        0.15f,
+                        0.30f,
+                        0.50f
+                    );
+                    break;
+
+                // ===== 안전장치 =====
+                default:
+                    // 아직 스탯화 안 된 어빌리티
+                    break;
             }
         }
+    
     }
 }

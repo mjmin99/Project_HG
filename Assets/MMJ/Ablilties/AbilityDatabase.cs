@@ -11,42 +11,44 @@ public static class AbilityDatabase
         AbilityIds.MaxHPUp,
         AbilityIds.AttackUp,
         AbilityIds.MagicAttackUp,
-        AbilityIds.SkillDamageUp,
+        // AbilityIds.SkillDamageUp,
         AbilityIds.CritRateUp,
         AbilityIds.AttackRangeUp,
         AbilityIds.AttackSpeedUp,
-        AbilityIds.SkillCooldownResetOnUse,
-        AbilityIds.SkillBuffAfterUse,
+        // AbilityIds.SkillCooldownResetOnUse,
+        // AbilityIds.SkillBuffAfterUse,
+        AbilityIds.CritDamageUp,
+        AbilityIds.DefenseUp,
     };
 
-    private static readonly List<int> DealerMeleeAbilities = new()
-    {
-        AbilityIds.CritBonusDamage,
-        AbilityIds.LifeStealOnAttack,
-        AbilityIds.BossDamageUp,
-    };
+    // private static readonly List<int> DealerMeleeAbilities = new()
+    // {
+    //     
+    //     AbilityIds.LifeStealOnAttack,
+    //     AbilityIds.BossDamageUp,
+    // };
 
-    private static readonly List<int> DealerRangedAbilities = new()
-    {
-        AbilityIds.RangedAttackUp,
-        AbilityIds.EveryThirdAttackBonus,
-        AbilityIds.DotOnHit,
-    };
+    // private static readonly List<int> DealerRangedAbilities = new()
+    // {
+    //     AbilityIds.RangedAttackUp,
+    //     AbilityIds.EveryThirdAttackBonus,
+    //     AbilityIds.DotOnHit,
+    // };
 
-    private static readonly List<int> TankAbilities = new()
-    {
-        AbilityIds.DamageReduction,
-        AbilityIds.TakeDamageForAlly,
-        AbilityIds.StatusResistance,
-        AbilityIds.ShieldAndHealBoost,
-    };
-
-    private static readonly List<int> SupportAbilities = new()
-    {
-        AbilityIds.HealAura,
-        AbilityIds.HealCanCrit,
-        AbilityIds.HealAndShieldIncrease,
-    };
+    // private static readonly List<int> TankAbilities = new()
+    // {
+    //     AbilityIds.DamageReduction,
+    //     AbilityIds.TakeDamageForAlly,
+    //     AbilityIds.StatusResistance,
+    //     AbilityIds.ShieldAndHealBoost,
+    // };
+    
+    // private static readonly List<int> SupportAbilities = new()
+    // {
+    //     AbilityIds.HealAura,
+    //     AbilityIds.HealCanCrit,
+    //     AbilityIds.HealAndShieldIncrease,
+    // };
 
     // ===== 공개 API =====
 
@@ -58,23 +60,23 @@ public static class AbilityDatabase
         AddAbilities(pool, CommonAbilities);
 
         // 2️⃣ 역할 / 공격타입별
-        switch (model.role)
-        {
-            case CharacterRole.Tank:
-                AddAbilities(pool, TankAbilities);
-                break;
-
-            case CharacterRole.Dealer:
-                if (model.attackType == AttackType.Melee)
-                    AddAbilities(pool, DealerMeleeAbilities);
-                else
-                    AddAbilities(pool, DealerRangedAbilities);
-                break;
-
-            case CharacterRole.Healer:
-                AddAbilities(pool, SupportAbilities);
-                break;
-        }
+        // switch (model.role)
+        // {
+        //     case CharacterRole.Tank:
+        //         AddAbilities(pool, TankAbilities);
+        //         break;
+        // 
+        //     case CharacterRole.Dealer:
+        //         if (model.attackType == AttackType.Melee)
+        //             AddAbilities(pool, DealerMeleeAbilities);
+        //         else
+        //             AddAbilities(pool, DealerRangedAbilities);
+        //         break;
+        // 
+        //     case CharacterRole.Healer:
+        //         AddAbilities(pool, SupportAbilities);
+        //         break;
+        // }
 
         return pool;
     }
@@ -93,7 +95,7 @@ public static class AbilityDatabase
     {
         float r = Random.value;
 
-        // ⭐ 확률 테이블 (조절 포인트)
+        // 확률 테이블 (조절 포인트)
         if (r < 0.60f) return AbilityRarity.Tier1;
         if (r < 0.90f) return AbilityRarity.Tier2;
         return AbilityRarity.Tier3;
