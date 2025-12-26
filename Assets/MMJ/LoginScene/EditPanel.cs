@@ -92,6 +92,7 @@ public class EditPanel : MonoBehaviour
                     return;
                 }
                 Debug.Log("비밀번호 변경 완료");
+                ToastUtil.Success("비밀번호 변경 완료!");
             });
 
     }
