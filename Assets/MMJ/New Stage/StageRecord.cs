@@ -35,16 +35,46 @@ public record StageRecord
 [Serializable]
 public class StageProgressData
 {
-    // key: "W01-S005"
-    // Value: 해당 스테이지의 클리어 기록
-    public Dictionary<string,StageRecord> records = new();
+    // 저장용 (JsonUtility가 직렬화 가능)
+    public List<StageRecord> records = new();
 
+    // 런타임 캐시 (저장 안 됨)
+    [NonSerialized]
+    private Dictionary<string, StageRecord> cache;
+
+    public Dictionary<string, StageRecord> Cache
+    {
+        get
+        {
+            if (cache == null)
+                RebuildCache();
+            return cache;
+        }
+    }
+
+    // 신규 세이브 생성 시: 모든 스테이지에 대한 기본 레코드 생성
     public StageProgressData(StageDataSO[] stages)
     {
+        records.Clear();
         foreach (var d in stages)
         {
-            StageRecord record = new(d);
-            records.Add(StageKeyUtil.ToKey(d.world,d.stage),record);
+            records.Add(new StageRecord(d));
+        }
+    }
+
+    // Firebase 로드 후 보정용
+    public void RebuildCache()
+    {
+        // 방어
+        if (records == null)
+            records = new List<StageRecord>();
+
+        cache = new Dictionary<string, StageRecord>();
+
+        foreach (var r in records)
+        {
+            var key = StageKeyUtil.ToKey(r.world, r.level);
+            cache[key] = r;
         }
     }
 }

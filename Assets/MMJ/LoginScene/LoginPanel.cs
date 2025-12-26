@@ -88,24 +88,30 @@ public class LoginPanel : MonoBehaviour
 
 
     }
-
     private void ResetPass()
     {
-        FirebaseManager.Auth.SendPasswordResetEmailAsync(idInput.text)
-                .ContinueWithOnMainThread(task =>
-                {
-                    if (!task.IsCanceled)
-                    {
-                        Debug.LogError("패스워드 재설정 이메일 전송 취소됨");
-                        return;
-                    }
-                    if (!task.IsFaulted)
-                    {
-                        Debug.LogError($"패스워드 재설정 이메일 전송 실패. 이유 : {task.Exception}");
-                        return;
-                    }
-
-                    Debug.Log("패스워드 재설정 이메일 전송 성공");
-                });
+        UIManager.Instance.OpenUI<UIPopup>("ResetPasswordPopup");
     }
+
+
+    // 흐름 변경으로 인한 이전 함수
+    // private void ResetPass()
+    // {
+    //     FirebaseManager.Auth.SendPasswordResetEmailAsync(idInput.text)
+    //             .ContinueWithOnMainThread(task =>
+    //             {
+    //                 if (!task.IsCanceled)
+    //                 {
+    //                     Debug.LogError("패스워드 재설정 이메일 전송 취소됨");
+    //                     return;
+    //                 }
+    //                 if (!task.IsFaulted)
+    //                 {
+    //                     Debug.LogError($"패스워드 재설정 이메일 전송 실패. 이유 : {task.Exception}");
+    //                     return;
+    //                 }
+    // 
+    //                 Debug.Log("패스워드 재설정 이메일 전송 성공");
+    //             });
+    // }
 }

@@ -62,7 +62,7 @@ public class TestEnemyController : MonoBehaviour, IAttackable
 
     public void Attack()
     {
-        var attackInfo = new AttackInfo(LayerMask.NameToLayer("Enemy"), atk, false);
+        var attackInfo = new AttackInfo(LayerMask.NameToLayer("Enemy"), atk);
         hitInfo.collider.GetComponent<IAttackable>().TakeHit(attackInfo);
     }
     

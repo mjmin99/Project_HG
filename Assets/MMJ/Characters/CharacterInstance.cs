@@ -22,6 +22,7 @@ public class CharacterInstance
     {
         CharacterStats stats = new CharacterStats();
 
+        stats.atkType = model.attackType;
         stats.hp = model.baseHP + level * 10;
         stats.attack = model.baseAttack + level * 2;
         stats.magicAttack = model.baseMagicAttack + level * 3;
@@ -31,7 +32,9 @@ public class CharacterInstance
         stats.critRate = model.baseCritRate;
         stats.critDamage = model.baseCritDamage;
 
-        stats.attackRange = model.attackRange; // ⭐ 이 줄 추가
+        stats.attackRange = model.attackRange;
+
+        ApplyAbilityStatModifiers(ref stats);
 
         return stats;
     }
@@ -58,6 +61,53 @@ public class CharacterInstance
                 ability = null,
                 isLocked = false
             });
+        }
+    }
+
+    private void ApplyAbilityStatModifiers(ref CharacterStats stats)
+    {
+        if (abilitySlots == null)
+            return;
+
+        foreach (var slot in abilitySlots)
+        {
+            if (slot.ability == null)
+                continue;
+
+            var ability = slot.ability;
+
+            switch (ability.abilityId)
+            {
+                case AbilityIds.MaxHPUp:
+                    stats.hp += AbilityTiers.Value(
+                        ability.rarity,
+                        50, 100, 200
+                    );
+                    break;
+
+                case AbilityIds.AttackUp:
+                    stats.attack += AbilityTiers.Value(
+                        ability.rarity,
+                        5, 10, 20
+                    );
+                    break;
+
+                case AbilityIds.AttackSpeedUp:
+                    stats.attackSpeed += AbilityTiers.Value(
+                        ability.rarity,
+                        0.05f, 0.1f, 0.2f
+                    );
+                    break;
+
+                case AbilityIds.CritRateUp:
+                    stats.critRate += AbilityTiers.Value(
+                        ability.rarity,
+                        0.05f, 0.1f, 0.15f
+                    );
+                    break;
+
+                    // 필요하면 계속 추가
+            }
         }
     }
 }

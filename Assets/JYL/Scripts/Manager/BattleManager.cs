@@ -1,7 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    [SerializeField] private Transform characterParent;
+    [SerializeField] private Transform[] characterPos;
+    private List<CharController> characters = new();
+    
     private bool isClear = false;
 
     private StageDataSO stageData;
@@ -16,9 +21,11 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     // 외부 스테이지 셀렉트 UI 에서 수행되는 함수
     
-    // TODO : 테스트. 버튼으로 해당 함수 수행. 실제로는 OnEnable이나 Start에서 수행
+    
+    
     public void StartStage(string stageKey)
     {
+        InitCharacters();
         // Manager.Enemy.CreateEnemy(string 현재 스테이지);
         // 스테이지에 소환될 에너미들 생성하여 wave 단위로 컨트롤러들을 저장함
         // stageData = 
@@ -34,4 +41,26 @@ public class BattleManager : MonoBehaviour
     {
         
     }
+
+    private void InitCharacters()
+    {
+        var partySet = Manager.Save.CurrentData.partySet;
+        int count = 0;
+        foreach (var member in partySet)
+        {
+            var stat = Manager.Character.GetStats(member);
+            var model = Manager.Character.models[member];
+            var go = new GameObject(model.characterName)
+            {
+                transform =
+                {
+                    position = characterPos[count++].position
+                }
+            };
+            go.transform.SetParent(characterParent);
+            var character = go.AddComponent<CharController>();
+            character.Init(member, 5f);
+        }
+    }
+    
 }

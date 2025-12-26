@@ -47,6 +47,6 @@ public class MainScenePresenter : MonoBehaviour
 
     public void OnClickExpedition()
     {
-        stageSelectUI.Open();
+        UIManager.Instance.OpenUI<StageSelectPanel>("StageSelectPanel");
     }
 }

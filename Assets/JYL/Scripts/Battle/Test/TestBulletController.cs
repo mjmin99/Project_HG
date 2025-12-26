@@ -7,7 +7,7 @@ public class TestBulletController : MonoBehaviour
     private BoxCollider col;
     private AttackInfo info;
 
-    public void Init(LayerMask attacker, float firePower, bool isPoison)
+    public void Init(LayerMask attacker, float firePower)
     {
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         col = gameObject.GetOrAddComponent<BoxCollider>();
@@ -15,7 +15,7 @@ public class TestBulletController : MonoBehaviour
         gameObject.transform.position += Vector3.up * 0.25f;
         rb.isKinematic = false;
         rb.useGravity = false;
-        info = new AttackInfo(attacker, firePower, isPoison);
+        info = new AttackInfo(attacker, firePower);
     }
 
     public void FireToPosition(Vector3 pos)

@@ -1,0 +1,71 @@
+배틀 매니저 세팅 예시
+public class BattleManager : MonoBehaviour
+{
+    private StageDataSO stageData;
+
+    private void Start()
+    {
+        stageData = StageRuntimeManager.Instance.CurrentStage;
+
+        if (stageData == null)
+        {
+            Debug.LogError("StageDataSO가 없습니다!");
+            return;
+        }
+
+        InitStage();
+    }
+
+배틀 매니저가 있을텐데 거기서 SO 데이터를 위와 같은 방법으로 넣어주면 됨
+
+
+-----------------------------
+스테이지 클리어 시 save 도 반영을 해줘야하는데
+
+
+
+🎯 목표
+
+클리어 시
+
+현재 스테이지 world / stage 기준으로
+
+StageSaveService에 결과 저장
+
+SaveManager.SaveCurrentUser() 호출
+
+
+------------------
+🔑 사용해야 할 것
+
+StageSaveService
+
+StageDataSO
+
+클리어 결과 (시간, 점수 등)
+
+
+클리어 처리 예시
+public void StageClear()
+{
+    var stage = stageData;
+
+    var stageSave = FindObjectOfType<StageSaveService>();
+    if (stageSave == null)
+    {
+        Debug.LogError("StageSaveService 없음");
+        return;
+    }
+
+    stageSave.ApplyClearResult(
+        stage.world,
+        stage.stage,
+        clearTimeMs: 123456,
+        score: 9999,
+        stars: 3
+    );
+
+    Manager.Save.SaveCurrentUser();
+
+    SceneManager.LoadScene("MainScene");
+}

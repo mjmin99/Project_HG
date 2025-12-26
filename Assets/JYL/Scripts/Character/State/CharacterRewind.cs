@@ -8,7 +8,7 @@ public class CharacterRewind : CharacterState
 
     private const float REWIND_SPEED = 1.5f;
 
-    public CharacterRewind(TestCharController controller) : base(controller)
+    public CharacterRewind(CharController controller) : base(controller)
     {
         this.controller = controller;
         RunFixedUpdate = true;

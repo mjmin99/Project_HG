@@ -28,7 +28,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (uiStack.Count > 0) CloseTop();
-            else OpenUI<UIPopup>("OptionPopup");
+            else OpenUI<UIPanel>("OptionPanel");
         }
     }
 

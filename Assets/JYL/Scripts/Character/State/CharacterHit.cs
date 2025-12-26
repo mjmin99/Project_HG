@@ -5,7 +5,7 @@ public class CharacterHit : CharacterState
     private const float HIT_TIMER = 0.2f;
     private float timer;
     
-    public CharacterHit(TestCharController controller) : base(controller)
+    public CharacterHit(CharController controller) : base(controller)
     {
         RunFixedUpdate = true;
     }

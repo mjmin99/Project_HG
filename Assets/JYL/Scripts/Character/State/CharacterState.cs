@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class CharacterState : BaseState
 {
-    protected TestCharController controller;
+    protected CharController controller;
     
     protected Ray ray;
     protected static readonly int EnemyMask =  LayerMask.GetMask("Enemy");
     
 
-    protected CharacterState(TestCharController controller)
+    protected CharacterState(CharController controller)
     {
         this.controller = controller;
     }

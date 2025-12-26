@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class CharacterDetailPanel : UIPanel
 {
@@ -43,6 +44,12 @@ public class CharacterDetailPanel : UIPanel
     [SerializeField] private Button btnReroll;
     [SerializeField] private TMP_Text rerollCostText;
 
+    [Header("Visual")]
+    [SerializeField] private Image standingImage;
+
+    [Header("Currency")]
+    [SerializeField] private TMP_Text goldText;
+
     private int currentCharacterId = -1;
 
     /// <summary>
@@ -71,23 +78,23 @@ public class CharacterDetailPanel : UIPanel
 
         RefreshStars(model);
 
-        levelText.text = $"Lv. {inst.level}";
-        shardText.text = $"Shard: {inst.shard}";
+        levelText.text = $"LV. {inst.level}";
+        shardText.text = $"{inst.shard}";
 
-        hpText.text = $"HP: {stats.hp:0}";
-        atkText.text = $"ATK: {stats.attack:0}";
-        matkText.text = $"MATK: {stats.magicAttack:0}";
-        defText.text = $"DEF: {stats.defense:0}";
-        aspdText.text = $"ASPD: {stats.attackSpeed:0.00}";
-        critText.text = $"CRIT: {stats.critRate * 100:0.0}%";
-        critDmgText.text = $"CRITDMG: {stats.critDamage * 100:0.0}%";
-        rangeText.text = $"RANGE: {stats.attackRange:0.0}";
+        hpText.text = $"{stats.hp:0}";
+        atkText.text = $"{stats.attack:0}";
+        matkText.text = $"{stats.magicAttack:0}";
+        defText.text = $"{stats.defense:0}";
+        aspdText.text = $"{stats.attackSpeed:0.00}";
+        critText.text = $"{stats.critRate * 100:0.0}%";
+        critDmgText.text = $"{stats.critDamage * 100:0.0}%";
+        rangeText.text = $"{stats.attackRange:0.0}";
 
         RefreshAbilitySlots(model, inst); // 어빌리티 슬롯 생성
 
         // 업데이트에 할 필요 없는 이유가 여기에 두면 슬롯 버튼 누를 때 호출됨
         int cost = GetRerollCost(inst);
-        rerollCostText.text = $"Cost: {cost}";
+        rerollCostText.text = $"비용 : {cost}";
 
         int requiredExp = Manager.Character.RequiredExp(inst.level);
 
@@ -95,8 +102,16 @@ public class CharacterDetailPanel : UIPanel
         expSlider.maxValue = requiredExp;
         expSlider.value = inst.exp;
 
-        expText.text = $"{inst.exp} / {requiredExp}";
-        enhanceCostText.text = "Cost: 100G";
+        expText.text = $"{inst.exp} / <color=#AAAAAA>{requiredExp}</color>";
+        enhanceCostText.text = "비용 : 100";
+
+        standingImage.sprite = model.StandingSprite;
+        standingImage.preserveAspect = true;
+        standingImage.SetNativeSize();
+
+        RefreshGold();
+        RefreshEnhanceCost();
+        RefreshShard();
     }
 
     private void RefreshStars(CharacterModel model)
@@ -107,6 +122,21 @@ public class CharacterDetailPanel : UIPanel
         {
             stars[i].gameObject.SetActive(i < rarity);
         }
+    }
+
+    private void RefreshGold()
+    {
+        int gold = Manager.Save.CurrentData.gold;
+        goldText.text = $"Gold: {gold}";
+    }
+
+    private void RefreshShard()
+    {
+        if (!Manager.Character.instances
+            .TryGetValue(currentCharacterId, out var inst))
+            return;
+
+        shardText.text = $"Shard: {inst.shard}";
     }
 
     public override void OnOpen()
@@ -120,7 +150,7 @@ public class CharacterDetailPanel : UIPanel
         btnEnhance.onClick.RemoveAllListeners();
         btnEnhance.onClick.AddListener(OnClickEnhance);
 
-        rerollCostText.text = "Cost: 10";
+        rerollCostText.text = "비용: 10";
     }
 
     public override void OnClose()
@@ -139,10 +169,12 @@ public class CharacterDetailPanel : UIPanel
         if (!result)
         {
             Debug.Log("리롤 실패 (골드 부족 또는 오류)");
+            UIManager.Instance.ShowToast("SimpleToast","조각이 부족합니다");
             return;
         }
 
         Refresh();
+        PlayShardChangedAnim();
     }
 
     private void OnClickAssign()
@@ -201,10 +233,36 @@ public class CharacterDetailPanel : UIPanel
 
         if (!result)
         {
-            Debug.Log("강화 실패: 골드 부족");
+            UIManager.Instance.ShowToast("SimpleToast","골드가 부족합니다");
+            Debug.Log("강화 실패 : 골드 부족");
             return;
         }
 
         Refresh();
+        PlayGoldChangedAnim();
+    }
+
+    private void RefreshEnhanceCost()
+    {
+        int cost = Manager.Character
+            .GetEnhanceCost(currentCharacterId);
+
+        enhanceCostText.text = $"비용 : {cost}";
+    }
+
+    private void PlayShardChangedAnim()
+    {
+        shardText.transform.localScale = Vector3.one;
+        shardText.transform
+            .DOScale(1.2f, 0.1f)
+            .SetLoops(2, LoopType.Yoyo);
+    }
+
+    private void PlayGoldChangedAnim()
+    {
+        goldText.transform.localScale = Vector3.one;
+        goldText.transform
+            .DOScale(1.2f, 0.1f)
+            .SetLoops(2, LoopType.Yoyo);
     }
 }

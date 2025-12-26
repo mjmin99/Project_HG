@@ -1,71 +1,185 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class CharController : MonoBehaviour
 {
-    
-    public Rigidbody2D rb;
-    public BoxCollider2D boxCol;
-    public Animator animator;
-    // public Skill skill;
     public CharacterStats stats;
+    public AttackType atkType;
+    public Animator animator;
+    public Rigidbody rb;
+    public BoxCollider col;
+    public StateMachine stateMachine;
+    public readonly Dictionary<CharStateType, BaseState> stateDict = new(); 
+    
+    // 컨트롤러 전용 스탯
+    private float maxHp;
+    public float curHp { get; private set; }
+    public float shield;
+    public bool isRewinding;
+    public bool isDead;
+    
+    public RaycastHit hitInfo; // 어택 시 사용하는 정보
+    
+    private BulletController bulletPrefab;
+    private TimeRecorder timeRecorder;
+    private float maxRecordTime;
+    private const float HIT_COOLDOWN = 3f;
+    private float hitTimer;
+    
+    public void Init(int characterId, float recordTime)
+    {
+        stats = Manager.Character.GetStats(characterId);
+        rb = gameObject.GetOrAddComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.freezeRotation = true;
+        
+        col = gameObject.GetOrAddComponent<BoxCollider>();
+        col.isTrigger = true;
+        col.center = new Vector3(0f, 0.25f, 0f);
+        col.size = new Vector3(0.5f, 0.5f, 0.2f);
+        
+        animator = gameObject.GetOrAddComponent<Animator>();
+        animator.runtimeAnimatorController 
+            = Resources.Load<RuntimeAnimatorController>(
+                $"Animation/Character/Controller/{characterId}");
+        
+        maxHp = stats.hp;
+        curHp = maxHp;
+        maxRecordTime =  recordTime;
+        
+        timeRecorder = new TimeRecorder(maxRecordTime, Time.fixedDeltaTime);
+        
+        stateMachine = new StateMachine();
+        stateDict.Add(CharStateType.Idle, new CharacterIdle(this) );
+        stateDict.Add(CharStateType.Run, new CharacterRun(this));
+        stateDict.Add(CharStateType.Attack, new CharacterAttack(this));
+        stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
+        stateDict.Add(CharStateType.Hit, new CharacterHit(this));
+        stateDict.Add(CharStateType.Dead, new CharacterDead(this));
+        stateDict.Add(CharStateType.Rewind, new CharacterRewind(this));
+        
+        stateMachine.Initialize(stateDict[CharStateType.Idle]);
 
-    // FSM 관리
-    // public StateMachine stateMachine;
-
+        if (stats.atkType != AttackType.Melee)
+        {
+            bulletPrefab 
+                = Resources.Load<BulletController>(
+                    $"Prefab/Bullet/Character/{characterId}");
+        }
+        isRewinding = false;
+    }
     private void Update()
     {
-        // stateMachine.Update();
+        stateMachine.Update();
+        if (hitTimer > 0f) hitTimer += Time.deltaTime;
     }
-
     private void FixedUpdate()
     {
-        // stateMachine.FixedUpdate();
-    }
-
-    private void LateUpdate()
-    {
-        // stateMachine.LateUpdate();
+        stateMachine.FixedUpdate();
+        
+        if (!isRewinding) 
+            timeRecorder.Record(transform.position, curHp, shield);
     }
     
-    public void Init(CharacterInstance instance, CharacterModel model)
+    private void LateUpdate()
     {
-        stats = instance.GetStats(model);
-        animator = gameObject.GetOrAddComponent<Animator>();
-        animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>($"Animation/Controller/{model.id}");
-        // stateMachine.Init();
+        stateMachine.LateUpdate();
     }
-
-    public void TakeHit()
+        
+    
+    public bool HasHistory() => timeRecorder.HasHistory();
+    public TestTimeInfo PopHistory() => timeRecorder.Pop();
+    public TestTimeInfo PeekHistory() => timeRecorder.Peek();
+    public void RewindTime()
     {
-        animator.Play("Hit");
+        stateMachine.ChangeState(stateDict[CharStateType.Rewind]);
     }
-
-    public void Attack(AttackType type)
+    public void FinishRewind()
     {
-        // 애니메이션 재생
-        animator.Play("Attack");
-        switch (type)
+        timeRecorder.Clear();
+        stateMachine.ChangeState(stateDict[CharStateType.Idle]);
+    }
+    
+    public void Attack()
+    {
+        if (hitInfo.collider == null) return;
+        
+        switch (atkType)
         {
             case AttackType.Melee:
-                // 밀리 범위 공격 수행
+                var info = new AttackInfo(gameObject.layer, stats.attack);
+                hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 break;
             case AttackType.Ranged:
-                // 투사체 발사 : 별도 스크립트
+                var bullet = Instantiate(bulletPrefab, gameObject.transform);
+                bullet.Init(gameObject.layer, stats.attack);
+                bullet.FireToPosition(hitInfo.transform.position);
                 break;
+            case AttackType.Lazer:
+                // OnTriggerEnter로 알아서 처리됨
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                Debug.Log("어택 타입 안정해짐");
+                break;
         }
     }
-
-    public void Move()
+    
+    public void TakeHit(AttackInfo attackInfo)
     {
-        animator.Play("Move");
-        // 오른쪽으로 이동하는 로직
+        if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
+        int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
+        // 해당 데미지를 Toast UI로 표현
+        
+        if (shield > 0 && damage > 0)
+        {
+            int shieldDamage = (int)Mathf.Clamp(damage, 0, shield);
+            shield -= shieldDamage;
+            damage -= shieldDamage;
+        }
+        if (damage <= 0) return;
+        
+        curHp -= damage;
+        
+        if (curHp <= 0)
+        {
+            curHp = 0;
+            stateMachine.ChangeState(
+                stateDict[CharStateType.Dead]);
+        }
+        
+        else
+        {
+            if (hitTimer > 0) return;
+            hitTimer = HIT_COOLDOWN;
+            stateMachine.ChangeState(stateDict[CharStateType.Hit]);
+        }
     }
-    public void UseSkill()
+    public void Heal(float amount)
     {
-        animator.Play("Skill");
+        int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp);
+        if (healAmount > 0)
+        {
+            curHp += healAmount;
+            // 힐 이펙트 및 Toast UI 생성
+        }
+    }
+    public void SetHp(float value)
+    {
+        curHp = value;
+    }
+    public void SetShield(float value)
+    {
+        shield = value;
+    }
+    public void GetShield(float amount)
+    {
+        shield += amount;
+        // 쉴드 증가 Toast UI 생성 
+    }
+    
+    public void PlayAnimation(int animKey)
+    {
+        animator.Play(animKey);
     }
 }
