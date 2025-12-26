@@ -125,16 +125,33 @@ public class CharController : MonoBehaviour, IAttackable
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 break;
             case AttackType.Ranged:
+                // 힐러일 경우 전체 힐
+                if (stats.role == CharacterRole.Healer)
+                {
+                    foreach (var c in Manager.Game.Characters)
+                    {
+                        c.Heal(stats.magicAttack);
+                    }
+                    break;
+                }
                 var bullet = Instantiate(bulletPrefab, gameObject.transform);
-                bullet.Init(gameObject.layer, stats.attack);
+                bullet.Init(gameObject.layer, stats.magicAttack);
                 bullet.FireToPosition(hitInfo.transform.position);
                 break;
             case AttackType.Lazer:
                 // OnTriggerEnter로 알아서 처리됨
+                bullet = Instantiate(bulletPrefab, gameObject.transform);
+                bullet.Init(gameObject.layer,stats.magicAttack);
+                break;
             default:
                 Debug.Log("어택 타입 안정해짐");
                 break;
         }
+    }
+
+    public void UseSkill()
+    {
+        
     }
     
     public void TakeHit(AttackInfo attackInfo)

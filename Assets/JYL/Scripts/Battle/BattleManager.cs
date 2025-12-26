@@ -38,10 +38,11 @@ public class BattleManager : MonoBehaviour
     }
     public void StartStage() // 스테이지 시작 시
     {
+        SetMaps();
         InitCharacters();
         enemyManager.Init();
+        Manager.Game.SetCharacters(characters);
 
-        SetMaps();
         stageData = Manager.Game.GetStageData();
         clearTime = DateTime.Now.Millisecond;
     }

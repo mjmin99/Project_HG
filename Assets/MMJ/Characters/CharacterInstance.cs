@@ -23,6 +23,7 @@ public class CharacterInstance
         CharacterStats stats = new CharacterStats();
 
         stats.atkType = model.attackType;
+        stats.role = model.role;
         stats.hp = model.baseHP + level * 10;
         stats.attack = model.baseAttack + level * 2;
         stats.magicAttack = model.baseMagicAttack + level * 3;

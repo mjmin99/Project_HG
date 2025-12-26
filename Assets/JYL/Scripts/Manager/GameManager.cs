@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -6,6 +7,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private StageDataSO stageData;
 
     public StageSaveService stageService;
+    public List<CharController> Characters;
 
     protected override void Awake()
     {
@@ -18,5 +20,9 @@ public class GameManager : Singleton<GameManager>
     public StageDataSO GetStageData()
     {
         return stageData;
+    }
+    public void SetCharacters(List<CharController> characters)
+    {
+        Characters = characters;
     }
 }
