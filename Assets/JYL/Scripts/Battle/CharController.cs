@@ -191,7 +191,7 @@ public class CharController : MonoBehaviour, IAttackable
         if (healAmount > 0)
         {
             curHp += healAmount;
-            // 힐 이펙트 및 Toast UI 생성
+            // TODO : 힐 이펙트 및 Toast UI 생성
         }
     }
     
