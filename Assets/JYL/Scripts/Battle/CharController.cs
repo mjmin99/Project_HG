@@ -13,10 +13,14 @@ public class CharController : MonoBehaviour, IAttackable
     public BoxCollider col;
     public StateMachine stateMachine;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
+
+    // 해싱
+    private const string CONTROLLER_PATH = "Battle/Characters/Controllers/";
+    private const string BULLET_PATH = "Battle/Characters/Bullets/";
     
     // 컨트롤러 전용 스탯
     private float maxHp;
-    public float curHp { get; private set; }
+    private float curHp;
     public float shield;
     public bool isRewinding;
     
@@ -30,9 +34,8 @@ public class CharController : MonoBehaviour, IAttackable
     private const float HIT_COOLDOWN = 3f;
     private float hitTimer;
     
-    public void Init(int characterId, float recordTime)
+    public void Init(int characterId, CharacterStats charStats, float recordTime)
     {
-        stats = Manager.Character.GetStats(characterId);
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         rb.useGravity = false;
         rb.freezeRotation = true;
@@ -45,10 +48,7 @@ public class CharController : MonoBehaviour, IAttackable
         animator = gameObject.GetOrAddComponent<Animator>();
         animator.runtimeAnimatorController 
             = Resources.Load<RuntimeAnimatorController>(
-                $"Animation/Character/Controller/{characterId}");
-        
-        maxHp = stats.hp;
-        curHp = maxHp;
+                CONTROLLER_PATH + characterId);
         maxRecordTime =  recordTime;
         
         timeRecorder = new TimeRecorder(maxRecordTime, Time.fixedDeltaTime);
@@ -63,15 +63,20 @@ public class CharController : MonoBehaviour, IAttackable
         stateDict.Add(CharStateType.Rewind, new CharacterRewind(this));
         
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
+        
+        isRewinding = false;
 
-        if (stats.atkType != AttackType.Melee)
+        // 스텟 설정
+        stats = charStats;
+        maxHp = charStats.hp;
+        curHp = maxHp;
+        
+        if (charStats.atkType != AttackType.Melee)
         {
             bulletPrefab 
                 = Resources.Load<BulletController>(
-                    $"Prefab/Bullet/Character/{characterId}");
+                    BULLET_PATH+characterId);
         }
-        isRewinding = false;
-
     }
     
     private void Update()
@@ -93,10 +98,10 @@ public class CharController : MonoBehaviour, IAttackable
         stateMachine.LateUpdate();
     }
         
-    
-    public bool HasHistory() => timeRecorder.HasHistory();
-    public TestTimeInfo PopHistory() => timeRecorder.Pop();
-    public TestTimeInfo PeekHistory() => timeRecorder.Peek();
+    // TimeRecord 관련 함수
+    public bool HasHistory() => timeRecorder.HasHistory(); // 기록이 있는지 확인
+    public TestTimeInfo PopHistory() => timeRecorder.Pop(); // 기록을 꺼냄
+    public TestTimeInfo PeekHistory() => timeRecorder.Peek(); // 다음 기록 확인
     
     public void RewindTime()
     {

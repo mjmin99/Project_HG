@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 using UniRx;
+using Random = UnityEngine.Random;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -16,6 +16,7 @@ public class EnemyManager : MonoBehaviour
     private int lastWaveIndex;
     private List<StageSpawn> curWaveSpawns;
     private List<EnemyController> curWaveEnemies;
+    private Camera cam;
     
     public void Init()
     {
@@ -23,6 +24,7 @@ public class EnemyManager : MonoBehaviour
         curWaveSpawns = stageData.waves[waveIndex].spawns;
         lastWaveIndex = stageData.waves.Count - 1;
         curWaveEnemies = CreateEnemy();
+        cam = Camera.main;
     }
 
     private List<EnemyController> CreateEnemy() 
@@ -33,7 +35,10 @@ public class EnemyManager : MonoBehaviour
         {
             GameObject go = new GameObject($"{e.id}");
             go.transform.SetParent(enemiesParent);
-            // 적 위치 잡아주기
+            // TODO: 적 위치 잡아주기
+            float rndX = Random.Range(0, 2f);
+            var camPos = cam.transform.position;
+            go.transform.position = new Vector3(camPos.x + 2f + rndX, 0, 0);
             var enemy = go.AddComponent<EnemyController>();
             var info = enemyDatabase.Get(e.id);
             enemy.Init(info);
@@ -46,21 +51,20 @@ public class EnemyManager : MonoBehaviour
 
     private void EnemySubscribe(bool isDead, EnemyController controller)
     {
-        if (isDead)
+        if (!isDead) return;
+        
+        curWaveEnemies.Remove(controller);
+        
+        if (curWaveEnemies.Count != 0) return;
+        
+        if (waveIndex == lastWaveIndex)
         {
-            curWaveEnemies.Remove(controller);
-            if (curWaveEnemies.Count == 0)
-            {
-                if (waveIndex == lastWaveIndex)
-                {
-                    battleManager.StageClear();
-                    return;
-                }
-
-                waveIndex++;
-                curWaveSpawns = stageData.waves[waveIndex].spawns;
-                curWaveEnemies = CreateEnemy();
-            }
+            battleManager.StageClear();
+            return;
         }
+
+        waveIndex++;
+        curWaveSpawns = stageData.waves[waveIndex].spawns;
+        curWaveEnemies = CreateEnemy();
     }
 }

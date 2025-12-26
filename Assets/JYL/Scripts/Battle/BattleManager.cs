@@ -23,19 +23,11 @@ public class BattleManager : MonoBehaviour
     public int score;
 
     private float gameOverTimer;
-
-    /// <summary>
-    /// 1. 캐릭터 생성
-    /// 2. StageData 불러오기
-    /// 3. StageData 기준으로 에너미 및 웨이브 생성
-    /// 4. 맵 생성(스테이지 키 값을 가지고 맵 데이터 불러옴) - 스크롤링 기법 적용
-    /// 5. 생성 포인트에 웨이브에 맞춰 적 생성
-    /// 6. 생성 포인트에 플레이어 생성 및 전투 진행(클리어 시 까지)
-    /// </summary>
-    // 외부 스테이지 셀렉트 UI 에서 수행되는 함수
+    private bool isGameOver;
+    
     private void Update()
     {
-        if (gameOverTimer > 0f)
+        if (gameOverTimer > 0f && isGameOver)
         {
             gameOverTimer -= Time.deltaTime;
             if (gameOverTimer <= 0f)
@@ -49,6 +41,7 @@ public class BattleManager : MonoBehaviour
         InitCharacters();
         enemyManager.Init();
 
+        SetMaps();
         stageData = Manager.Game.GetStageData();
         clearTime = DateTime.Now.Millisecond;
     }
@@ -92,9 +85,10 @@ public class BattleManager : MonoBehaviour
         {
             c.RewindTime();
         }
-
     }
 
+    //내부로직
+    
     private void SetMaps() // 맵 생성
     {
         mapPresenter.Init();
@@ -118,9 +112,9 @@ public class BattleManager : MonoBehaviour
             };
             go.transform.SetParent(characterParent);
             var character = go.AddComponent<CharController>();
-            character.Init(member, rewindTime);
+            character.Init(member, stat, rewindTime);
             characters.Add(character);
-            character.isDead.Subscribe(x => CheckAlive()).AddTo(character);
+            character.isDead.Subscribe(_ => CheckAlive()).AddTo(character);
         }
     }
 
@@ -130,9 +124,13 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var c in characters)
         {
-            if (!c.isDead.Value) return;
+            if (c.isDead.Value) continue;
+            isGameOver = false;
+            return;
         }
+        
         gameOverTimer = rewindTime;
+        isGameOver = true;
     }
     
 }
