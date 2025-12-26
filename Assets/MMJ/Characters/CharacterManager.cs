@@ -81,6 +81,7 @@ public class CharacterManager : Singleton<CharacterManager>
             };
 
             instances[id] = inst;
+            SaveManager.RaiseCharacterAcquired(inst);
             Debug.Log($"[CharacterManager] 신규 캐릭터 획득! ID: {id}");
             return;
         }
@@ -92,7 +93,7 @@ public class CharacterManager : Singleton<CharacterManager>
             inst.level = 1;
             inst.exp = 0;
             inst.shard = 0;
-
+            SaveManager.RaiseCharacterAcquired(inst);
             Debug.Log($"[CharacterManager] 캐릭터 획득! ID: {id}");
         }
         else

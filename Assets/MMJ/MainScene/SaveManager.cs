@@ -10,6 +10,8 @@ public class SaveManager : Singleton<SaveManager>
 
     private DatabaseReference db;
 
+    public static event System.Action<CharacterInstance> OnCharacterAcquired;
+
     // 유저 세이브 시 사용되는 함수
     public void SaveCurrentUser()
     {
@@ -193,5 +195,9 @@ public class SaveManager : Singleton<SaveManager>
             CurrentData.characters.Add(inst);
 
         Debug.Log($"[SaveManager] ID 순으로 {CurrentData.characters.Count}개 캐릭터 동기화");
+    }
+    public static void RaiseCharacterAcquired(CharacterInstance inst)
+    {
+        OnCharacterAcquired?.Invoke(inst);
     }
 }
