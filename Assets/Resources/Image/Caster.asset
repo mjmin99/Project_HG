@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954cc3b69ccd109488ac5c26ceee33fa, type: 3}
   m_Name: Caster
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
-  spriteName: test3
-  sprite: {fileID: 21300000, guid: 2cb019dbda323c341b02fe31f2e5b5fe, type: 3}
+  spriteName: Caster
+  sprite: {fileID: 21300000, guid: e02f99769aa51574ab0f57461d0307b2, type: 3}
