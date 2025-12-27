@@ -15,5 +15,6 @@ public struct CharacterStats
     public float critDamage;
 
     public float attackRange;
-    public float skillDamageMultiplier; // 어빌리티 스킬 데미지 배율
+    // 임시로 막아둠
+    // public float skillDamageMultiplier; // 어빌리티 스킬 데미지 배율
 }

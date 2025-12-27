@@ -54,21 +54,22 @@ public class Ability_MagicAttackUp : AbilityBase, IStatModifierAbility
     }
 }
 
-public class Ability_SkillDamageUp : AbilityBase, IStatModifierAbility
-{
-    private readonly AbilityRarity rarity;
-    public Ability_SkillDamageUp(AbilityRarity r) { rarity = r; }
-    public override int AbilityId => AbilityIds.SkillDamageUp;
-    public override string Name => "스킬 피해량 증가";
-    public override AbilityRarity Rarity => rarity;
-    public override AbilityScope Scope => AbilityScope.Common;
-
-    public void ModifyStats(ref CharacterStats stats, ICombatActor owner)
-    {
-        float rate = AbilityTiers.StatRate(rarity, 0.08f, 0.16f, 0.28f);
-        stats.skillDamageMultiplier *= (1f + rate);
-    }
-}
+// 잠시 막아둠
+// public class Ability_SkillDamageUp : AbilityBase, IStatModifierAbility
+// {
+//     private readonly AbilityRarity rarity;
+//     public Ability_SkillDamageUp(AbilityRarity r) { rarity = r; }
+//     public override int AbilityId => AbilityIds.SkillDamageUp;
+//     public override string Name => "스킬 피해량 증가";
+//     public override AbilityRarity Rarity => rarity;
+//     public override AbilityScope Scope => AbilityScope.Common;
+// 
+//     public void ModifyStats(ref CharacterStats stats, ICombatActor owner)
+//     {
+//         float rate = AbilityTiers.StatRate(rarity, 0.08f, 0.16f, 0.28f);
+//         stats.skillDamageMultiplier *= (1f + rate);
+//     }
+// }
 
 public class Ability_CritRateUp : AbilityBase, IStatModifierAbility
 {
@@ -118,19 +119,74 @@ public class Ability_AttackSpeedUp : AbilityBase, IStatModifierAbility
     }
 }
 
+// 임시로 막아둠
 // 딜러(원거리) 전용: 공격력 추가 증가
-public class Ability_RangedAttackUp : AbilityBase, IStatModifierAbility
+//public class Ability_RangedAttackUp : AbilityBase, IStatModifierAbility
+//{
+//    private readonly AbilityRarity rarity;
+//    public Ability_RangedAttackUp(AbilityRarity r) { rarity = r; }
+//    public override int AbilityId => AbilityIds.RangedAttackUp;
+//    public override string Name => "원거리 공격력 추가 증가";
+//    public override AbilityRarity Rarity => rarity;
+//    public override AbilityScope Scope => AbilityScope.Dealer_Ranged;
+//
+//    public void ModifyStats(ref CharacterStats stats, ICombatActor owner)
+//    {
+//        float rate = AbilityTiers.StatRate(rarity, 0.12f, 0.24f, 0.40f);
+//        stats.attack *= (1f + rate);
+//    }
+//}
+
+public class Ability_CritDamageUp : AbilityBase, IStatModifierAbility
 {
     private readonly AbilityRarity rarity;
-    public Ability_RangedAttackUp(AbilityRarity r) { rarity = r; }
-    public override int AbilityId => AbilityIds.RangedAttackUp;
-    public override string Name => "원거리 공격력 추가 증가";
+
+    public Ability_CritDamageUp(AbilityRarity r)
+    {
+        rarity = r;
+    }
+
+    public override int AbilityId => AbilityIds.CritDamageUp;
+    public override string Name => "치명타 데미지 증가";
     public override AbilityRarity Rarity => rarity;
-    public override AbilityScope Scope => AbilityScope.Dealer_Ranged;
+    public override AbilityScope Scope => AbilityScope.Common;
 
     public void ModifyStats(ref CharacterStats stats, ICombatActor owner)
     {
-        float rate = AbilityTiers.StatRate(rarity, 0.12f, 0.24f, 0.40f);
-        stats.attack *= (1f + rate);
+        float bonus = AbilityTiers.StatRate(
+           rarity,
+           0.15f, // Tier1
+           0.30f, // Tier2
+           0.50f  // Tier3
+       );
+
+        stats.critDamage += bonus;
     }
 }
+public class Ability_DefenseUp : AbilityBase, IStatModifierAbility
+{
+    private readonly AbilityRarity rarity;
+
+    public Ability_DefenseUp(AbilityRarity r)
+    {
+        rarity = r;
+    }
+
+    public override int AbilityId => AbilityIds.DefenseUp;
+    public override string Name => "방어력 증가";
+    public override AbilityRarity Rarity => rarity;
+    public override AbilityScope Scope => AbilityScope.Common;
+
+    public void ModifyStats(ref CharacterStats stats, ICombatActor owner)
+    {
+        float rate = AbilityTiers.StatRate(
+            rarity,
+            0.10f, // Tier1
+            0.20f, // Tier2
+            0.35f  // Tier3
+        );
+
+        stats.defense *= (1f + rate);
+    }
+}
+
