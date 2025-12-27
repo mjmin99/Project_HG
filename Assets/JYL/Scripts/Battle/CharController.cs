@@ -17,6 +17,7 @@ public class CharController : MonoBehaviour, IAttackable
     // 해싱
     private const string CONTROLLER_PATH = "Battle/Characters/Controllers/";
     private const string BULLET_PATH = "Battle/Characters/Bullets/";
+    private const string SKILL_PATH = "Skill/";
     
     // 컨트롤러 전용 스탯
     private float maxHp;
@@ -30,6 +31,8 @@ public class CharController : MonoBehaviour, IAttackable
     
     private BulletController bulletPrefab;
     private TimeRecorder timeRecorder;
+    private Skill skill;
+    
     private float maxRecordTime;
     private const float HIT_COOLDOWN = 3f;
     private float hitTimer;
@@ -77,11 +80,16 @@ public class CharController : MonoBehaviour, IAttackable
                 = Resources.Load<BulletController>(
                     BULLET_PATH+characterId);
         }
+
+        var inst = Manager.Character.instances[characterId];
+        // 스킬 정보 가져오기
+        skill = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
     }
     
     private void Update()
     {
         stateMachine.Update();
+        
         if (hitTimer > 0f) hitTimer += Time.deltaTime;
     }
     
@@ -148,10 +156,34 @@ public class CharController : MonoBehaviour, IAttackable
                 break;
         }
     }
-
-    public void UseSkill()
+    // 스킬 아이콘 클릭으로 사용. 사용에 성공 시 true 반환
+    // 배틀 매니저에서, isGameOver일 경우 조작 막아야 함
+    public bool UseSkill() 
     {
+        var go = Instantiate(skill,transform);
+        go.transform.position = transform.position + Vector3.up * 0.25f;
+        go.Init();
+        go.SkillEffect();
         
+        switch (skill.skillType)
+        {
+            case SkillType.StrongAttack:
+                if (hitInfo.collider == null) return false;
+                var info = new AttackInfo(gameObject.layer, stats.attack * 5f);
+                hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
+                break;
+            case SkillType.Parrying:
+                
+                break;
+            case SkillType.AllHeal:
+                foreach (var c in Manager.Game.Characters)
+                {
+                    c.Heal(stats.magicAttack);
+                }
+                break;
+        }
+
+        return true;
     }
     
     public void TakeHit(AttackInfo attackInfo)

@@ -25,4 +25,5 @@ public class GameManager : Singleton<GameManager>
     {
         Characters = characters;
     }
+    public void ClearCharacters() => Characters.Clear();
 }

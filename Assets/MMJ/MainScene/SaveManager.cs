@@ -1,4 +1,5 @@
-﻿using Firebase.Database;
+﻿using System;
+using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
 using System.Collections.Generic;
@@ -143,15 +144,22 @@ public class SaveManager : Singleton<SaveManager>
         {
             var model = pair.Value;
 
-            CharacterInstance inst = new CharacterInstance
+            var inst = new CharacterInstance
             {
                 id = model.id,
                 isOwned = (model.id == 0),
                 level = 1,
                 exp = 0,
-                shard = 0
+                shard = 0,
+                skillType = model.role switch
+                {
+                    CharacterRole.Dealer => SkillType.StrongAttack,
+                    CharacterRole.Tank => SkillType.Parrying,
+                    CharacterRole.Healer => SkillType.AllHeal,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
             };
-
+            
             data.characters.Add(inst);
         }
 
