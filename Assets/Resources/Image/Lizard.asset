@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954cc3b69ccd109488ac5c26ceee33fa, type: 3}
+  m_Name: Lizard
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
+  spriteName: test3
+  sprite: {fileID: 21300000, guid: 2cb019dbda323c341b02fe31f2e5b5fe, type: 3}
