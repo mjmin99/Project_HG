@@ -49,7 +49,7 @@ public static class Util
                 g => g.Key, 
                 g => new Dialog(g.Key, g.ToList()));
     }
-
+    
     public static Tween FadeInImage(this Image image, float duration = 0.3f)
     {
         Color c = image.color;

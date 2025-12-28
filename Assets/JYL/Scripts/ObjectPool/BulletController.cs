@@ -1,38 +1,52 @@
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+public class BulletController : PooledObject
 {
-    [SerializeField] private float fireSpeed;
+    private float fireSpeed;
     private Rigidbody rb;
     private BoxCollider col;
     private AttackInfo info;
+    private Animator animator;
+    public bool isInit;
 
-    public void Init(LayerMask attacker, float firePower)
+    public void Init(LayerMask attacker, float firePower, float fireSpeed = 2f)
     {
+        gameObject.GetComponent<SpriteRenderer>().sprite = null;
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        
         rb = gameObject.GetOrAddComponent<Rigidbody>();
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        
         col = gameObject.GetOrAddComponent<BoxCollider>();
         col.isTrigger = true;
-        gameObject.transform.position += Vector3.up * 0.25f;
+        col.enabled = false;
+        
         rb.isKinematic = false;
         rb.useGravity = false;
+        
         info = new AttackInfo(attacker, firePower);
+        animator = gameObject.GetOrAddComponent<Animator>();
+        isInit = true;
+        this.fireSpeed = fireSpeed;
     }
 
     public void FireToPosition(Vector3 pos)
     {
+        rb.linearVelocity = Vector3.zero;
+        gameObject.SetActive(true);
+        animator.Play("Fire");
+        animator.Update(0f);
+        col.enabled = true;
         var targetVec = pos + Vector3.up * 0.25f - transform.position;
         targetVec.Normalize();
         rb.AddForce(targetVec * fireSpeed, ForceMode.Impulse);
-    }
-
-    public void LazerFire()
-    {
-        // TODO : 레이저 발사 구현 및 테스트
+        ReturnToPool();
     }
     
     void OnTriggerEnter(Collider other)
     {
         var comp = other.gameObject.GetComponent<IAttackable>();
         comp.TakeHit(info);
+        ReturnToPoolNow();
     }
 }

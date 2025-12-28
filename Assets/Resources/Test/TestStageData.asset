@@ -21,9 +21,11 @@ MonoBehaviour:
   waves:
   - waitBeforeWave: 1
     spawns:
-    - monsterId: 0
+    - id: 1000
       count: 1
+      spawnInterval: 0.5
   - waitBeforeWave: 1
     spawns:
-    - monsterId: 2
+    - id: 1001
       count: 2
+      spawnInterval: 0.5

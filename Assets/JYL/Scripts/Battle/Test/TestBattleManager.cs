@@ -20,7 +20,7 @@ namespace JYL
             characters = gameManager.GetParty().ToList();
             foreach (var c in characters)
             {
-                if(c.gameObject.activeSelf) c.Init(0,8f);
+                //if(c.gameObject.activeSelf) c.Init(0,8f);
             }
             enemies = gameManager.GetEnemies().ToList();
             foreach (var c in enemies)

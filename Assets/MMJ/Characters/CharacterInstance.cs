@@ -16,13 +16,16 @@ public class CharacterInstance
     // 어빌리티
     // 이전에 쓰던 거 public List<AbilityInstance> abilities = new List<AbilityInstance>();
     // 바꾼이유 : 슬롯 재설정을 위해서
+    
     public List<AbilitySlot> abilitySlots = new();
+    public SkillType skillType;
 
     public CharacterStats GetStats(CharacterModel model)
     {
         CharacterStats stats = new CharacterStats();
 
         stats.atkType = model.attackType;
+        stats.role = model.role;
         stats.hp = model.baseHP + level * 10;
         stats.attack = model.baseAttack + level * 2;
         stats.magicAttack = model.baseMagicAttack + level * 3;
