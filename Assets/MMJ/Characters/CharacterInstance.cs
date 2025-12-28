@@ -200,7 +200,7 @@ public class CharacterInstance
         }
     
     }
-    // ------------------------------------------------------ 추가 중
+
     public Dictionary<int, int> GetAbilityCounts()
     {
         var dict = new Dictionary<int, int>();

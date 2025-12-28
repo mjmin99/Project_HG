@@ -8,7 +8,7 @@ public class ConfirmDeleteUserPopup : UIPopup
     [SerializeField] Button confirmButton;
     [SerializeField] Button cancelButton;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         confirmButton.onClick.AddListener(OnConfirm);

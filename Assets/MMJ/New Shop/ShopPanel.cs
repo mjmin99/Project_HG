@@ -25,8 +25,6 @@ public class ShopPanel : UIPanel
 
     private GachaService gacha;
 
-    #region Life Cycle
-
     public override void OnOpen()
     {
         base.OnOpen();
@@ -48,9 +46,6 @@ public class ShopPanel : UIPanel
             devAddGoldButton.gameObject.SetActive(false);
 #endif
     }
-    #endregion
-
-    #region Button Binding
 
     private void BindButtons()
     {
@@ -70,10 +65,6 @@ public class ShopPanel : UIPanel
             devAddGoldButton.onClick.AddListener(AddTestGold);
         }
     }
-
-    #endregion
-
-    #region Draw Logic
 
     private void OnClickDraw1()
     {
@@ -125,10 +116,6 @@ public class ShopPanel : UIPanel
         popup.ShowMany(results);
     }
 
-    #endregion
-
-    #region UI Update
-
     private void UpdateGoldUI()
     {
         if (goldText != null && Manager.Save.CurrentData != null)
@@ -136,10 +123,6 @@ public class ShopPanel : UIPanel
             goldText.text = Manager.Save.CurrentData.gold.ToString();
         }
     }
-
-    #endregion
-
-    #region DEV Tools
 
     private void AddTestGold()
     {
@@ -150,14 +133,8 @@ public class ShopPanel : UIPanel
         Debug.Log("[DEV] 테스트 골드 +10000 지급");
     }
 
-    #endregion
-
-    #region Close
-
     private void OnClickClose()
     {
         UIManager.Instance.CloseTop();
     }
-
-    #endregion
 }

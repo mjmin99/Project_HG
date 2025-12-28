@@ -151,13 +151,13 @@ public class CharacterDetailPanel : UIPanel
         btnEnhance.onClick.AddListener(OnClickEnhance);
 
         rerollCostText.text = "비용: 10";
-    }
+    } // 패널 오픈
 
     public override void OnClose()
     {   
         currentCharacterId = -1;
         base.OnClose();
-    }
+    } // 패널 클로즈
 
     private void OnClickReroll()
     {
@@ -321,5 +321,5 @@ public class CharacterDetailPanel : UIPanel
             AbilityIds.MagicAttackUp => new Color(0.8f, 0.4f, 1f), // 보라
             _ => Color.white
         };
-    } //
+    } // 발광 색 판단
 }
