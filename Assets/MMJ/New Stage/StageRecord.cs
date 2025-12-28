@@ -66,8 +66,7 @@ public class StageProgressData
     public void RebuildCache()
     {
         // 방어
-        if (records == null)
-            records = new List<StageRecord>();
+        records ??= new List<StageRecord>();
 
         cache = new Dictionary<string, StageRecord>();
 

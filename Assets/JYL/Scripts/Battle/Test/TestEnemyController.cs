@@ -9,7 +9,7 @@ public class TestEnemyController : MonoBehaviour, IAttackable
     private float shield = 25f;
     private float def = 7f;
 
-    [SerializeField] private TestDamageUI damageUi;
+    [SerializeField] private DamageUI damageUi;
     [SerializeField] private RectTransform uiCanvas;
 
     public Animator animator;
@@ -31,13 +31,13 @@ public class TestEnemyController : MonoBehaviour, IAttackable
         col.center = new Vector3(0, 0.25f, 0);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
         
-        damageUi.Init(uiCanvas);
+        damageUi.Init();
         
         stateMachine = new StateMachine();
-        stateDict.Add(CharStateType.Idle, new EnemyIdle(this));
-        stateDict.Add(CharStateType.Attack, new EnemyAttack(this));
-        stateDict.Add(CharStateType.Hit, new EnemyHit(this));
-        stateDict.Add(CharStateType.Dead, new EnemyDead(this));
+        // stateDict.Add(CharStateType.Idle, new EnemyIdle(this));
+        // stateDict.Add(CharStateType.Attack, new EnemyAttack(this));
+        // stateDict.Add(CharStateType.Hit, new EnemyHit(this));
+        // stateDict.Add(CharStateType.Dead, new EnemyDead(this));
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
     }
 
@@ -73,7 +73,7 @@ public class TestEnemyController : MonoBehaviour, IAttackable
         int damage = (int)(info.atk * (1 - def / 100));
         
         // 해당 데미지를 Toast UI로 표현
-        damageUi.ShowDamageEffect(damage).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
+        damageUi.ShowDamageEffect(damage,gameObject.GetComponent<RectTransform>(),false).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
         
         if (shield > 0 && damage > 0)
         {

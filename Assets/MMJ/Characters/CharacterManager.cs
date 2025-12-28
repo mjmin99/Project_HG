@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class CharacterManager : Singleton<CharacterManager>
@@ -7,11 +8,36 @@ public class CharacterManager : Singleton<CharacterManager>
     public Dictionary<int, CharacterInstance> instances = new();
 
 
+    // TODO : 배틀씬 테스트용으로 ContextMenu 어트리뷰트 추가
+    [ContextMenu("LoadModels")]
+    public void LoadModels() // 테스트용 함수. 테스트 끝난 후 지우기
+    {
+        var characterModels = CharacterCSVLoader.Load();
+        LoadModels(characterModels);
+        for (int i = 0; i < characterModels.Count; i++)
+        {
+            instances[i] = new CharacterInstance();
+            switch(characterModels[i].role)
+            {
+                case CharacterRole.Dealer:
+                    instances[i].skillType = SkillType.StrongAttack;
+                    break;
+                case CharacterRole.Tank:
+                    instances[i].skillType = SkillType.Parrying;
+                    break;
+                case CharacterRole.Healer:
+                    instances[i].skillType = SkillType.AllHeal;
+                    break;
+            }
+        }
+    }
     public void LoadModels(List<CharacterModel> list)
     {
         models.Clear();
         foreach (var m in list)
+        {
             models[m.id] = m;
+        }
 
         Debug.Log($"[CharacterManager] 모델 {list.Count}개 로드됨");
     }

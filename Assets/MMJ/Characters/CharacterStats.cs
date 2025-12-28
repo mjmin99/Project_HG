@@ -5,6 +5,8 @@ using UnityEngine;
 public struct CharacterStats
 {
     public AttackType atkType;
+    public CharacterRole role;
+    
     public float hp;
     public float attack;
     public float magicAttack;

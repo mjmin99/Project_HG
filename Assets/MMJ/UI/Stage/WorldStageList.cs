@@ -11,7 +11,7 @@ public class WorldStageList : MonoBehaviour
 
     private void Awake()
     {
-        stageSave = FindAnyObjectByType<StageSaveService>();
+        stageSave = Manager.Game.stageService;
 
         if (stageSave == null)
             Debug.LogError("[WorldStageList] StageSaveService not found!");
@@ -50,11 +50,11 @@ public class WorldStageList : MonoBehaviour
     // }
 
 
+    // TODO : 테스트 함수. 테스트 종료 후 삭제예정
     // 여기는 그냥 스테이지를 누르면 임시로 클리어를 세이브로 보낼 수 있도록 민만준이 만든것
     private void OnStageSelected(int world, int stage)
     {
         // 1. StageSaveService 찾기
-        var stageSave = FindAnyObjectByType<StageSaveService>();
         if (stageSave == null)
         {
             Debug.LogError("[WorldStageList] StageSaveService not found");

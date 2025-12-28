@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEngine;
+
 //이벤트가 발생할 때, 어빌리티에게 “상황 정보”를 전달하는 컨텍스트
 
 public struct AbilityContext
@@ -37,7 +39,7 @@ public struct AbilityContext
             targetIsBoss = target != null && target.IsBoss,
             statusType = StatusType.None,
             attackIndex = 0,
-            deltaTime = 0
+            deltaTime = Time.deltaTime
         };
     }
 }
