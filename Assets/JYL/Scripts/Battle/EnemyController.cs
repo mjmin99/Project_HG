@@ -8,19 +8,12 @@ public class EnemyController : MonoBehaviour, IAttackable
 
     private float maxHp;
     public float curHp;
-
-
-    private float atk;
-    private float mAtk;
-    private float atkSpeed;
-    private float atkRange;
-    private float defense;
+    
     private AttackType atkType;
     
     private float curShield;
 
-    [SerializeField] private TestDamageUI damageUi;
-    [SerializeField] private RectTransform uiCanvas;
+    private DamageUI damageUi;
 
     public Animator animator;
     public BoxCollider col;
@@ -30,18 +23,25 @@ public class EnemyController : MonoBehaviour, IAttackable
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
     private const float HIT_COOLDOWN = 3f;
     private float hitCoolTimer;
-    public ReactiveProperty<bool> isDead;
+    public ReactiveProperty<bool> isDead = new();
 
-    public void Init(Enemy info)
+    private const string ANIM_CONT_PATH = "Battle/Enemy/Controllers/";
+
+    public void Init(Enemy info, DamageUI damageUI)
     {
-        animator = gameObject.GetOrAddComponent<Animator>();
-        col = gameObject.GetComponent<BoxCollider>();
-
+        var spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.flipX = true;
+        
+        animator = gameObject.AddComponent<Animator>();
+        animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>(ANIM_CONT_PATH + info.enemyName);
         animator.Play("Idle");
+        
+        col = gameObject.GetOrAddComponent<BoxCollider>();
         col.center = new Vector3(0, 0.25f, 0);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
 
-        damageUi.Init(uiCanvas);
+        damageUi = damageUI;
+        
 
         stateMachine = new StateMachine();
         stateDict.Add(CharStateType.Idle, new EnemyIdle(this));
@@ -51,15 +51,9 @@ public class EnemyController : MonoBehaviour, IAttackable
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
 
         // 스텟설정
+        enemyInfo = info;
         maxHp = info.maxHP;
         curHp = info.maxHP;
-        atk = info.attack;
-        mAtk = info.magicAttack;
-        atkSpeed = info.attackSpeed;
-        atkRange = info.attackRange;
-        defense = info.defense;
-        atkType = info.attackType;
-
     }
 
     public void PlayAnimation(int key) => animator.Play(key);
@@ -84,7 +78,7 @@ public class EnemyController : MonoBehaviour, IAttackable
 
     public void Attack()
     {
-        var attackInfo = new AttackInfo(LayerMask.NameToLayer("Enemy"), atk);
+        var attackInfo = new AttackInfo(LayerMask.NameToLayer("Enemy"), enemyInfo.attack);
         hitInfo.collider.GetComponent<IAttackable>().TakeHit(attackInfo);
     }
 
@@ -92,10 +86,10 @@ public class EnemyController : MonoBehaviour, IAttackable
     {
         if (info.layer != LayerMask.NameToLayer("Player")) return;
 
-        int damage = (int)(info.atk * (1 - defense / 100));
+        int damage = (int)(info.atk * (1 - enemyInfo.defense / 100));
 
         // 해당 데미지를 Toast UI로 표현
-        damageUi.ShowDamageEffect(damage).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
+        damageUi.ShowDamageEffect(damage, transform, false).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
 
         if (curShield > 0 && damage > 0)
         {
@@ -106,7 +100,7 @@ public class EnemyController : MonoBehaviour, IAttackable
 
         if (damage <= 0) return;
 
-        curHp = damage;
+        curHp -= damage;
 
         if (curHp <= 0)
         {

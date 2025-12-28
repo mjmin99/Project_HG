@@ -9,6 +9,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private EnemyDatabase enemyDatabase;
     [SerializeField] private BattleManager battleManager;
     [SerializeField] private Transform enemiesParent;
+    [SerializeField] public DamageUI enemyDamageUI;
 
     private StageDataSO stageData;
 
@@ -17,14 +18,18 @@ public class EnemyManager : MonoBehaviour
     private List<StageSpawn> curWaveSpawns;
     private List<EnemyController> curWaveEnemies;
     private Camera cam;
+
+    private int enemyLayer;
     
     public void Init()
     {
+        enemyLayer = LayerMask.NameToLayer("Enemy");
+        cam = Camera.main;
         stageData = Manager.Game.GetStageData();
         curWaveSpawns = stageData.waves[waveIndex].spawns;
         lastWaveIndex = stageData.waves.Count - 1;
         curWaveEnemies = CreateEnemy();
-        cam = Camera.main;
+        enemyDamageUI.Init();
     }
 
     private List<EnemyController> CreateEnemy() 
@@ -38,10 +43,11 @@ public class EnemyManager : MonoBehaviour
             // TODO: 적 위치 잡아주기
             float rndX = Random.Range(0, 2f);
             var camPos = cam.transform.position;
-            go.transform.position = new Vector3(camPos.x + 2f + rndX, 0, 0);
+            go.transform.position = new Vector3(camPos.x + 6f + rndX, 0, 0);
+            go.layer = enemyLayer;
             var enemy = go.AddComponent<EnemyController>();
             var info = enemyDatabase.Get(e.id);
-            enemy.Init(info);
+            enemy.Init(info, enemyDamageUI);
             enemy.isDead.Subscribe(x=>EnemySubscribe(x,enemy)).AddTo(enemy);
             list.Add(enemy);
         }

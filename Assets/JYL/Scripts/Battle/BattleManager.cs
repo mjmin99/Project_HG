@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -9,6 +11,7 @@ public class BattleManager : MonoBehaviour
     [Header("Set Refs")] 
     [SerializeField] private MapPresenter mapPresenter;
     [SerializeField] private EnemyManager enemyManager;
+    [SerializeField] public DamageUI damageUI;
     
     [Header("Set Character Refs")]
     [SerializeField] private Transform characterParent;
@@ -18,7 +21,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float rewindTime = 5f;
     
     private readonly List<CharController> characters = new();
+    private List<Transform> charTransforms = new();
     private readonly Dictionary<SkillType, CharController> skillDict = new();
+
+    private int characterLayer;
+    private Camera cam;
     
     // 스킬 타입 딕셔너리
     // 배치된 스킬 타입에 따라 UI의 이미지도 정해짐
@@ -29,6 +36,19 @@ public class BattleManager : MonoBehaviour
 
     private float gameOverTimer;
     private bool isGameOver;
+
+    private void FixedUpdate()
+    {
+        if (!cam) return;
+        
+        float x = 0f;
+        foreach (var c in charTransforms)
+        {
+            x += c.position.x;
+        }
+        x /= charTransforms.Count;
+        cam.transform.position = Vector3.Lerp(cam.transform.position,new Vector3(x + 1f,cam.transform.position.y,cam.transform.position.z), Time.fixedDeltaTime * 10);
+    }
     
     private void Update()
     {
@@ -42,15 +62,23 @@ public class BattleManager : MonoBehaviour
         }
     }
     
+    // TODO: 테스트용으로 함수 수행
+    [ContextMenu("Start")]
     public void StartStage() // 스테이지 시작 시
     {
+        characterLayer = LayerMask.NameToLayer("Player");
+        
+        cam = Camera.main;
+        
         SetMaps();
-        InitCharacters();
+        InitCharacters(true);
         enemyManager.Init();
         Manager.Game.SetCharacters(characters);
+        damageUI.Init();
 
         stageData = Manager.Game.GetStageData();
-        clearTime = DateTime.Now.Millisecond;
+        clearTime = DateTime.Now.Millisecond; 
+        charTransforms = characters.Select(c => c.transform).ToList();
     }
     
     public void StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
@@ -111,10 +139,21 @@ public class BattleManager : MonoBehaviour
     } 
 
     // 캐릭터 정보 가져오고 초기화
-    private void InitCharacters()
+    // TODO : 테스트. 캐릭터 정보 미리 정하기
+    private void InitCharacters(bool isTest)
     {
-        var partySet = Manager.Save.CurrentData.partySet;
+        int[] partySet;
+        if (isTest) // TODO: 테스트 종료시 삭제
+        {
+            partySet = new[] { 0, 1, 5 };
+        }
+        else
+        {
+            partySet = Manager.Save.CurrentData.partySet;
+        }
+        
         int count = 0;
+        
         foreach (var member in partySet)
         {
             var model = Manager.Character.models[member];
@@ -126,10 +165,12 @@ public class BattleManager : MonoBehaviour
                 }
             };
             go.transform.SetParent(characterParent);
+            go.tag = "Player";
+            go.layer = characterLayer; 
             
             var stat = Manager.Character.GetStats(member);
             var character = go.AddComponent<CharController>();
-            character.Init(member, stat, rewindTime);
+            character.Init(member, stat, rewindTime, damageUI);
             character.isDead.Subscribe(_ => CheckAlive()).AddTo(character);
             
             var inst = Manager.Character.instances[member];

@@ -13,7 +13,8 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         stageService = new StageSaveService();
-        stageService.Init();
+        // TODO: 테스트용 함수로 변경 사용
+        stageService.Init(true);
     }
 
 

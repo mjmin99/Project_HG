@@ -3,20 +3,20 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class TestDamageUI : MonoBehaviour
+public class DamageUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageTextPrefab;
-    [SerializeField] private int poolSize = 10; // 오브젝트 풀링. 풀링 갯수
+    [SerializeField] private int poolSize = 30; // 오브젝트 풀링. 풀링 갯수
     
-    private RectTransform parentCanvas;
+    [SerializeField] private Transform returnPool;
 
     private Stack<TMP_Text> textPool = new();
 
-    public void Init(RectTransform rectT)
+    public void Init()
     {
-        parentCanvas = rectT;
         for (int i = 0; i < poolSize; i++)
         {
             CreateTextInstance();
@@ -25,15 +25,17 @@ public class TestDamageUI : MonoBehaviour
 
     private void CreateTextInstance()
     {
-        var newText = Instantiate(damageTextPrefab, parentCanvas);
+        var newText = Instantiate(damageTextPrefab, returnPool);
         newText.gameObject.SetActive(false);
         textPool.Push(newText);
     }
     
-    public async UniTaskVoid ShowDamageEffect(int damage)
+    public async UniTaskVoid ShowDamageEffect(int damage, Transform targetTransform, bool isPlayerHit)
     {
         if(textPool.Count == 0) CreateTextInstance();
         var newText = textPool.Pop();
+        var parentCanvas = MakeChildCanvas(targetTransform);
+        newText.transform.SetParent(parentCanvas);
         
         newText.gameObject.SetActive(true);
         newText.SetText($"{damage}");// damage.ToString(); ...(x)
@@ -46,7 +48,9 @@ public class TestDamageUI : MonoBehaviour
         newText.rectTransform.anchoredPosition = Vector2.zero;
         
         // 랜덤 오프셋 설정
-        float randX = Random.Range(0.1f, 0.4f); // UnityEngine.Random이 더 간편하면서 성능상 문제 없음
+        float randX = isPlayerHit 
+            ? Random.Range(-0.4f, -0.1f) 
+            : Random.Range(0.1f, 0.4f); // UnityEngine.Random이 더 간편하면서 성능상 문제 없음
         Vector2 endPos = new Vector2(randX, 0.3f);
         
         // 이전 Tween이 실행 중이라면 제거
@@ -65,6 +69,26 @@ public class TestDamageUI : MonoBehaviour
         await seq.AsyncWaitForCompletion();
         
         newText.gameObject.SetActive(false);
+        newText.transform.SetParent(returnPool);
         textPool.Push(newText);
+    }
+
+    private RectTransform MakeChildCanvas(Transform targetTransform)
+    {
+        var targetCanvas = targetTransform.GetComponentInChildren<Canvas>();
+        
+        if (targetCanvas != null)
+            return targetCanvas.GetComponent<RectTransform>();
+        
+        GameObject go = new GameObject("DamageUI");
+        go.transform.SetParent(targetTransform);
+        
+        var newCanvas = go.AddComponent<Canvas>();
+        newCanvas.renderMode = RenderMode.WorldSpace;
+        
+        var tr = go.GetComponent<RectTransform>();
+        tr.anchoredPosition = Vector2.up * 0.25f;
+
+        return tr;
     }
 }

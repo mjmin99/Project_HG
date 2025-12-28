@@ -7,7 +7,6 @@ using UnityEngine;
 public class CharController : MonoBehaviour, IAttackable
 {
     public CharacterStats stats;
-    public AttackType atkType;
     public Animator animator;
     public Rigidbody rb;
     public BoxCollider col;
@@ -17,6 +16,7 @@ public class CharController : MonoBehaviour, IAttackable
     // 해싱
     private const string CONTROLLER_PATH = "Battle/Characters/Controllers/";
     private const string BULLET_PATH = "Battle/Characters/Bullets/";
+    private const string LAZER_PATH = "Battle/Characters/Lazer/";
     private const string SKILL_PATH = "Skill/";
     
     // 컨트롤러 전용 스탯
@@ -25,20 +25,29 @@ public class CharController : MonoBehaviour, IAttackable
     public float shield;
     public bool isRewinding;
     
-    public ReactiveProperty<bool> isDead;
+    public ReactiveProperty<bool> isDead = new();
     
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
-    
-    private BulletController bulletPrefab;
+
     private TimeRecorder timeRecorder;
     private Skill skill;
+
+    private DamageUI damageUi;
+    private ObjectPool bulletPool;
     
     private float maxRecordTime;
     private const float HIT_COOLDOWN = 3f;
     private float hitTimer;
+
+    private readonly Vector3 lazerVec = Vector3.up * 0.25f - Vector3.back * 0.05f;
+    private readonly Vector3 bulletVec = Vector3.up * 0.25f;
     
-    public void Init(int characterId, CharacterStats charStats, float recordTime)
+    public void Init(int characterId, CharacterStats charStats, float recordTime, DamageUI damageUI)
     {
+        gameObject.AddComponent<SpriteRenderer>();
+        
+        damageUi = damageUI;
+        
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         rb.useGravity = false;
         rb.freezeRotation = true;
@@ -48,10 +57,13 @@ public class CharController : MonoBehaviour, IAttackable
         col.center = new Vector3(0f, 0.25f, 0f);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
         
+        var inst = Manager.Character.instances[characterId];
+        var model = Manager.Character.models[characterId];
+        
         animator = gameObject.GetOrAddComponent<Animator>();
         animator.runtimeAnimatorController 
             = Resources.Load<RuntimeAnimatorController>(
-                CONTROLLER_PATH + characterId);
+                CONTROLLER_PATH + model.characterName);
         maxRecordTime =  recordTime;
         
         timeRecorder = new TimeRecorder(maxRecordTime, Time.fixedDeltaTime);
@@ -74,14 +86,28 @@ public class CharController : MonoBehaviour, IAttackable
         maxHp = charStats.hp;
         curHp = maxHp;
         
-        if (charStats.atkType != AttackType.Melee)
+        // 원거리나 레이저 타입일 경우 오브젝트 풀 생성
+        if (charStats.atkType == AttackType.Ranged)
         {
-            bulletPrefab 
+            var bulletPrefab 
                 = Resources.Load<BulletController>(
-                    BULLET_PATH+characterId);
+                    BULLET_PATH+model.characterName);
+            var go = new GameObject($"BulletPool_{model.characterName}");
+            go.transform.SetParent(transform);
+            bulletPool = go.AddComponent<ObjectPool>();
+            bulletPool.CreatePool(bulletPrefab);
+        }
+        else if(charStats.atkType == AttackType.Lazer)
+        {
+            var lazerPrefab 
+                = Resources.Load<LazerController>(
+                    LAZER_PATH+model.characterName);
+            var go = new GameObject($"LazerPool_{model.characterName}");
+            go.transform.SetParent(transform);
+            bulletPool = go.AddComponent<ObjectPool>();
+            bulletPool.CreatePool(lazerPrefab);
         }
 
-        var inst = Manager.Character.instances[characterId];
         // 스킬 정보 가져오기
         skill = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
     }
@@ -126,30 +152,43 @@ public class CharController : MonoBehaviour, IAttackable
     {
         if (hitInfo.collider == null) return;
         
-        switch (atkType)
+        switch (stats.atkType)
         {
             case AttackType.Melee:
                 var info = new AttackInfo(gameObject.layer, stats.attack);
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 break;
             case AttackType.Ranged:
-                // 힐러일 경우 전체 힐
+                // TODO: 힐러일 경우 전체 힐. 이펙트 재생 필요함
                 if (stats.role == CharacterRole.Healer)
                 {
                     foreach (var c in Manager.Game.Characters)
                     {
                         c.Heal(stats.magicAttack);
                     }
-                    break;
+                    // break;
                 }
-                var bullet = Instantiate(bulletPrefab, gameObject.transform);
-                bullet.Init(gameObject.layer, stats.magicAttack);
-                bullet.FireToPosition(hitInfo.transform.position);
+                var bullet = bulletPool.GetObject() as BulletController;
+                if (bullet != null)
+                {
+                    bullet.transform.position = transform.position + bulletVec;
+                    
+                    if (!bullet.isInit) bullet.Init(gameObject.layer, stats.attack);
+                    bullet.FireToPosition(hitInfo.transform.position);
+                }
+
                 break;
             case AttackType.Lazer:
                 // OnTriggerEnter로 알아서 처리됨
-                bullet = Instantiate(bulletPrefab, gameObject.transform);
-                bullet.Init(gameObject.layer,stats.magicAttack);
+                var lazer = bulletPool.GetObject() as LazerController;
+                if (lazer != null)
+                {
+                    lazer.transform.position = transform.position + lazerVec;
+
+                    if (!lazer.isInit) lazer.Init(gameObject.layer, stats.magicAttack);
+                    
+                    lazer.InitiateLazer();
+                }
                 break;
             default:
                 Debug.Log("어택 타입 안정해짐");
@@ -190,7 +229,9 @@ public class CharController : MonoBehaviour, IAttackable
     {
         if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
         int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
+        
         // 해당 데미지를 Toast UI로 표현
+        damageUi.ShowDamageEffect(damage, transform, true).Forget();
         
         if (shield > 0 && damage > 0)
         {

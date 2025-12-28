@@ -10,9 +10,17 @@ public class StageSaveService
 {
     private StageProgressData data;
 
-    public void Init()
+    // TODO: 배틀 씬 테스트 전용
+    public void Init(bool isTest = false)
     {
-        data = Manager.Save.CurrentData.stageProgress; 
+        if (isTest)
+        {
+            var stages = Resources.LoadAll<StageDataSO>($"Stage/");
+            SaveData d = new SaveData(stages);
+            data = d.stageProgress;
+            return;
+        }
+        data = Manager.Save.CurrentData.stageProgress;
     }
     // 해당 스테이지의 기록을 가져오거나 없으면 생성
     public StageRecord GetStageRecord(int world, int level)
