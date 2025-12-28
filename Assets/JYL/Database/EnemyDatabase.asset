@@ -17,7 +17,7 @@ MonoBehaviour:
     enemyName: slime
     attack: 1
     magicAttack: 1
-    maxHP: 100
+    maxHP: 1000
     attackSpeed: 1.2
     attackRange: 3
     attackType: 0

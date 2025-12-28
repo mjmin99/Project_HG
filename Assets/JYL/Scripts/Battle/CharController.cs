@@ -30,7 +30,9 @@ public class CharController : MonoBehaviour, IAttackable
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
 
     private TimeRecorder timeRecorder;
-    private Skill skill;
+    private Skill skillPrefab;
+    private Parrying parry;
+    private readonly Stack<Skill> skillPool = new();
 
     private DamageUI damageUi;
     private ObjectPool bulletPool;
@@ -39,8 +41,8 @@ public class CharController : MonoBehaviour, IAttackable
     private const float HIT_COOLDOWN = 3f;
     private float hitTimer;
 
-    private readonly Vector3 lazerVec = Vector3.up * 0.25f - Vector3.back * 0.05f;
-    private readonly Vector3 bulletVec = Vector3.up * 0.25f;
+    private readonly Vector3 lazerVec = Vector3.up * 0.25f - Vector3.back * 0.05f + Vector3.right * 0.2f;
+    private readonly Vector3 bulletVec = Vector3.up * 0.2f + Vector3.right * 0.1f;
     
     public void Init(int characterId, CharacterStats charStats, float recordTime, DamageUI damageUI)
     {
@@ -109,7 +111,7 @@ public class CharController : MonoBehaviour, IAttackable
         }
 
         // 스킬 정보 가져오기
-        skill = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
+        skillPrefab = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
     }
     
     private void Update()
@@ -197,24 +199,39 @@ public class CharController : MonoBehaviour, IAttackable
     }
     // 스킬 아이콘 클릭으로 사용. 사용에 성공 시 true 반환
     // 배틀 매니저에서, isGameOver일 경우 조작 막아야 함
-    public bool UseSkill() 
+    public bool UseSkill()
     {
-        var go = Instantiate(skill,transform);
-        go.transform.position = transform.position + Vector3.up * 0.25f;
-        go.Init();
-        go.SkillEffect();
+        Skill newSkill;
+        if (skillPool.Count <= 0)
+        {
+            newSkill = Instantiate(skillPrefab,transform);
+            newSkill.Init(skillPool);
+        }
+        else
+        {
+            newSkill =  skillPool.Pop();
+        }
         
-        switch (skill.skillType)
+        switch (skillPrefab.skillType)
         {
             case SkillType.StrongAttack:
+                newSkill.transform.position = transform.position + Vector3.right * 0.25f;
                 if (hitInfo.collider == null) return false;
                 var info = new AttackInfo(gameObject.layer, stats.attack * 5f);
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
+                newSkill.SkillEffect();
                 break;
             case SkillType.Parrying:
-                
+                parry = newSkill as Parrying;
+                if (parry != null)
+                {
+                    parry.transform.position = transform.position + Vector3.right * 0.25f;
+                    parry.SkillEffect();
+                }
                 break;
             case SkillType.AllHeal:
+                newSkill.SkillEffect();
+                newSkill.transform.position = transform.position;
                 foreach (var c in Manager.Game.Characters)
                 {
                     c.Heal(stats.magicAttack);
@@ -225,9 +242,18 @@ public class CharController : MonoBehaviour, IAttackable
         return true;
     }
     
+    
     public void TakeHit(AttackInfo attackInfo)
     {
         if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
+        if (parry != null)
+        {
+            if (parry.isParrying)
+            {
+                parry.SuccessParry();
+                hitInfo.collider.GetComponent<EnemyController>().GetStun(parry.stunTime);
+            }
+        }
         int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
         
         // 해당 데미지를 Toast UI로 표현

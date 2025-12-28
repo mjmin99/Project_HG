@@ -37,7 +37,6 @@ public class CharacterManager : Singleton<CharacterManager>
         foreach (var m in list)
         {
             models[m.id] = m;
-            Debug.Log(m.id);
         }
 
         Debug.Log($"[CharacterManager] 모델 {list.Count}개 로드됨");

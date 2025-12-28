@@ -27,6 +27,8 @@ public class EnemyController : MonoBehaviour, IAttackable
 
     private const string ANIM_CONT_PATH = "Battle/Enemy/Controllers/";
 
+    public float stunTime;
+
     public void Init(Enemy info, DamageUI damageUI)
     {
         var spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
@@ -48,6 +50,7 @@ public class EnemyController : MonoBehaviour, IAttackable
         stateDict.Add(CharStateType.Attack, new EnemyAttack(this));
         stateDict.Add(CharStateType.Hit, new EnemyHit(this));
         stateDict.Add(CharStateType.Dead, new EnemyDead(this));
+        stateDict.Add(CharStateType.Stun, new EnemyStun(this));
         stateMachine.Initialize(stateDict[CharStateType.Idle]);
 
         // 스텟설정
@@ -86,7 +89,9 @@ public class EnemyController : MonoBehaviour, IAttackable
     {
         if (info.layer != LayerMask.NameToLayer("Player")) return;
 
-        int damage = (int)(info.atk * (1 - enemyInfo.defense / 100));
+        int damage = stunTime > 0
+            ? (int)(info.atk * (1 - enemyInfo.defense / 200))
+            : (int)(info.atk * (1 - enemyInfo.defense / 100));
 
         // 해당 데미지를 Toast UI로 표현
         damageUi.ShowDamageEffect(damage, transform, false).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
@@ -109,10 +114,18 @@ public class EnemyController : MonoBehaviour, IAttackable
             isDead.Value = true;
         }
 
-        else if (hitCoolTimer <= 0f)
+        else if (hitCoolTimer <= 0f && stunTime <= 0f)
         {
             stateMachine.ChangeState(stateDict[CharStateType.Hit]);
             hitCoolTimer = HIT_COOLDOWN;
         }
+    }
+
+    public void GetStun(float stunTime)
+    {
+        // TODO: 스턴 효과 애니메이션 재생 필요
+        Debug.Log($"스턴 들어감_{stunTime}");   
+        this.stunTime = stunTime;
+        stateMachine.ChangeState(stateDict[CharStateType.Stun]);
     }
 }

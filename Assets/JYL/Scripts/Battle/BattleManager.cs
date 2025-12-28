@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using TMPro;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -19,13 +21,17 @@ public class BattleManager : MonoBehaviour
     
     [Header("Set Values")]
     [SerializeField] private float rewindTime = 5f;
+
+    [Header("Set UI")] 
+    [SerializeField] private TestSkillUI skillUI;
     
     private readonly List<CharController> characters = new();
     private List<Transform> charTransforms = new();
-    private readonly Dictionary<SkillType, CharController> skillDict = new();
+    private readonly Dictionary<int, CharController> skillDict = new();
 
     private int characterLayer;
     private Camera cam;
+    private readonly List<SkillCounter> skills = new();
     
     // 스킬 타입 딕셔너리
     // 배치된 스킬 타입에 따라 UI의 이미지도 정해짐
@@ -69,7 +75,6 @@ public class BattleManager : MonoBehaviour
         characterLayer = LayerMask.NameToLayer("Player");
         
         cam = Camera.main;
-        
         SetMaps();
         InitCharacters(true);
         enemyManager.Init();
@@ -79,6 +84,21 @@ public class BattleManager : MonoBehaviour
         stageData = Manager.Game.GetStageData();
         clearTime = DateTime.Now.Millisecond; 
         charTransforms = characters.Select(c => c.transform).ToList();
+        
+        // TODO: 스킬 테스트
+        skillUI.Init(skills);
+        for(int i = 0; i < skills.Count ; i++)
+        {
+            int index = i;
+            skills[i].skillCount
+                .Subscribe(n 
+                    => skillUI.SetTxt(index, $"{skills[index].type}: {n} left"))
+                .AddTo(skillUI);
+        }
+        
+        // TODO: 스킬 테스트
+        skills[0].skillCount.Value++;
+        skills[0].skillCount.Value++;
     }
     
     public void StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
@@ -124,12 +144,25 @@ public class BattleManager : MonoBehaviour
     }
 
     // 스킬 아이콘 클릭 시 스킬 사용
-    // 스킬 사용 실패 시, false 반환해서 스킬 소모 막음
-    public bool OnClickSkills(SkillType skillType) 
+    public void OnClickSkills(int characterId, int num)
     {
-        if (isGameOver) return false;
+        var tmp = skills.Find(x => x.charId == characterId);
+        bool canUse = !isGameOver && tmp.skillCount.Value > 0;
         
-        return skillDict[skillType].UseSkill();
+        if (!canUse) return;
+        
+        if (skillDict[characterId].UseSkill())
+        {
+            tmp.skillCount.Value--;
+            skillUI.SetTxt(num,$"{tmp.type} : {tmp.skillCount}");
+        }
+    }
+
+    public void GetSkill(int characterId)
+    {
+        var tmp = skills.Find(x => x.charId == characterId);
+        if (tmp.skillCount.Value >= 3) return;
+        tmp.skillCount.Value++; ;
     }
     
     //내부로직
@@ -174,8 +207,8 @@ public class BattleManager : MonoBehaviour
             character.isDead.Subscribe(_ => CheckAlive()).AddTo(character);
             
             var inst = Manager.Character.instances[member];
-            skillDict.Add(inst.skillType, character);
-            
+            skillDict.Add(model.id, character);
+            skills.Add(new SkillCounter(model.id,inst.skillType));
             characters.Add(character);
         }
     }

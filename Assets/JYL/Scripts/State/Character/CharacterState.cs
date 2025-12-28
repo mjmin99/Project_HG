@@ -30,5 +30,6 @@ public enum CharStateType{
     Skill,
     Hit,
     Dead,
-    Rewind
+    Rewind,
+    Stun
 }

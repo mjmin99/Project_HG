@@ -32,6 +32,7 @@ public class BulletController : PooledObject
 
     public void FireToPosition(Vector3 pos)
     {
+        rb.linearVelocity = Vector3.zero;
         gameObject.SetActive(true);
         animator.Play("Fire");
         animator.Update(0f);

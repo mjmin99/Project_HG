@@ -8,7 +8,7 @@ public class LazerController : PooledObject
     private AttackInfo info;
     private Animator animator;
     public bool isInit;
-
+    
     public void Init(LayerMask attacker, float firePower, float playSpeed = 1f)
     {
         gameObject.layer = LayerMask.NameToLayer("Player");
