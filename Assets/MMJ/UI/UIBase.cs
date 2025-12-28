@@ -25,29 +25,16 @@ public abstract class UIBase : MonoBehaviour
     public virtual void OnOpen()
     {
         PlayOpenAnimation();
+        Manager.Audio.PlaySfx("SFX_Ok");
     }
 
     public virtual void OnClose()
     {
         if (_isClosing) return;
         _isClosing = true;
-
         PlayCloseAnimation();
+        Manager.Audio.PlaySfx("SFX_Cancel");
     }
-
-    //protected virtual void PlayOpenAnimation()
-    //{
-    //    // 시작 상태: 완전 투명 + 살짝 작게
-    //    rect.localScale = Vector3.one * 0.85f;
-    //    canvasGroup.alpha = 0f;
-    //
-    //    Sequence seq = DOTween.Sequence();
-    //    seq.SetUpdate(true); // TimeScale 무시
-    //
-    //    // 동시에 커지고, 동시에 나타남
-    //    seq.Append(rect.DOScale(1f, 0.18f).SetEase(Ease.OutCubic));
-    //    seq.Join(canvasGroup.DOFade(1f, 0.18f));
-    //}
 
     protected virtual void PlayOpenAnimation()
     {
@@ -59,16 +46,6 @@ public abstract class UIBase : MonoBehaviour
         sequence = DOTween.Sequence()
             .Append(canvasGroup.DOFade(1f, animDuration));
     }
-
-    //protected virtual void PlayCloseAnimation()
-    //{
-    //    Sequence seq = DOTween.Sequence();
-    //    seq.SetUpdate(true);
-    //
-    //    seq.Append(rect.DOScale(0.9f, 0.15f).SetEase(Ease.InCubic));
-    //    seq.Join(canvasGroup.DOFade(0f, 0.15f));
-    //    seq.OnComplete(() => Destroy(gameObject));
-    //}
 
     protected virtual void PlayCloseAnimation()
     {

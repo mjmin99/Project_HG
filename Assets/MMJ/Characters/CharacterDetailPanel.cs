@@ -52,14 +52,12 @@ public class CharacterDetailPanel : UIPanel
 
     private int currentCharacterId = -1;
 
-    /// <summary>
-    /// 외부에서 캐릭터 선택 시 호출
-    /// </summary>
+
     public void SetCharacter(int characterId)
     {
         currentCharacterId = characterId;
         Refresh();
-    }
+    } // 외부에서 캐릭터 선택 시 호출
 
     private void Refresh()
     {
@@ -112,7 +110,7 @@ public class CharacterDetailPanel : UIPanel
         RefreshGold();
         RefreshEnhanceCost();
         RefreshShard();
-    }
+    } // 디테일 패널의 모든 값 갱신
 
     private void RefreshStars(CharacterModel model)
     {
@@ -122,13 +120,13 @@ public class CharacterDetailPanel : UIPanel
         {
             stars[i].gameObject.SetActive(i < rarity);
         }
-    }
-
+    } // 등급 갱신
+ 
     private void RefreshGold()
     {
         int gold = Manager.Save.CurrentData.gold;
         goldText.text = $"Gold: {gold}";
-    }
+    } // 돈 갱신
 
     private void RefreshShard()
     {
@@ -137,10 +135,11 @@ public class CharacterDetailPanel : UIPanel
             return;
 
         shardText.text = $"Shard: {inst.shard}";
-    }
+    } // 강화석 갱신
 
     public override void OnOpen()
     {
+        base.OnOpen();
         btnAssign.onClick.RemoveAllListeners();
         btnAssign.onClick.AddListener(OnClickAssign);
 
@@ -154,7 +153,7 @@ public class CharacterDetailPanel : UIPanel
     }
 
     public override void OnClose()
-    {
+    {   
         currentCharacterId = -1;
         base.OnClose();
     }
@@ -172,10 +171,10 @@ public class CharacterDetailPanel : UIPanel
             UIManager.Instance.ShowToast("SimpleToast","조각이 부족합니다");
             return;
         }
-
+        Manager.Audio.PlaySfx("SFX_UseCoin");
         Refresh();
         PlayShardChangedAnim();
-    }
+    } // 어빌리티 재설정
 
     private void OnClickAssign()
     {
@@ -188,7 +187,7 @@ public class CharacterDetailPanel : UIPanel
         PartyAssignmentContext.Begin(currentCharacterId);
 
         UIManager.Instance.OpenUI<PartySlotSelectPopup>("PartySlotSelectPopup");
-    }
+    } // 파티 편성
 
     private void RefreshAbilitySlots(CharacterModel model, CharacterInstance inst)
     {
@@ -209,7 +208,7 @@ public class CharacterDetailPanel : UIPanel
                 Refresh();
             });
         }
-    }
+    } // 어빌리티 슬롯 갱신
 
     private int GetRerollCost(CharacterInstance inst)
     {
@@ -221,7 +220,7 @@ public class CharacterDetailPanel : UIPanel
         }
 
         return 10 + locked * 10;
-    }
+    } // 어빌리티 재설정 재화 계산
 
     private void OnClickEnhance()
     {
@@ -237,10 +236,10 @@ public class CharacterDetailPanel : UIPanel
             Debug.Log("강화 실패 : 골드 부족");
             return;
         }
-
+        Manager.Audio.PlaySfx("SFX_UseCoin");
         Refresh();
         PlayGoldChangedAnim();
-    }
+    } // 강화하기
 
     private void RefreshEnhanceCost()
     {
@@ -248,7 +247,7 @@ public class CharacterDetailPanel : UIPanel
             .GetEnhanceCost(currentCharacterId);
 
         enhanceCostText.text = $"비용 : {cost}";
-    }
+    } // 강화 재화 계산
 
     private void PlayShardChangedAnim()
     {
@@ -256,7 +255,7 @@ public class CharacterDetailPanel : UIPanel
         shardText.transform
             .DOScale(1.2f, 0.1f)
             .SetLoops(2, LoopType.Yoyo);
-    }
+    } // 강화석 소모 애니메이션
 
     private void PlayGoldChangedAnim()
     {
@@ -264,5 +263,5 @@ public class CharacterDetailPanel : UIPanel
         goldText.transform
             .DOScale(1.2f, 0.1f)
             .SetLoops(2, LoopType.Yoyo);
-    }
+    } // 돈 소모 애니메이션
 }

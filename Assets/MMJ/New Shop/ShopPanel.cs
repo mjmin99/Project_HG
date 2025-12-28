@@ -29,6 +29,7 @@ public class ShopPanel : UIPanel
 
     public override void OnOpen()
     {
+        base.OnOpen();
         // 도메인 서비스 생성
         gacha = new GachaService(
             Manager.Save,
@@ -120,7 +121,7 @@ public class ShopPanel : UIPanel
             Debug.LogError("[ShopPanel] GachaResultPopup 열기 실패");
             return;
         }
-
+        Manager.Audio.PlaySfx("SFX_UseCoin");
         popup.ShowMany(results);
     }
 
