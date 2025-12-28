@@ -382,7 +382,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -404,7 +404,7 @@ TextureImporter:
         width: 14
         height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -413,6 +413,50 @@ TextureImporter:
       bones: []
       spriteID: d6c8b70f303a3bd4f91c5bb623094a56
       internalID: -977639221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1-bit_UI_byBatuhanK_14
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 250
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afcd47e23f60d75499e156a9e22984ed
+      internalID: 56405866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1-bit_UI_byBatuhanK_15
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 225
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cb66bfe896e96244ace02d3cb85d429
+      internalID: -342137897
       vertices: []
       indices: 
       edges: []
@@ -437,6 +481,8 @@ TextureImporter:
       1-bit_UI_byBatuhanK_11: -1252117449
       1-bit_UI_byBatuhanK_12: 42710275
       1-bit_UI_byBatuhanK_13: -977639221
+      1-bit_UI_byBatuhanK_14: 56405866
+      1-bit_UI_byBatuhanK_15: -342137897
       1-bit_UI_byBatuhanK_2: 1682437631
       1-bit_UI_byBatuhanK_3: -1875104931
       1-bit_UI_byBatuhanK_4: -469534905

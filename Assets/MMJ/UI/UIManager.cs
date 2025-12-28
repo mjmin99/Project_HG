@@ -27,8 +27,13 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (uiStack.Count > 0) CloseTop();
-            else OpenUI<UIPanel>("OptionPanel");
+            if (uiStack.Count > 0)
+            { CloseTop(); }
+            else
+            { 
+                // 여기에 어느 씬인지에 대한 변수값을 두고 배틀씬 일때 배틀씬 옵션 패널이 켜질 수 있게 제어
+                OpenUI<UIPanel>("OptionPanel"); 
+            }
         }
     }
 
