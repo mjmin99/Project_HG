@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class StageSaveService : MonoBehaviour
+public class StageSaveService
 {
     [Header("Database")]
     [SerializeField] private StageDatabaseSO stageDatabase;
@@ -10,8 +10,16 @@ public class StageSaveService : MonoBehaviour
 
     #region Init
 
-    private bool EnsureInitialized()
+    public bool EnsureInitialized(bool isTest = false)
     {
+        if (isTest)
+        {
+            var stages = Resources.LoadAll<StageDataSO>($"Stage/");
+            SaveData d = new SaveData(stages);
+            data = d.stageProgress;
+            return true;
+        }
+        
         if (data != null)
             return true;
 
@@ -60,19 +68,10 @@ public class StageSaveService : MonoBehaviour
             return true;
 
         // 이전 스테이지 기준
-        int prevWorld = world;
-        int prevStage = stage - 1;
+        var curRecord = GetStageRecord(world, stage);
+        var prevRecord = GetStageRecord(curRecord.prevWorld, curRecord.prevLevel); 
 
-        if (prevStage <= 0)
-        {
-            prevWorld -= 1;
-            prevStage = 5; // 월드당 스테이지 수
-        }
-
-        if (prevWorld <= 0)
-            return false;
-
-        return IsCleared(prevWorld, prevStage);
+        return IsCleared(prevRecord.world, prevRecord.level);
     }
 
     public StageRecord GetStageRecord(int world, int stage)
@@ -100,18 +99,18 @@ public class StageSaveService : MonoBehaviour
 
         var key = StageKeyUtil.ToKey(world, stage);
 
-        // 🔥 없으면 생성
         if (!data.Cache.TryGetValue(key, out var r))
         {
-            if (!stageDatabase.TryGet(world, stage, out var stageData))
-            {
-                Debug.LogError($"[StageSaveService] StageDataSO not found: {key}");
-                return;
-            }
-
-            r = new StageRecord(stageData);
-            data.records.Add(r);
-            data.Cache[key] = r;
+            Debug.LogWarning("딕셔너리에 없음");
+            // if (!stageDatabase.TryGet(world, stage, out var stageData))
+            // {
+            //     Debug.LogError($"[StageSaveService] StageDataSO not found: {key}");
+            //     return;
+            // }
+            //
+            // r = new StageRecord(stageData);
+            // data.records.Add(r);
+            // data.Cache[key] = r;
         }
 
         r.cleared = true;
