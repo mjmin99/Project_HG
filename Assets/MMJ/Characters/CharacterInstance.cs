@@ -35,6 +35,46 @@ public class CharacterInstance
         stats.attackRange = model.attackRange;
 
         ApplyAbilityStatModifiers(ref stats);
+        // ---------------------------------------------- 추가 중
+        var setBonuses = GetAbilitySetBonuses();
+
+        foreach (var pair in setBonuses)
+        {
+            switch (pair.Key)
+            {
+                case StatType.HP:
+                    stats.hp *= (1f + pair.Value);
+                    break;
+
+                case StatType.Attack:
+                    stats.attack *= (1f + pair.Value);
+                    break;
+
+                case StatType.MagicAttack:
+                    stats.magicAttack *= (1f + pair.Value);
+                    break;
+
+                case StatType.Defense:
+                    stats.defense *= (1f + pair.Value);
+                    break;
+
+                case StatType.AttackSpeed:
+                    stats.attackSpeed *= (1f + pair.Value);
+                    break;
+
+                case StatType.CritRate:
+                    stats.critRate *= (1f + pair.Value);
+                    break;
+
+                case StatType.CritDamage:
+                    stats.critDamage *= (1f + pair.Value);
+                    break;
+
+                case StatType.AttackRange:
+                    stats.attackRange *= (1f + pair.Value);
+                    break;
+            }
+        }
 
         return stats;
     }
@@ -159,5 +199,111 @@ public class CharacterInstance
             }
         }
     
+    }
+    // ------------------------------------------------------ 추가 중
+    public Dictionary<int, int> GetAbilityCounts()
+    {
+        var dict = new Dictionary<int, int>();
+
+        foreach (var slot in abilitySlots)
+        {
+            if (slot.ability == null)
+                continue;
+
+            int id = slot.ability.abilityId;
+
+            if (!dict.ContainsKey(id))
+                dict[id] = 0;
+
+            dict[id]++;
+        }
+
+        return dict;
+    }
+
+    private static StatType GetStatTypeByAbility(int abilityId)
+    {
+        return abilityId switch
+        {
+            AbilityIds.MaxHPUp => StatType.HP,
+            AbilityIds.AttackUp => StatType.Attack,
+            AbilityIds.MagicAttackUp => StatType.MagicAttack,
+            AbilityIds.AttackSpeedUp => StatType.AttackSpeed,
+            AbilityIds.DefenseUp => StatType.Defense,
+            AbilityIds.CritRateUp => StatType.CritRate,
+            AbilityIds.CritDamageUp => StatType.CritDamage,
+            AbilityIds.AttackRangeUp => StatType.AttackRange,
+
+            _ => StatType.None
+        };
+    }
+
+    public enum StatType
+    {
+        None,
+        HP,
+        Attack,
+        MagicAttack,
+        Defense,
+        AttackSpeed,
+        CritRate,
+        CritDamage,
+        AttackRange
+    }
+
+    private static float GetSetBonusRate(int count)
+    {
+        return count switch
+        {
+            >= 5 => 0.35f, // 35%
+            >= 4 => 0.20f,
+            >= 3 => 0.10f,
+            >= 2 => 0.05f,
+            _ => 0f
+        };
+    }
+
+    public Dictionary<StatType, float> GetAbilitySetBonuses()
+    {
+        var result = new Dictionary<StatType, float>();
+        var counts = GetAbilityCounts();
+
+        foreach (var pair in counts)
+        {
+            int abilityId = pair.Key;
+            int count = pair.Value;
+
+            if (count < 2)
+                continue;
+
+            StatType statType = GetStatTypeByAbility(abilityId);
+            if (statType == StatType.None)
+                continue;
+
+            float bonusRate = GetSetBonusRate(count);
+            if (bonusRate <= 0f)
+                continue;
+
+            if (!result.ContainsKey(statType))
+                result[statType] = 0f;
+
+            result[statType] += bonusRate;
+        }
+
+        return result;
+    }
+
+    public HashSet<int> GetSetBonusAbilityIds()
+    {
+        var result = new HashSet<int>();
+        var counts = GetAbilityCounts();
+
+        foreach (var pair in counts)
+        {
+            if (pair.Value >= 2)
+                result.Add(pair.Key);
+        }
+
+        return result;
     }
 }

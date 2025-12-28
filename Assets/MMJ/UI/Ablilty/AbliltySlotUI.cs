@@ -1,6 +1,18 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using System;
+using static CharacterInstance;
+
+public enum SetBonusLevel // 세트 강도
+{
+    None,
+    Pair,       // 2
+    Triple,     // 3
+    Quad,       // 4+
+}
+
 
 public class AbilitySlotUI : MonoBehaviour
 {
@@ -31,9 +43,24 @@ public class AbilitySlotUI : MonoBehaviour
     private static readonly Color TEXT_TIER3 = new Color(0.95f, 0.9f, 1f);
     private static readonly Color TEXT_EMPTY = Color.gray;
 
+
+    [SerializeField] private CanvasGroup canvasGroup;
+
+    private Tween setBonusTween;
+
+    [SerializeField] private Image glowImage; // 슬롯 뒤에 깔아둘 이미지
+
+    // 메인 연출의 진입점
+    private Tween alphaTween;
+    private Tween scaleTween;
+    private Tween glowTween;
+
     private void Awake()
     {
         lockButtonImage = lockButton.GetComponent<Image>();
+
+        if (canvasGroup == null)
+            canvasGroup = GetComponent<CanvasGroup>();
     }
 
     public void Bind(
@@ -120,5 +147,108 @@ public class AbilitySlotUI : MonoBehaviour
             AbilityRarity.Tier3 => TEXT_TIER3,
             _ => Color.white
         };
+    }
+
+
+    // ------------------------- 추가중
+
+    public void SetSetBonusEffect(SetBonusLevel level, Color glowColor)
+    {
+        StopAllSetBonusEffects();
+
+        if (level == SetBonusLevel.None)
+            return;
+
+        PlayAlphaPulse(level);
+        PlayScalePulse(level);
+        PlayGlowPulse(level, glowColor);
+    }
+
+    private void PlayAlphaPulse(SetBonusLevel level)
+    {
+        float minAlpha = level switch
+        {
+            SetBonusLevel.Pair => 0.75f,
+            SetBonusLevel.Triple => 0.6f,
+            _ => 0.45f
+        };
+
+        alphaTween = canvasGroup
+            .DOFade(minAlpha, 0.35f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+
+    private void PlayScalePulse(SetBonusLevel level)
+    {
+        float scale = level switch
+        {
+            SetBonusLevel.Pair => 1.02f,
+            SetBonusLevel.Triple => 1.04f,
+            _ => 1.06f
+        };
+
+        scaleTween = transform
+            .DOScale(scale, 0.35f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+
+    private void PlayGlowPulse(SetBonusLevel level, Color color)
+    {
+        glowImage.gameObject.SetActive(true);
+        glowImage.color = new Color(color.r, color.g, color.b, 0f);
+
+        float maxAlpha = level switch
+        {
+            SetBonusLevel.Pair => 0.3f,
+            SetBonusLevel.Triple => 0.5f,
+            _ => 0.75f
+        };
+
+        glowTween = glowImage
+            .DOFade(maxAlpha, 0.5f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+
+    private void PlaySetBonusEffect()
+    {
+        StopSetBonusEffect();
+
+        canvasGroup.alpha = 1f;
+
+        setBonusTween = canvasGroup
+            .DOFade(0.4f, 0.6f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+
+    private void StopSetBonusEffect()
+    {
+        if (setBonusTween != null && setBonusTween.IsActive())
+            setBonusTween.Kill();
+
+        canvasGroup.alpha = 1f;
+    }
+
+    private void OnDestroy() 
+    {
+        StopAllSetBonusEffects();
+    } // 두 트윈 버그 해결용 코드
+
+    private void StopAllSetBonusEffects()
+    {
+        alphaTween?.Kill();
+        scaleTween?.Kill();
+        glowTween?.Kill();
+
+        if (canvasGroup != null)
+            canvasGroup.alpha = 1f;
+
+        transform.localScale = Vector3.one;
+
+        if (glowImage != null)
+            glowImage.gameObject.SetActive(false);
     }
 }

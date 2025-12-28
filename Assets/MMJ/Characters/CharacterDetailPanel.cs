@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class CharacterDetailPanel : UIPanel
 {
@@ -196,7 +197,11 @@ public class CharacterDetailPanel : UIPanel
         foreach (Transform child in abilitySlotGroup)
             Destroy(child.gameObject);
 
+        var setBonusIds = inst.GetSetBonusAbilityIds();
+        var counts = inst.GetAbilityCounts();
+
         int max = model.MaxAbilitySlotCount;
+        int unlocked = inst.abilitySlots.Count;
 
         for (int i = 0; i < max; i++)
         {
@@ -207,6 +212,35 @@ public class CharacterDetailPanel : UIPanel
             {
                 Refresh();
             });
+
+           // model.MaxAbilitySlotCount 기준으로 UI를 만들었는데
+           // inst.abilitySlots 리스트의 실제 길이가 그보다 짧은 상태에서
+           // inst.abilitySlots[i]를 접근해서 터진 것
+
+            // 버그 수정 접근 보호
+            if (i >= unlocked)
+            {
+                // 아직 해방 안 된 슬롯 → AbilitySlotUI에서 Locked 처리됨
+                ui.SetSetBonusEffect(SetBonusLevel.None, Color.white);
+                continue;
+            }
+
+            // 세트 보너스 연출 판단
+            var slot = inst.abilitySlots[i];
+
+            // 실제 ability 있을 때만 강도 판단
+            if (slot.ability == null)
+            {
+                ui.SetSetBonusEffect(SetBonusLevel.None, Color.white);
+                continue;
+            }
+
+            int abilityId = slot.ability.abilityId;
+
+            SetBonusLevel level = GetSetBonusLevel(counts, abilityId);
+            Color glowColor = GetGlowColorByAbility(abilityId);
+
+            ui.SetSetBonusEffect(level, glowColor);
         }
     } // 어빌리티 슬롯 갱신
 
@@ -264,4 +298,28 @@ public class CharacterDetailPanel : UIPanel
             .DOScale(1.2f, 0.1f)
             .SetLoops(2, LoopType.Yoyo);
     } // 돈 소모 애니메이션
+
+    private SetBonusLevel GetSetBonusLevel(Dictionary<int, int> counts, int abilityId)
+    {
+        if (abilityId <= 0) return SetBonusLevel.None;
+        if (!counts.TryGetValue(abilityId, out int cnt)) return SetBonusLevel.None;
+
+        if (cnt >= 4) return SetBonusLevel.Quad;
+        if (cnt >= 3) return SetBonusLevel.Triple;
+        if (cnt >= 2) return SetBonusLevel.Pair;
+        return SetBonusLevel.None;
+    } // 세트 보너스 강도 판단 함수
+
+    private Color GetGlowColorByAbility(int abilityId)
+    {
+        return abilityId switch
+        {
+            AbilityIds.AttackSpeedUp => new Color(0.3f, 1f, 0.9f), // 청록
+            AbilityIds.MaxHPUp => new Color(0.4f, 1f, 0.4f), // 초록
+            AbilityIds.DefenseUp => new Color(0.4f, 0.6f, 1f), // 파랑
+            AbilityIds.AttackUp => new Color(1f, 0.4f, 0.4f), // 빨강
+            AbilityIds.MagicAttackUp => new Color(0.8f, 0.4f, 1f), // 보라
+            _ => Color.white
+        };
+    } //
 }

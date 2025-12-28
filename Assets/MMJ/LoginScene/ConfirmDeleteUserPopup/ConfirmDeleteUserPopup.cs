@@ -10,6 +10,7 @@ public class ConfirmDeleteUserPopup : UIPopup
 
     private void Awake()
     {
+        base.Awake();
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);
     }
