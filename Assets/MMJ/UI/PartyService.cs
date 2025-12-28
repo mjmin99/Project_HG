@@ -1,8 +1,18 @@
 ﻿using System;
 using UnityEngine;
 
+
+
+
 public static class PartyService
 {
+    public static readonly CharacterRole[] SlotRoles =
+    {
+        CharacterRole.Tank,   // slot 0
+        CharacterRole.Dealer, // slot 1
+        CharacterRole.Healer  // slot 2
+    };
+
     // (partySet, changedSlotIndex, assignedCharacterId)
     public static event Action<int[], int, int> OnPartyChanged;
 
@@ -21,20 +31,26 @@ public static class PartyService
     public static void AssignToSlot(int slotIndex, int characterId)
     {
         if (Manager.Save == null || Manager.Save.CurrentData == null)
-        {
-            Debug.LogError("[PartyService] SaveManager/CurrentData not ready.");
             return;
-        }
 
         if (slotIndex < 0 || slotIndex >= 3)
+            return;
+
+        if (!Manager.Character.models.TryGetValue(characterId, out var model))
+            return;
+
+        var requiredRole = SlotRoles[slotIndex];
+
+        // 직업 불일치 → 차단
+        if (model.role != requiredRole)
         {
-            Debug.LogError($"[PartyService] Invalid slotIndex: {slotIndex}");
+            ToastUtil.Error($"이 슬롯에는 {requiredRole}만 배치할 수 있어요");
             return;
         }
 
         var party = Manager.Save.CurrentData.partySet;
 
-        // 이미 파티에 있는 캐릭터면 기존 슬롯 비우기 (중복 방지)
+        // 중복 제거
         for (int i = 0; i < party.Length; i++)
         {
             if (party[i] == characterId)
@@ -44,13 +60,9 @@ public static class PartyService
             }
         }
 
-        // 배치
         party[slotIndex] = characterId;
-
-        // 이벤트 발행 (UI 즉시 갱신)
         OnPartyChanged?.Invoke(party, slotIndex, characterId);
 
-        // 저장 (안 하면 재실행 시 원복됨)
         Manager.Save.SaveCurrentUser();
     }
 

@@ -169,7 +169,7 @@ public class CharacterDetailPanel : UIPanel
         if (!result)
         {
             Debug.Log("리롤 실패 (골드 부족 또는 오류)");
-            UIManager.Instance.ShowToast("SimpleToast","조각이 부족합니다");
+            ToastUtil.Error("조각이 부족합니다");
             return;
         }
         Manager.Audio.PlaySfx("SFX_UseCoin");
@@ -266,7 +266,7 @@ public class CharacterDetailPanel : UIPanel
 
         if (!result)
         {
-            UIManager.Instance.ShowToast("SimpleToast","골드가 부족합니다");
+            ToastUtil.Error("골드가 부족합니다");
             Debug.Log("강화 실패 : 골드 부족");
             return;
         }

@@ -323,8 +323,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uCE90\uB9AD\uD130 \uBF51\uAE30\n\n1\uC131 ~ 5\uC131 \uB79C\uB364 \uD68D\uB4DD\n\n10\uBF51\uAE30
-    -> 3\uC131 \uD558\uB098 \uBCF4\uC7A5\n\n100\uBF51\uAE30 -> 5\uC131 \uD558\uB098
+  m_text: "\uCE90\uB9AD\uD130 \uBF51\uAE30\n\n\uD55C \uBC88 \uBF51\uB294\uB370 50
+    Gold\n\n10\uBF51\uAE30 -> 3\uC131 \uBCF4\uC7A5\n\n100\uBF51\uAE30 -> 5\uC131
     \uBCF4\uC7A5"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 35fa70493b8db7c4fab2d46e26b65ffb, type: 2}

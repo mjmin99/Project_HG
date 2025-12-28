@@ -64,7 +64,7 @@ public class WorldStageList : MonoBehaviour
         // 2. 이미 클리어한 스테이지일 경우 빠지는 경로 -> 여기 그냥 입장 가능하게 바꿔서 넣어야할듯
         if (stageSave.IsCleared(world, stage))
         {
-            UIManager.Instance.ShowToast("SimpleToast", "이미 클리어한 스테이지입니다");
+            ToastUtil.Error("이미 클리어한 스테이지입니다");
             return;
         }
 
@@ -86,7 +86,7 @@ public class WorldStageList : MonoBehaviour
         Manager.Save.SaveCurrentUser();
 
         // 6. 토스트 표시
-        UIManager.Instance.ShowToast("SimpleToast", $"W{world}-{stage} 스테이지 완료!");
+        ToastUtil.Success($"W{world}-{stage} 스테이지 완료!");
 
         Debug.Log($"[TEST CLEAR] W{world}-{stage} 클리어 저장됨");
 
