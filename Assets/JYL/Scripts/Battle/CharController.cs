@@ -288,6 +288,8 @@ public class CharController : MonoBehaviour, IAttackable
     
     public void Heal(float amount)
     {
+        if (isDead.Value) return;
+        
         int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp.Value);
         if (healAmount > 0)
         {

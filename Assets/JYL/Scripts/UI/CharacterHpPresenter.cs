@@ -8,6 +8,7 @@ public class CharacterHpPresenter : MonoBehaviour
     [SerializeField] private GameObject[] charPanel;
     [SerializeField] private TMP_Text[] charNameText;
     [SerializeField] private TMP_Text[] charHpText;
+    [SerializeField] private Slider[] hpBar;
     [SerializeField] private Image[] charIcon;
     [SerializeField] private Image[] deadImage;
 
@@ -32,7 +33,7 @@ public class CharacterHpPresenter : MonoBehaviour
             charIcon[i].sprite = model.Icon;
             charNameText[i].SetText(model.characterName);
             charHpText[i].SetText($"{maxHp[i]} /  {maxHp[i]}");
-            
+            hpBar[i].value = 1f;
             
             int index = i;
             character.curHp.Subscribe(x=>UpdateHpUI(index, x)).AddTo(character);
@@ -46,11 +47,13 @@ public class CharacterHpPresenter : MonoBehaviour
         {
             deadImage[index].gameObject.SetActive(true);
             charHpText[index].SetText($"0 / {maxHp[index]}");
+            hpBar[index].value = 0f;
         }
         else
         {
             deadImage[index].gameObject.SetActive(false);
             charHpText[index].SetText($"{amount} / {maxHp[index]}");
+            hpBar[index].value = amount / maxHp[index];
         }
     }
 }

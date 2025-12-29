@@ -3118,6 +3118,10 @@ MonoBehaviour:
   - {fileID: 376095063}
   - {fileID: 1596855085}
   - {fileID: 870070967}
+  hpBar:
+  - {fileID: 112152092}
+  - {fileID: 1181770480}
+  - {fileID: 1757461509}
   charIcon:
   - {fileID: 1364237943}
   - {fileID: 2123419580}
