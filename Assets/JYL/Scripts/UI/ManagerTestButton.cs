@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ManagerTestButton : MonoBehaviour
@@ -8,7 +8,6 @@ public class ManagerTestButton : MonoBehaviour
     void Awake()
     {
         testButton = GetComponent<Button>();
-        testButton.onClick.AddListener(()=>_ = Manager.Dialog.StartDialog(DialogKey.Test1));
+        testButton.onClick.AddListener(()=>_ = Manager.Dialog.StartDialog(DialogKey.Scene1));
     }
-    
 }

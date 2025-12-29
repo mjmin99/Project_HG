@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,6 +54,6 @@ public record DialogLine
         }
     }
 }
-public enum DialogKey { None, Test1, Test2 }
+public enum DialogKey { None, Test1, Test2, Prologue, Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, Scene7, Scene8, Scene9, Scene10, Scene11, Scene12 }
 public enum DialogType { DialogStart, ChangeBackground, CharacterIn, CharacterOut, NoVoice, WithVoice, PlaySfx}
 public enum BackgroundType {None, Forest, City}

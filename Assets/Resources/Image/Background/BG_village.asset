@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954cc3b69ccd109488ac5c26ceee33fa, type: 3}
-  m_Name: Firecaster
+  m_Name: BG_village
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
-  spriteName: Firecaster
-  sprite: {fileID: 21300000, guid: 60cd39843f820a04eb9d58d65422c62b, type: 3}
+  spriteName: BG_village
+  sprite: {fileID: 21300000, guid: ad2550557c7271241b7e88a45ecdcf55, type: 3}

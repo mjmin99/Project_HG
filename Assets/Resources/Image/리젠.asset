@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954cc3b69ccd109488ac5c26ceee33fa, type: 3}
-  m_Name: Forest
+  m_Name: "\uB9AC\uC820"
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
-  spriteName: forest
-  sprite: {fileID: 21300000, guid: cc0c13b0a1d770c4794db48fcc77b253, type: 3}
+  spriteName: "\uB8E8\uBBF8\uC544"
+  sprite: {fileID: 21300000, guid: fa5c225f461ca3e49a2317fe83403896, type: 3}

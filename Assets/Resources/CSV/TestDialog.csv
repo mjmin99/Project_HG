@@ -1,12 +1,12 @@
-DialogID,VoiceID,SpeakerId,Action,TextContent
-Test1,101,,ChangeBackground,Forest
+﻿DialogID,VoiceID,SpeakerId,Action,TextContent
+Test1,101,,ChangeBackground,BG_forest
 Test1,1001,,DialogStart,
 Test1,10,Test1,CharacterIn,
 Test1,11,Test2,CharacterIn,
 Test1,14,Test3,CharacterIn,
 Test1,Hello,Test1,WithVoice,HelloHelloHelloHelloHelloHello
 Test1,Listen,Test3,WithVoice,ListenListenListenListenListenListenListen
-Test1,102,,ChangeBackground,City
+Test1,102,,ChangeBackground,BG_city
 Test1,Hey,Test2,WithVoice,HeyHeyHeyHeyHeyHeyHeyHey
 Test1,12,,NoVoice,...
 Test1,15,,PlaySfx,LinkHit
@@ -17,3 +17,201 @@ Test2,Hey,Test2,WithVoice,Hey
 Test2,Look,Test1,WithVoice,Look
 Test2,Look,Test2,WithVoice,Look
 Test2,22,Test1,NoVoice,...
+Prologue,0,,ChangeBackground,BG_black
+Prologue,0,,DialogStart,
+Prologue,0,,NoVoice,크로노멘더스
+Prologue,0,,NoVoice,풍부한 자원을 바탕으로 다양한 종족이 공존하던 세계.
+Prologue,0,,NoVoice,엘프는 숲을 가꾸었고. 인간은 도시를 세웠으며. 드워프는 산맥 아래에서 땅의 숨결을 읽었다.
+Prologue,0,,NoVoice,다양한 종족들은 공존을 통해 평화롭고 안정된 모습으로 지내고있었다.
+Prologue,0,,NoVoice,그러던 어느날. 설명할 수 없는 균열이 세계 곳곳 발생했다.
+Prologue,0,,NoVoice,숲은 한순간에 불바다로 변했고. 도시는 무너지고. 잔해들이 공중에 뜨기 시작했다.
+Prologue,0,,NoVoice,시간이 멈춘듯 죽어야할 존재가 죽지못하고. 태어나야할 생명이 태어나지 못했으며. 과거 멸종한 생명체들이 다시 돌아다니기 시작했다.
+Prologue,0,,NoVoice,평화롭던 세상은 한순간에 낯선 세상으로 변했고. 일상은 무너지기 시작했다.
+Prologue,0,,NoVoice,이러한 현상과 동시에 선택받은 존재들이 나타나기 시작한다.
+Prologue,0,,NoVoice,이들은 시간을 되감아 과거로 갈 수 있는 존재.
+Prologue,0,,NoVoice,그 존재들은 이러한 현상을 해결하기위해 모험을 떠난다.
+Prologue,0,,NoVoice,이 이야기는 무너진 세상을 원래대로 되돌리기위한 탐험가의 이야기다.
+Scean1,0,,ChangeBackground,BG_village
+Scene1,0,,DialogStart,
+Scene1,0,리젠,CharacterIn,
+Scene1,ad01,리젠,WithVoice,으음 지금쯤 온다 했던거 같은데
+Scene1,0,루미아,CharacterIn,
+Scene1,ad02,루미아,WithVoice,조금만 더 기다려봐. 아무래도 길이 어려울 수 있으니
+Scene1,0,브루가,CharacterIn,
+Scene1,ad03,브루가,WithVoice,그래 너무 성급하게 굴지 말자고
+Scene1,ad04,리젠,WithVoice,하지만 빨리 숲의 이변을 처리하지 않으면..
+Scene1,0,,NoVoice,멀리서 발걸음 소리가 들려오며. 사람의 형체가 다가온다.
+Scene1,ad05,리젠,WithVoice,드디어 도착한 모양이네
+Scene1,ad06,리젠,WithVoice,당신이 오늘 오기로 한 탐험가 맞지?
+Scene1,ad07,브루가,WithVoice,“흠… 분위기는 나쁘지 않아 보여. 최소한 겁먹은 얼굴은 아니군.”
+Scene1,ad08,탐험가,WithVoice,또 다른 탐험가가 오기로되어있는게 아니라면. 내가 맞을거야
+Scene1,ad09,루미아,WithVoice,아무래도 맞는거같네. 그럼 지금 상황 설명을 부탁할게
+Scene1,ad10,리젠,WithVoice,음... 그래
+Scene1,ad11,리젠,WithVoice,지금은 많이 무너졌지만. 여긴 우리 마을이야. 마을 주민은 우리를 포함해 몇십명이 다지만. 우리 3명은 이 마을을 이상현상으로부터 지키고있어.
+Scene1,ad12,리젠,WithVoice,그러던 중 탐험가가 여기로 온다는 소식을 듣고 기다리고있었지. 요 앞 숲에서 이상한 존재가 계속 마을을 공격해오고 있었으니까
+Scene1,ad13,리젠,WithVoice,아무리 싸워도 탐험가의 능력이 있지않다면. 우리로썬 버티는 것 만으로도 힘에 부쳐
+Scene1,ad14,리젠,WithVoice,그래서 탐험가의 도움을 받아 마을을 지키고 이상현상으로부터 세상을 원래대로 되돌리려 하는거야
+Scene1,ad15,브루가,WithVoice,물론 도와준다면 너의 말은 다 들어주도록하지
+Scene1,ad16,탐험가,WithVoice,처음부터 그걸 목적으로 이 마을에 온거야. 일단 급한 일부터 해결하자
+Scene1,ad17,루미아,WithVoice,시원하네. 그래 그럼 바로 출발하자
+Scene1,0,리젠,CharacterOut,
+Scene1,0,루미아,CharacterOut,
+Scene1,0,브루가,CharacterOut,
+Scene2,0,,ChangeBackground,BG_forest
+Scene2,0,,DialogStart,
+Scene2,0,리젠,CharacterIn,
+Scene2,0,브루가,CharacterIn,
+Scene2,0,루미아,CharacterIn,
+Scene2,ad18,리젠,WithVoice,...공기가 이상해. 숲인데 숨 쉬는 느낌이 들질 않아.
+Scene2,0,,NoVoice,눈쌀을 찌푸리며 말한다.
+Scene2,ad19,브루가,WithVoice,확실히...저번에 왔을 때 보다 더 안좋아졌군. 빨리 해결하지 않으면 사단이 나겠어.
+Scene2,ad20,루미아,WithVoice,그래. 하지만 조심해. 탐험가가 있다고 해도. 상황이 더 안좋아진거같아.
+Scene2,0,,NoVoice,3명은 모두 긴장 상태로 나를 돌아보며 말했다.
+Scene2,ad21,리젠,WithVoice,전투는 우리에게 맡기고 탐험가 너는 상황이 위급할 때. 탐험가의 능력인 시간 역행을 부탁할게. 너의 그 능력이 전투의 핵심이야
+Scene2,ad22,브루가,WithVoice,탐험가들만 쓸 수 있는 시간 역행은 정말 대단하다더군. 일정시간 시간을 되감아 아군의 체력마저 회복시킨다고 들었다네
+Scene2,ad23,루미아,WithVoice,그 능력은 아군에게만 적용되어 쓰러트린 적은 시간 역행의 영향을 받지 않는다고 들었어
+Scene2,0,탐험가,NoVoice,나는 모두의 말을 기억하고 곧 이어질 전투를 대비했다.
+Scene2,0,리젠,CharacterOut,
+Scene2,0,브루가,CharacterOut,
+Scene2,0,루미아,CharacterOut,
+Scene3,0,,ChangeBackground,BG_forest
+Scene3,0,,DialogStart,
+Scene3,0,Firestarter,CharacterIn,
+Scene3,ad24,Firestarter,WithVoice,그분의 앞길을 막는 놈들은 모두 불태워주마!!
+Scene3,ad25,탐험가,WithVoice,으윽. 너무 뜨거워
+Scene3,0,,NoVoice,나는 적이 내뿜는 뜨거운 열기에 주춤 뒤로 밀려나며 다른 사람들을 돌아보았다
+Scene3,0,,NoVoice,다른 사람들은 열기를 견디며 전투 준비 자세로 서있었다.
+Scene3,0,Firestarter,CharacterOut,
+Scene3,0,리젠,CharacterIn,탐험가. 이제 저녀석만 처치하면 숲은 정상화될거야
+Scene3,0,리젠,CharacterOut,
+Scene4,0,,ChangeBackground,BG_village
+Scene4,0,,DialogStart,
+Scene4,0,리젠,CharacterIn,
+Scene4,ad26,리젠,WithVoice,소개할게 여기가 우리 마을이야. 인구는 적지만 다들 그럭저럭 지내고있어. 탐험가 너도 이 마을을 주둔지로 잡고 지내는건 어때?
+Scene4,ad27,탐험가,WithVoice,좋은 마을인거같아. 그래 앞으로 활동은 여기서 진행할게. 앞으로도 잘 부탁해
+Scene4,0,루미아,CharacterIn,
+Scene4,ad28,루미아,WithVoice,저희들도 앞으로 잘 부탁해. 탐험가
+Scene4,0,리젠,CharacterOut,
+Scene4,0,루미아,CharacterOut,
+Scene4,0,탐험가,CharacterOut,
+Scene5,0,,ChangeBackground,BG_cave
+Scene5,0,,DialogStart,
+Scene5,0,리젠,CharacterIn,
+Scene5,ad29,리젠,WithVoice,…이상하네.
+Scene5,ad30,리젠,WithVoice,동굴인데… 바위들이 전부 떠 있어.
+Scene5,0,탐험가,NoVoice,마치 시간이 멈춘 순간이 잘려 나와. 그대로 공중에 매달린 것처럼 보인다.
+Scene5,ad31,탐험가,WithVoice,지나가는데 조심해야겠는걸... 바위뿐 아니라 곤충..독충으로 보이는 것 들도 있어.
+Scene5,ad32,리젠,WithVoice,그래 조심해서 나아가자. 빨리 이 현상을 처리해버리자고 탐험가.
+Scene5,0,리젠,CharacterOut,
+Scene6,0,,ChangeBackground,BG_cave
+Scene6,0,,DialogStart,
+Scene6,0,,NoVoice,공중에 떠 있던 바위들이 격렬하게 흔들리며. 바닥을 찢고 거대한 드릴이 솟아오른다.
+Scene6,0,,NoVoice,금속과 암석이 갈리는 굉음이 동굴을 울린다.
+Scene6,0,브루가,CharacterIn,
+Scene6,ad33,브루가,WithVoice,탐험가 조심하도록. 저놈이 이 지역의 터주인 모양이다.
+Scene6,ad34,탐험가,WithVoice,저런..형태도 만들어질 수 있는거야?
+Scene6,0,,NoVoice,나는 괴형태를 한 몬스터를 가리키며 말했다.
+Scene6,ad35,브루가,WithVoice,나도 처음본다만...예사롭지 않은 놈이야. 저 드릴을 멈추지않는 한. 이상현상은 계속될거다
+Scene6,ad36,탐험가,WithVoice,그렇다면 빨리 처리해야겠지. 준비하자
+Scene6,0,Driller,CharacterIn,
+Scene6,ad37,Driller,WithVoice,침입자. 제거한다. 파괴. 분해. 굴착
+Scene6,0,,WithVoice,세계의 균열은 더 깊어져야한다.
+Scene6,0,탐험가,CharacterOut,
+Scene6,0,브루가,CharacterOut,
+Scene7,0,,ChangeBackground,BG_ruins
+Scene7,0,,DialogStart,
+Scene7,0,루미아,CharacterIn,
+Scene7,ad38,루미아,WithVoice,도시..? 이 현상은...
+Scene7,0,탐험가,CharacterIn,
+Scene7,0,탐험가,NoVoice,분명 문명이 있어야 할 것 같지만. 폭팔이 일어난 상태로 정지되어있다. 그 위에 눈이 쌓여있고. 분명 일어날 수 없는 현상이다.
+Scene7,ad39,탐험가,WithVoice,눈이 오고있지만. 전혀 춥지않아. 바로 옆에 폭팔이 일어나고있지만. 뜨겁지않아..
+Scene7,ad40,루미아,WithVoice,빨리 이 곳에서 벗어나고싶어. 탐험가.
+Scene7,ad41,탐험가,WithVoice,나도 같은 생각이야. 빠르게 이 지역의 이상현상을 해결하자
+Scene7,0,루미아,CharacterOut,
+Scene7,0,탐험가,CharacterOut,
+Scene8,0,,ChangeBackground,BG_ruins
+Scene8,0,,DialogStart,
+Scene8,0,neon_vail,CharacterIn,
+Scene8,ad42,neon_vail,WithVoice,오? 이런곳에 생명체가 찾아오다니...그렇다면 탐험가인가?
+Scene8,0,,NoVoice,양손에 검을 들고있는 생명체는 갑자기 앞에 나타나며 말을 걸어왔다.
+Scene8,0,탐험가,CharacterIn,
+Scene8,0,루미아,CharacterIn,
+Scene8,ad43,루미아,NoVoice,..!
+Scene8,ad44,neon_vail,WithVoice,음..이런 상황에서도 침착하다니 확실히 탐험가가 분명하군. 그래서 이곳의 이상현상을 제거하러 오셨나?
+Scene8,0,,NoVoice,루미아와 나는 갑자기 나타난 적에게 놀라며 거리를 두었지만. 그 존재는 그 자리에서 말을 걸어왔다.
+Scene8,ad45,탐험가,WithVoice,일단..적이라는건 확실하네. 루미아. 전투 준비
+Scene8,0,루미아,CharacterOut,
+Scene8,0,탐험가,CharacterOut,
+Scene9,0,,ChangeBackground,BG_iceberg
+Scene9,0,,DialogStart,
+Scene9,0,탐험가,CharacterIn,
+Scene9,ad46,탐험가,WithVoice,...차갑게 얼어붙은 빙산에서 용암이 흐르고있어
+Scene9,ad47,탐험가,WithVoice,말도 안되는 풍경이야.. 공중에 떠잇는 바위. 폭팔중에 멈춘 시간. 이제는 얼음에서 흐르는 용암이라니
+Scene9,ad48,탐험가,WithVoice,이 현상도 분명 이상현상이겠지. 빨리 해결해야만 해
+Scene9,0,,ChangeBackground,BG_iceberg
+Scene9,0,,DialogStart,
+Scene9,0,탐험가,CharacterIn,
+Scene9,ad49,탐험가,WithVoice,니가 이 장소의 이상현상 원인이야?
+Scene9,0,snakebot,CharacterIn,
+Scene9,ad50,snakebot,WithVoice,음...여기까지 오다니..
+Scene9,ad51,탐험가,WithVoice,사람이 질문을 했으면 대답을 해야지. 니가 이곳의 이상현상 원인이냐니까?
+Scene9,ad52,snakebot,WithVoice,원인이라.. 아니 나로인해 이 현상이 생겼을 순 있지만. 나는 한낯 실험체에 불과하다
+Scene9,ad53,탐험가,WithVoice,실험? 그럼 이 현상이 실험에 의해 생긴거라고?
+Scene9,ad54,snakebot,WithVoice,그렇다. 하지만 이 이상의 질문에 답할 필요는 없을 것 같군. 탐험가라는 존재는 어느 시간에도 곤란한 결과를 나타내니
+Scene9,ad55,snakebot,WithVoice,자 탐험가. 너 또한 변수로써 작용이 되는지 시험해보지
+Scene10,0,snakebot,CharacterOut,
+Scene10,0,,ChangeBackground,BG_otherWorld
+Scene10,0,,DialogStart,
+Scene10,0,탐험가,CharacterIn,
+Scene10,ad56,탐험가,WithVoice,이 공간은....현실이고 말고 할 문제가 아니잖아..
+Scene10,ad57,탐험가,WithVoice,우주..? 아니 더 이상한거같은데
+Scene10,0,리젠,CharacterIn,
+Scene10,ad58,리젠,WithVoice,탐험가는 우주에 가본적 있어? 이렇게 생긴곳이야?
+Scene10,0,브루가,CharacterIn,
+Scene10,ad59,브루가,WithVoice,그럴리가. 생명체는 우주에 갈 수 없다는걸 알고있지않나
+Scene10,0,루미아,CharacterIn,
+Scene10,ad60,루미아,WithVoice,하지만 언젠가는 우주에 가보고싶긴 하네
+Scene10,0,탐험가,NoVoice,레진과 브루가. 그리고 루미아가 긴장감을 잃은 상태로 말을 하기 시작했다.
+Scene10,ad61,탐험가,WithVoice,하아..여기 그래도 이상현상발생지.. 아니지 여긴 그냥 이상현상 그 자체겠구나.
+Scene10,ad62,탐험가,WithVoice,이상현상 한 복판에서 긴장감이 너무 없는거 아니야?
+Scene10,0,탐험가,NoVoice,나는 주변을 둘러보며 말을 했다.
+Scene10,ad63,리젠,WithVoice,그럼 빨리 마무리하자. 이제 슬슬 마을로 돌아가고싶어
+Scene10,ad64,탐험가,WithVoice,...그래 이 장소도 빨리 마무리 하자
+Scene10,0,탐험가,NoVoice,파티원과 함께 앞으로 나가아기 시작했다.
+Scene10,0,리젠,CharacterOut,
+Scene10,0,브루가,CharacterOut,
+Scene10,0,루미아,CharacterOut,
+Scene11,0,,ChangeBackground,BG_otherWorld
+Scene11,0,,DialogStart,
+Scene11,0,탐험가,CharacterIn,
+Scene11,ad65,탐험가,WithVoice,생긴걸 보아하니 정말 마지막인거같은데 어떻게 생각해?
+Scene11,0,리젠,CharacterIn,
+Scene11,ad66,리젠,WithVoice,저렇게 생긴게 마지막이 아니라면...그것대로 최악이라 생각해
+Scene11,0,브루가,CharacterIn,
+Scene11,ad67,브루가,WithVoice,나도 동감이야. 무조건 마지막에 나와야할 것 처럼 생겼군
+Scene11,0,루미아,CharacterIn,
+Scene11,ad68,루미아,WithVoice,외모로 판단하면 안되지만 같은 생각이야. 무조건 마지막일거라고 생각해
+Scene11,0,boneriaper,CharacterIn,
+Scene11,ad69,boneriaper,WithVoice,...탐험가라는 것들은 항상 긴장감이 없는 존재다만..이번 탐험가는 더 심하군
+Scene11,ad70,boneriaper,WithVoice,"와라, 빨리 처리하고 다음 단계로 넘어가야겠군"
+Scene11,0,탐험가,CharacterOut,
+Scene11,0,리젠,CharacterOut,
+Scene11,0,브루가,CharacterOut,
+Scene11,0,루미아,CharacterOut,
+Scene11,0,boneriaper,CharacterOut,
+Scene12,0,,ChangeBackground,
+Scene12,0,,DialogStart,
+Scene12,0,리젠,CharacterIn,
+Scene12,0,브루가,CharacterIn,
+Scene12,0,루미아,CharacterIn,
+Scene12,0,탐험가,CharacterIn,
+Scene12,ad71,탐험가,WithVoice,끝났네...드디어...드디어 끝내이야 나는 이제 한달동안은 아무것도 안하고 쉴거야
+Scene12,ad72,브루가,WithVoice,나는 사람은 아니지만 인간적인 부분에서 동의한다. 나도 당분간은 아무것도 하고싶지 않군.
+Scene12,ad73,리젠,WithVoice,그래 마을에 도착했으니 이제 푹 쉬어버리자!!
+Scene12,ad74,루미아,WithVoice,우선! 집에가서 푹 자고싶어! 끝이다!
+Scene12,ad75,탐험가,WithVoice,다들 고생했어. 물론 내가 제일 고생했다고 생각하지만.
+Scene12,0,,NoVoice,End.
+Scene12,0,루미아,CharacterOut,
+Scene12,0,리젠,CharacterOut,
+Scene12,0,브루가,CharacterOut,
+Scene12,0,탐험가,CharacterOut,
