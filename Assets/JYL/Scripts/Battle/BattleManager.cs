@@ -21,10 +21,12 @@ public class BattleManager : MonoBehaviour
     
     [Header("Set Values")]
     [SerializeField] private float rewindTime = 5f;
+    [SerializeField] private float rewindCoolDown = 15f;
 
     [Header("Set UI")] 
     [SerializeField] public RectTransform uiCanvas;
-    [SerializeField] private TestSkillUI skillUI;
+    [SerializeField] private CharacterHpPresenter characterHpPresenter;
+    [SerializeField] private SkillPresenter skillPresenter;
     
     private readonly List<CharController> characters = new();
     private List<Transform> charTransforms = new();
@@ -86,25 +88,28 @@ public class BattleManager : MonoBehaviour
         clearTime = DateTime.Now.Millisecond; 
         charTransforms = characters.Select(c => c.transform).ToList();
         
-        // TODO: 스킬 테스트
-        skillUI.Init(skills);
+        // TODO: 스킬 테스트. UI 변경 시, 로직 변경
+        skillPresenter.Init(skills);
         for(int i = 0; i < skills.Count ; i++)
         {
             int index = i;
             skills[i].skillCount
                 .Subscribe(n 
-                    => skillUI.SetTxt(index, $"{skills[index].type}: {n} left"))
-                .AddTo(skillUI);
+                    => skillPresenter.SetTxt(index, $"{skills[index].type}: {n} left"))
+                .AddTo(skillPresenter);
         }
         
-        // TODO: 스킬 테스트
+        // TODO: 스킬 테스트. 테스트 완료 시 삭제
         skills[0].skillCount.Value++;
         skills[0].skillCount.Value++;
+        
+        // 캐릭터 UI 연결
+        characterHpPresenter.Init();
     }
     
     public void StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
     {
-        // TODO : Stage Clear UI 띄우기
+        // TODO : Stage Clear UI 띄우기 구현 필요
         clearTime = DateTime.Now.Millisecond - clearTime;
         Manager.Game.stageService
             .ApplyClearResult(stageData.world, stageData.stage, clearTime, score);
@@ -113,20 +118,18 @@ public class BattleManager : MonoBehaviour
     
     private void GameOver()
     {
-        // TODO : 조작 로직 막기
+        // TODO : 조작 로직 막기 구현 필요
         // 게임 오버 UI 띄우기
     }
 
-    public void PauseGame() // 게임 일시정지
+    public void PauseGame() // 게임 일시정지. UI매니저 쪽에서 관리함
     {
         Time.timeScale = 0;
-        // TODO: UI 띄우기
     }
 
-    public void ReturnGame()
+    public void ReturnGame() // 일시정지에서 게임으로 되돌아가기. UI 매니저 쪽에서 관리함
     {
         Time.timeScale = 1;
-        // TODO: UI 닫기
     }
 
     public void ExitStage()
@@ -136,16 +139,18 @@ public class BattleManager : MonoBehaviour
         Manager.Game.ClearCharacters();
     }
 
-    public void RewindTime() // 시간 되감기 스킬
+    public void RewindTime() // 시간 되감기 스킬. 버튼으로 구현
     {
         foreach (var c in characters)
         {
             c.RewindTime();
         }
+
+        skillPresenter.SetRewind(rewindTime, rewindCoolDown);
     }
 
     // 스킬 아이콘 클릭 시 스킬 사용
-    public void OnClickSkills(int characterId, int num)
+    public void OnClickSkills(int characterId, int index)
     {
         var tmp = skills.Find(x => x.charId == characterId);
         bool canUse = !isGameOver && tmp.skillCount.Value > 0;
@@ -155,7 +160,7 @@ public class BattleManager : MonoBehaviour
         if (skillDict[characterId].UseSkill())
         {
             tmp.skillCount.Value--;
-            skillUI.SetTxt(num,$"{tmp.type} : {tmp.skillCount}");
+            skillPresenter.SetTxt(index,$"{tmp.type} : {tmp.skillCount}");
         }
     }
 
@@ -173,7 +178,7 @@ public class BattleManager : MonoBehaviour
     } 
 
     // 캐릭터 정보 가져오고 초기화
-    // TODO : 테스트. 캐릭터 정보 미리 정하기
+    // TODO : 테스트. 캐릭터 정보 미리 정하기. 테스트 완료 후, 임시 로직 삭제 필요
     private void InitCharacters(bool isTest)
     {
         int[] partySet;
@@ -209,7 +214,9 @@ public class BattleManager : MonoBehaviour
             
             var inst = Manager.Character.instances[member];
             skillDict.Add(model.id, character);
-            skills.Add(new SkillCounter(model.id,inst.skillType));
+            var skillInfo = character.skillPrefab;
+            var cool = skillInfo.GetSkillCooldown();
+            skills.Add(new SkillCounter(model.id,inst.skillType,0,cool));
             characters.Add(character);
         }
     }

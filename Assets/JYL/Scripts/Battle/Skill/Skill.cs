@@ -63,4 +63,10 @@ public abstract class Skill : MonoBehaviour
         }
         timer =  afterTime;
     }
+
+    public float GetSkillCooldown()
+    {
+        return coolDown;
+    }
+
 }
