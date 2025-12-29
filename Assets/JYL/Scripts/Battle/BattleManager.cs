@@ -23,6 +23,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private float rewindTime = 5f;
 
     [Header("Set UI")] 
+    [SerializeField] public RectTransform uiCanvas;
     [SerializeField] private TestSkillUI skillUI;
     
     private readonly List<CharController> characters = new();

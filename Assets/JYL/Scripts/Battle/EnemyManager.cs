@@ -28,8 +28,8 @@ public class EnemyManager : MonoBehaviour
         stageData = Manager.Game.GetStageData();
         curWaveSpawns = stageData.waves[waveIndex].spawns;
         lastWaveIndex = stageData.waves.Count - 1;
-        curWaveEnemies = CreateEnemy();
         enemyDamageUI.Init();
+        curWaveEnemies = CreateEnemy();
     }
 
     private List<EnemyController> CreateEnemy() 
@@ -45,10 +45,21 @@ public class EnemyManager : MonoBehaviour
             var camPos = cam.transform.position;
             go.transform.position = new Vector3(camPos.x + 6f + rndX, 0, 0);
             go.layer = enemyLayer;
+            
             var enemy = go.AddComponent<EnemyController>();
+            
             var info = enemyDatabase.Get(e.id);
-            enemy.Init(info, enemyDamageUI);
+            if (info.isBoss)
+            {
+                enemy.Init(info, enemyDamageUI, battleManager.uiCanvas);
+            }
+            else
+            {
+                enemy.Init(info, enemyDamageUI);
+            }
+            
             enemy.isDead.Subscribe(x=>EnemySubscribe(x,enemy)).AddTo(enemy);
+            
             list.Add(enemy);
         }
         

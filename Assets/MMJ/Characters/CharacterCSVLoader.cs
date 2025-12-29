@@ -5,7 +5,7 @@ public static class CharacterCSVLoader
 {
     public static List<CharacterModel> Load()
     {
-        TextAsset csvFile = Resources.Load<TextAsset>("characters");
+        TextAsset csvFile = Resources.Load<TextAsset>("CSV/characters");
 
         if (csvFile == null)
         {

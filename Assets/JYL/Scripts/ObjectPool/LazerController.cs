@@ -37,7 +37,6 @@ public class LazerController : PooledObject
         animator.Play("Fire");
         animator.Update(0f);
         var counter = animator.GetCurrentAnimatorStateInfo(0).length;
-        Debug.Log(counter);
         ReturnToPool(counter);
     }
     public void OnLazer() // 애니메이션 이벤트를 통해 수행 됨

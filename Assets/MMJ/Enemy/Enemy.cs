@@ -7,15 +7,15 @@ public class Enemy
     public int id;
     public string enemyName;
 
+    public float maxHP;
     public float attack;
     public float magicAttack;
-    public float maxHP;
+    public float defense;
     public float attackSpeed;
-
     public float attackRange;
 
     public AttackType attackType;
-    public float defense;
+    public bool isBoss;
 
     // 프리팹 로드 경로 Resources/Prefabs/Enemies/{name}.prefab
     public string PrefabPath =>

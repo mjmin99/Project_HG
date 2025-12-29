@@ -33,7 +33,6 @@ public class Parrying : Skill
 
     public void SuccessParry()
     {
-        Debug.Log("패리 성공함");
         isParrying = false;
         AfterEffect();
     }
