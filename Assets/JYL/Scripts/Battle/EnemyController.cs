@@ -30,6 +30,8 @@ public class EnemyController : MonoBehaviour, IAttackable
     private const string ANIM_CONT_PATH = "Battle/Enemy/Controllers/";
 
     public float stunTime;
+    
+    public bool[] skillDropHp = new bool[4];
 
     public void Init(Enemy info, DamageUI damageUI, RectTransform uiCanvas = null)
     {
@@ -162,5 +164,10 @@ public class EnemyController : MonoBehaviour, IAttackable
         // TODO: 스턴 효과 애니메이션 재생 필요
         this.stunTime = stunTime;
         stateMachine.ChangeState(stateDict[CharStateType.Stun]);
+    }
+
+    public float GetHpPercent()
+    {
+        return curHp.Value / maxHp ;
     }
 }

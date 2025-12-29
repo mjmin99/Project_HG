@@ -107,6 +107,7 @@ MonoBehaviour:
   skillType: 1
   returnTime: 2
   coolDown: 3
+  skillIcon: {fileID: 287862186, guid: c9107754e891ca0468931bbf4a74265f, type: 3}
   parryTime: 1.5
   stunTime: 5
   isParrying: 0

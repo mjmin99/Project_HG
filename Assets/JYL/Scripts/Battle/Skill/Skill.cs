@@ -12,7 +12,8 @@ public abstract class Skill : MonoBehaviour
     [SerializeField] public SkillType skillType;
     [SerializeField] protected float returnTime = 2f;
     [SerializeField] protected float coolDown = 3f;
-
+    [SerializeField] public Sprite skillIcon;
+    
     private Stack<Skill> skillPool;
 
     protected float timer;

@@ -8,8 +8,9 @@ public class SkillPresenter : MonoBehaviour
 {
     [Header("Set Manager")]
     [SerializeField] private BattleManager battleManager;
-    
-    [Header("Set Skill Button")]
+
+    [Header("Set Skill Button")] 
+    [SerializeField] public GameObject[] skillButtonPanel;
     [SerializeField] private Button[] skillButton;
     [SerializeField] private TMP_Text[] btnText;
     [SerializeField] private Image[] skillForwardImage;
@@ -56,25 +57,33 @@ public class SkillPresenter : MonoBehaviour
         }
     }
     
-    public void Init(List<SkillCounter> skills)
+    public void Init(List<SkillInfo> skills)
     {
         skillCooldown = new float[skills.Count];
         skillTimer = new float[skills.Count];
         skillCount = new float[skills.Count];
         
-        for (int i = 0; i < skills.Count; i++)
+        for (int i = 0; i < skillButtonPanel.Length; i++)
         {
+            skillButtonPanel[i].SetActive(i < skills.Count);
+            
+            if (i >= skills.Count) continue; // 캐릭 숫자만큼만 세팅함
+            
             btnText[i].SetText($"{skills[i].type} : {skills[i].skillCount}");
             skillCooldown[i] = skills[i].skillCooldown;
             
-            // TODO: 스킬 이미지 불러와서 심어야 함
-            // skillForwardImage[i].sprite = Resources.Load<Sprite>("경로");
-            // skillBackImage[i].sprite = Resources.Load<Sprite>("경로");
+            skillForwardImage[i].sprite = skills[i].skillIcon;
+            skillForwardImage[i].fillAmount = skills[i].skillCount.Value > 0 ? 1f : 0f;
+            skillBackImage[i].sprite = skills[i].skillIcon;
             
             int index = i;
             skillButton[i].OnClickAsObservable().Subscribe(x => battleManager.OnClickSkills(skills[index].charId, 0)).AddTo(this);
             skillButton[i].OnClickAsObservable().Subscribe(x => OnClickSkillButton(index)).AddTo(this);
-            skills[i].skillCount.Subscribe(x =>SetSkillButtonInteractable(index, x)).AddTo(this);
+            Debug.Log($"{i}_{skills[i].skillCount.Value}");
+            skills[i].skillCount.Subscribe(x =>
+                    SetSkillButtonInteractable(index, x, 
+                        battleManager.skillDict[skills[index].charId].isDead.Value))
+                .AddTo(this);
 
             if (skills[i].skillCount.Value <= 0)
             {
@@ -88,16 +97,23 @@ public class SkillPresenter : MonoBehaviour
 
     public void SetTxt(int num, string text) => btnText[num].SetText(text);
 
-    private void SetSkillButtonInteractable(int index, int amount)
+    private void SetSkillButtonInteractable(int index, int amount, bool isDead)
     {
         skillCount[index] = amount;
-        
-        if (amount > 0 && skillTimer[index] <= 0f)
+        if (isDead)
         {
+            skillButton[index].interactable = false;
+            skillForwardImage[index].fillAmount = 0f;
+            skillTimer[index] = 0f;
+        }
+        else if (amount > 0 && skillTimer[index] <= 0f)
+        {
+            skillForwardImage[index].fillAmount = 1f;
             skillButton[index].interactable = true;
         }
-        else
+        else if(amount == 0 && skillTimer[index] <= 0f)
         {
+            skillForwardImage[index].fillAmount = 0f;
             skillButton[index].interactable = false;
         }
     }

@@ -26,15 +26,15 @@ public class BattleManager : MonoBehaviour
     [Header("Set UI")] 
     [SerializeField] public RectTransform uiCanvas;
     [SerializeField] private CharacterHpPresenter characterHpPresenter;
-    [SerializeField] private SkillPresenter skillPresenter;
+    [SerializeField] public SkillPresenter skillPresenter;
     
     private readonly List<CharController> characters = new();
     private List<Transform> charTransforms = new();
-    private readonly Dictionary<int, CharController> skillDict = new();
+    public readonly Dictionary<int, CharController> skillDict = new();
 
     private int characterLayer;
     private Camera cam;
-    private readonly List<SkillCounter> skills = new();
+    public readonly List<SkillInfo> skills = new();
     
     // 스킬 타입 딕셔너리
     // 배치된 스킬 타입에 따라 UI의 이미지도 정해짐
@@ -51,11 +51,19 @@ public class BattleManager : MonoBehaviour
         if (!cam) return;
         
         float x = 0f;
-        foreach (var c in charTransforms)
+        int count = 0;
+        for(int i = 0; i< characters.Count; i++)
         {
-            x += c.position.x;
+            if (!characters[i].isDead.Value)
+            {
+                x += charTransforms[i].position.x;
+                count++;
+            }
+            
         }
-        x /= charTransforms.Count;
+        if (count == 0) return;
+        
+        x /= count;
         cam.transform.position = Vector3.Lerp(cam.transform.position,new Vector3(x + 1f,cam.transform.position.y,cam.transform.position.z), Time.fixedDeltaTime * 10);
     }
     
@@ -164,11 +172,12 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void GetSkill(int characterId)
+    public void GetSkill(int index)
     {
-        var tmp = skills.Find(x => x.charId == characterId);
+        var tmp = skills[index];
         if (tmp.skillCount.Value >= 3) return;
-        tmp.skillCount.Value++; ;
+        tmp.skillCount.Value++;
+        // TODO: 해당 UI(버튼) 애니메이션 처리(바운스)
     }
     
     //내부로직
@@ -215,8 +224,12 @@ public class BattleManager : MonoBehaviour
             var inst = Manager.Character.instances[member];
             skillDict.Add(model.id, character);
             var skillInfo = character.skillPrefab;
-            var cool = skillInfo.GetSkillCooldown();
-            skills.Add(new SkillCounter(model.id,inst.skillType,0,cool));
+            var skillCooldown = skillInfo.GetSkillCooldown();
+            skills.Add(new SkillInfo(
+                model.id,skillInfo.skillIcon,
+                skillInfo.skillType,
+                0,
+                skillCooldown));
             characters.Add(character);
         }
     }

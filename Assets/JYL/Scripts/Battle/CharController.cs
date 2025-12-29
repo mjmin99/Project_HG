@@ -76,7 +76,7 @@ public class CharController : MonoBehaviour, IAttackable
         stateDict.Add(CharStateType.Idle, new CharacterIdle(this) );
         stateDict.Add(CharStateType.Run, new CharacterRun(this));
         stateDict.Add(CharStateType.Attack, new CharacterAttack(this));
-        stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
+        // stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
         stateDict.Add(CharStateType.Hit, new CharacterHit(this));
         stateDict.Add(CharStateType.Dead, new CharacterDead(this));
         stateDict.Add(CharStateType.Rewind, new CharacterRewind(this));
@@ -254,6 +254,7 @@ public class CharController : MonoBehaviour, IAttackable
             {
                 parry.SuccessParry();
                 hitInfo.collider.GetComponent<EnemyController>().GetStun(parry.stunTime);
+                return;
             }
         }
         int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
