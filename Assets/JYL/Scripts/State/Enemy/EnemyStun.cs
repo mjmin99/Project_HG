@@ -6,6 +6,7 @@ public class EnemyStun : EnemyState
     public override void Enter()
     {
         controller.PlayAnimation(Hit);
+        Debug.Log("스턴 들어옴");
     }
 
     public override void Update()

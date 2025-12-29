@@ -13,7 +13,8 @@ public class DamageUI : MonoBehaviour
     
     [SerializeField] private Transform returnPool;
 
-    private Stack<TMP_Text> textPool = new();
+    private readonly Stack<TMP_Text> textPool = new();
+    private readonly Dictionary<Transform, RectTransform> parentCanvas = new();
 
     public void Init()
     {
@@ -34,8 +35,8 @@ public class DamageUI : MonoBehaviour
     {
         if(textPool.Count == 0) CreateTextInstance();
         var newText = textPool.Pop();
-        var parentCanvas = MakeChildCanvas(targetTransform);
-        newText.transform.SetParent(parentCanvas);
+        var childCanvas = CheckChildCanvas(targetTransform);
+        newText.transform.SetParent(childCanvas);
         
         newText.gameObject.SetActive(true);
         newText.SetText($"{damage}");// damage.ToString(); ...(x)
@@ -73,13 +74,18 @@ public class DamageUI : MonoBehaviour
         textPool.Push(newText);
     }
 
-    private RectTransform MakeChildCanvas(Transform targetTransform)
+    public RectTransform CheckChildCanvas(Transform targetTransform)
     {
+        if (parentCanvas.TryGetValue(targetTransform, out var canvas)) return canvas;
+        
         var targetCanvas = targetTransform.GetComponentInChildren<Canvas>();
         
         if (targetCanvas != null)
-            return targetCanvas.GetComponent<RectTransform>();
-        
+        {
+            parentCanvas.Add(targetTransform, targetCanvas.GetComponent<RectTransform>());
+            return parentCanvas[targetTransform];
+        }
+            
         GameObject go = new GameObject("DamageUI");
         go.transform.SetParent(targetTransform);
         
@@ -88,7 +94,8 @@ public class DamageUI : MonoBehaviour
         
         var tr = go.GetComponent<RectTransform>();
         tr.anchoredPosition = Vector2.up * 0.25f;
-
+        parentCanvas.Add(targetTransform, tr);
+        
         return tr;
     }
 }

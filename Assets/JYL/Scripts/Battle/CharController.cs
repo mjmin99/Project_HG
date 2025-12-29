@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class CharController : MonoBehaviour, IAttackable
 {
+    public int characterId;
     public CharacterStats stats;
     public Animator animator;
     public Rigidbody rb;
@@ -20,8 +21,8 @@ public class CharController : MonoBehaviour, IAttackable
     private const string SKILL_PATH = "Skill/";
     
     // 컨트롤러 전용 스탯
-    private float maxHp;
-    private float curHp;
+    public float maxHp;
+    public ReactiveProperty<float> curHp = new();
     public float shield;
     public bool isRewinding;
     
@@ -30,7 +31,7 @@ public class CharController : MonoBehaviour, IAttackable
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
 
     private TimeRecorder timeRecorder;
-    private Skill skillPrefab;
+    public Skill skillPrefab;
     private Parrying parry;
     private readonly Stack<Skill> skillPool = new();
 
@@ -44,8 +45,9 @@ public class CharController : MonoBehaviour, IAttackable
     private readonly Vector3 lazerVec = Vector3.up * 0.25f - Vector3.back * 0.05f + Vector3.right * 0.2f;
     private readonly Vector3 bulletVec = Vector3.up * 0.2f + Vector3.right * 0.1f;
     
-    public void Init(int characterId, CharacterStats charStats, float recordTime, DamageUI damageUI)
+    public void Init(int characterID, CharacterStats charStats, float recordTime, DamageUI damageUI)
     {
+        characterId = characterID;
         gameObject.AddComponent<SpriteRenderer>();
         
         damageUi = damageUI;
@@ -59,8 +61,8 @@ public class CharController : MonoBehaviour, IAttackable
         col.center = new Vector3(0f, 0.25f, 0f);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
         
-        var inst = Manager.Character.instances[characterId];
-        var model = Manager.Character.models[characterId];
+        var inst = Manager.Character.instances[characterID];
+        var model = Manager.Character.models[characterID];
         
         animator = gameObject.GetOrAddComponent<Animator>();
         animator.runtimeAnimatorController 
@@ -74,7 +76,7 @@ public class CharController : MonoBehaviour, IAttackable
         stateDict.Add(CharStateType.Idle, new CharacterIdle(this) );
         stateDict.Add(CharStateType.Run, new CharacterRun(this));
         stateDict.Add(CharStateType.Attack, new CharacterAttack(this));
-        stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
+        // stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
         stateDict.Add(CharStateType.Hit, new CharacterHit(this));
         stateDict.Add(CharStateType.Dead, new CharacterDead(this));
         stateDict.Add(CharStateType.Rewind, new CharacterRewind(this));
@@ -86,7 +88,7 @@ public class CharController : MonoBehaviour, IAttackable
         // 스텟 설정
         stats = charStats;
         maxHp = charStats.hp;
-        curHp = maxHp;
+        curHp.Value = maxHp;
         
         // 원거리나 레이저 타입일 경우 오브젝트 풀 생성
         if (charStats.atkType == AttackType.Ranged)
@@ -126,7 +128,7 @@ public class CharController : MonoBehaviour, IAttackable
         stateMachine.FixedUpdate();
         
         if (!isRewinding) 
-            timeRecorder.Record(transform.position, curHp, shield);
+            timeRecorder.Record(transform.position, curHp.Value, shield);
     }
     
     private void LateUpdate()
@@ -252,6 +254,7 @@ public class CharController : MonoBehaviour, IAttackable
             {
                 parry.SuccessParry();
                 hitInfo.collider.GetComponent<EnemyController>().GetStun(parry.stunTime);
+                return;
             }
         }
         int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
@@ -267,11 +270,11 @@ public class CharController : MonoBehaviour, IAttackable
         }
         if (damage <= 0) return;
         
-        curHp -= damage;
+        curHp.Value -= damage;
         
-        if (curHp <= 0)
+        if (curHp.Value <= 0)
         {
-            curHp = 0;
+            curHp.Value = 0;
             stateMachine.ChangeState(
                 stateDict[CharStateType.Dead]);
         }
@@ -286,17 +289,19 @@ public class CharController : MonoBehaviour, IAttackable
     
     public void Heal(float amount)
     {
-        int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp);
+        if (isDead.Value) return;
+        
+        int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp.Value);
         if (healAmount > 0)
         {
-            curHp += healAmount;
+            curHp.Value += healAmount;
             // TODO : 힐 이펙트 및 Toast UI 생성
         }
     }
     
     public void SetHp(float value)
     {
-        curHp = value;
+        curHp.Value = value;
     }
     
     public void SetShield(float value)

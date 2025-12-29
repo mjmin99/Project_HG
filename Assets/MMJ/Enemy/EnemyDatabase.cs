@@ -21,7 +21,7 @@ public class EnemyDatabase : ScriptableObject
         enemies.Clear();
 
         // 예시 CSV 위치
-        TextAsset csv = Resources.Load<TextAsset>("Data/EnemyTable");
+        TextAsset csv = Resources.Load<TextAsset>("CSV/EnemyTable");
         if (csv == null)
         {
             Debug.LogError("[EnemyDatabase] CSV not found");
@@ -50,7 +50,8 @@ public class EnemyDatabase : ScriptableObject
                 attackRange = float.Parse(cols[6]),
 
                 attackType = ParseAttackType(cols[7]),
-                defense = float.Parse(cols[8])
+                defense = float.Parse(cols[8]),
+                isBoss = bool.Parse(cols[9])
             };
 
             enemies.Add(enemy);

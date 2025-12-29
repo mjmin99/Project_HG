@@ -25,6 +25,7 @@ public class Parrying : Skill
 
     public override void SkillEffect()
     {
+        Debug.Log("패리 시작");
         timer = parryTime;
         gameObject.SetActive(true);
         animator.Play("Fire");
@@ -33,7 +34,7 @@ public class Parrying : Skill
 
     public void SuccessParry()
     {
-        Debug.Log("패리 성공함");
+        Debug.Log("패리 성공");
         isParrying = false;
         AfterEffect();
     }

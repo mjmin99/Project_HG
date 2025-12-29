@@ -107,6 +107,7 @@ MonoBehaviour:
   skillType: 0
   returnTime: 1.5
   coolDown: 3
+  skillIcon: {fileID: 1777807460, guid: f222ee7b64db8914f9df026abefcec6a, type: 3}
 --- !u!95 &1415234173729591266
 Animator:
   serializedVersion: 7

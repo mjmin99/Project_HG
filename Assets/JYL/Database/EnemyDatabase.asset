@@ -15,46 +15,51 @@ MonoBehaviour:
   enemies:
   - id: 1000
     enemyName: slime
-    attack: 1
+    maxHP: 200
+    attack: 50
     magicAttack: 1
-    maxHP: 1000
+    defense: 3
     attackSpeed: 1.2
     attackRange: 3
     attackType: 0
-    defense: 3
+    isBoss: 0
   - id: 1001
     enemyName: goblin
-    attack: 2
+    maxHP: 200
+    attack: 50
     magicAttack: 2
-    maxHP: 100
+    defense: 6
     attackSpeed: 1.5
     attackRange: 3
     attackType: 0
-    defense: 6
+    isBoss: 1
   - id: 1002
     enemyName: jinyoung
+    maxHP: 100
     attack: 3
     magicAttack: 3
-    maxHP: 100
+    defense: 2
     attackSpeed: 1.3
     attackRange: 3
     attackType: 0
-    defense: 2
+    isBoss: 0
   - id: 1003
     enemyName: guyjin
+    maxHP: 100
     attack: 4
     magicAttack: 4
-    maxHP: 100
+    defense: 2
     attackSpeed: 1.2
     attackRange: 3
     attackType: 1
-    defense: 2
+    isBoss: 0
   - id: 1004
     enemyName: manjun
+    maxHP: 100
     attack: 5
     magicAttack: 5
-    maxHP: 100
+    defense: 6
     attackSpeed: 1
     attackRange: 3
     attackType: 1
-    defense: 6
+    isBoss: 0
