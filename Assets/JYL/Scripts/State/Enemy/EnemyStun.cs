@@ -5,7 +5,8 @@ public class EnemyStun : EnemyState
     public EnemyStun(EnemyController controller) : base(controller) { }
     public override void Enter()
     {
-        controller.PlayAnimation(Hit);
+        // controller.PlayAnimation(Hit);
+        controller.PlayAnimation(Idle);
         Debug.Log("스턴 들어옴");
     }
 

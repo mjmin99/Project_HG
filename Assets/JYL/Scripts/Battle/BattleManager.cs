@@ -115,7 +115,7 @@ public class BattleManager : MonoBehaviour
         clearTime = Time.time - clearTime;
         Manager.Game.stageService
             .ApplyClearResult(stageData.world, stageData.stage, (long)clearTime, score);
-        
+        Manager.Save.AddGold(Manager.Game.GetStageData().rewardGold);
         Manager.Save.SaveCurrentUser();
         await UniTask.WhenAll(Manager.Game.tasks);
         

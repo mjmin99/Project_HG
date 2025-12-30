@@ -8,10 +8,10 @@ public class BossHpPresenter : EnemyHpPresenter
     public override void UpdateUI(float amount)
     {
         base. UpdateUI(amount);
-        bossHpText.SetText($"{amount} / {maxHp}");
         if (amount <= 0.01f)
         {
-            Destroy(gameObject);
+            if(gameObject.activeSelf) gameObject.SetActive(false);
         }
+        bossHpText.SetText($"{amount} / {maxHp}");
     }
 }

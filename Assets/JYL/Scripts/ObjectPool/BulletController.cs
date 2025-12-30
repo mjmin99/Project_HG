@@ -24,14 +24,15 @@ public class BulletController : PooledObject
         rb.isKinematic = false;
         rb.useGravity = false;
         
-        info = new AttackInfo(attacker, firePower);
+        info = new AttackInfo(attacker, firePower, false);
         animator = gameObject.GetOrAddComponent<Animator>();
         isInit = true;
         this.fireSpeed = fireSpeed;
     }
 
-    public void FireToPosition(Vector3 pos)
+    public void FireToPosition(Vector3 pos, bool isCritical)
     {
+        info.isCritical =  isCritical;
         rb.linearVelocity = Vector3.zero;
         gameObject.SetActive(true);
         animator.Play("Fire");

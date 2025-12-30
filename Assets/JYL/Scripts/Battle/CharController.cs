@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using UniRx;
 using Cysharp.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CharController : MonoBehaviour, IAttackable
 {
@@ -14,6 +13,7 @@ public class CharController : MonoBehaviour, IAttackable
     public BoxCollider col;
     public StateMachine stateMachine;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
+    public AttackInfo atkInfo;
 
     // 해싱
     private const string CONTROLLER_PATH = "Battle/Characters/Controllers/";
@@ -119,6 +119,8 @@ public class CharController : MonoBehaviour, IAttackable
 
         // 스킬 정보 가져오기
         skillPrefab = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
+        // AttackInfo 초기화
+        atkInfo = new AttackInfo(gameObject.layer, stats.attack, false);
     }
     
     private void Update()
@@ -160,17 +162,25 @@ public class CharController : MonoBehaviour, IAttackable
     public void Attack()
     {
         if (hitInfo.collider == null) return;
+        // 치명타 판단
+        float crit = Random.Range(0f, 1f);
+        bool isCritical = stats.critRate > crit;
+        // 치명타 고려 데미지 판단은 각 어택타입에 따라 달라짐
         
         switch (stats.atkType)
         {
             case AttackType.Melee:
-                var info = new AttackInfo(gameObject.layer, stats.attack);
-                hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
+                float attackDamage = isCritical ? stats.critDamage * stats.attack : stats.attack;
+                atkInfo.atk = attackDamage;
+                atkInfo.isCritical = isCritical;
+                hitInfo.collider.GetComponent<IAttackable>().TakeHit(atkInfo);
                 break;
             case AttackType.Ranged:
+                attackDamage = isCritical ? stats.critDamage * stats.attack : stats.attack;
                 // TODO: 힐러일 경우 전체 힐. 이펙트 재생 필요함
                 if (stats.role == CharacterRole.Healer)
                 {
+                    Debug.Log("어택에서 힐 들어옴");
                     foreach (var c in Manager.Game.Characters)
                     {
                         c.Heal(stats.magicAttack);
@@ -182,21 +192,22 @@ public class CharController : MonoBehaviour, IAttackable
                 {
                     bullet.transform.position = transform.position + bulletVec;
                     
-                    if (!bullet.isInit) bullet.Init(gameObject.layer, stats.attack);
-                    bullet.FireToPosition(hitInfo.transform.position);
+                    if (!bullet.isInit) bullet.Init(gameObject.layer, attackDamage);
+                    bullet.FireToPosition(hitInfo.transform.position, isCritical);
                 }
 
                 break;
             case AttackType.Lazer:
+                float magicAttack = isCritical ? stats.critDamage * stats.magicAttack : stats.magicAttack;
                 // OnTriggerEnter로 알아서 처리됨
                 var lazer = bulletPool.GetObject() as LazerController;
                 if (lazer != null)
                 {
                     lazer.transform.position = transform.position + lazerVec;
 
-                    if (!lazer.isInit) lazer.Init(gameObject.layer, stats.magicAttack);
+                    if (!lazer.isInit) lazer.Init(gameObject.layer, magicAttack);
                     
-                    lazer.InitiateLazer();
+                    lazer.InitiateLazer(isCritical);
                 }
                 break;
             default:
@@ -224,7 +235,7 @@ public class CharController : MonoBehaviour, IAttackable
             case SkillType.StrongAttack:
                 newSkill.transform.position = transform.position + Vector3.right * 0.25f;
                 if (hitInfo.collider == null) return false;
-                var info = new AttackInfo(gameObject.layer, stats.attack * 5f);
+                var info = new AttackInfo(gameObject.layer, stats.attack * 5f, false);
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 newSkill.SkillEffect();
                 break;
@@ -265,7 +276,7 @@ public class CharController : MonoBehaviour, IAttackable
         int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
         
         // 해당 데미지를 Toast UI로 표현
-        damageUi.ShowDamageEffect(damage, transform, true).Forget();
+        damageUi.ShowDamageEffect(damage, transform, true, false).Forget();
         
         if (shield > 0 && damage > 0)
         {
@@ -294,13 +305,16 @@ public class CharController : MonoBehaviour, IAttackable
     
     public void Heal(float amount)
     {
+        Debug.Log($"힐 들어옴{amount}");
         if (isDead.Value) return;
         
         int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp.Value);
+        Debug.Log($"힐 시작{healAmount}");
         if (healAmount > 0)
         {
             curHp.Value += healAmount;
             // TODO : 힐 이펙트 및 Toast UI 생성
+            damageUi.ShowHealEffect(healAmount, transform).Forget();
         }
     }
     

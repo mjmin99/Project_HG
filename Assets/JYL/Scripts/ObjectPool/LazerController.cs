@@ -24,14 +24,15 @@ public class LazerController : PooledObject
         rb.isKinematic = false;
         rb.useGravity = false;
         
-        info = new AttackInfo(attacker, firePower);
+        info = new AttackInfo(attacker, firePower, false);
         animator = gameObject.GetOrAddComponent<Animator>();
         isInit = true;
         fireSpeed = playSpeed;
     }
     
-    public void InitiateLazer()
+    public void InitiateLazer(bool isCritical)
     {
+        info.isCritical = isCritical;
         gameObject.SetActive(true);
         animator.speed = fireSpeed;
         animator.Play("Fire");
