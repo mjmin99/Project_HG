@@ -55,6 +55,7 @@ public class StageProgressData
     // 신규 세이브 생성 시: 모든 스테이지에 대한 기본 레코드 생성
     public StageProgressData(StageDataSO[] stages)
     {
+        Debug.Log("신규 스테이지 프로그레스 생성");
         records.Clear();
         foreach (var d in stages)
         {
@@ -65,7 +66,12 @@ public class StageProgressData
     // Firebase 로드 후 보정용
     public void RebuildCache()
     {
+        Debug.Log("리빌드 캐시");
         // 방어
+        if (records.Count == 0)
+        {
+            Debug.Log("레코드가 없음");
+        }
         records ??= new List<StageRecord>();
 
         cache = new Dictionary<string, StageRecord>();
@@ -73,7 +79,7 @@ public class StageProgressData
         foreach (var r in records)
         {
             var key = StageKeyUtil.ToKey(r.world, r.level);
-            cache[key] = r;
+            if(!cache.TryAdd(key,r)) Debug.LogError($"이미 있는 키임{key}");
         }
     }
 }

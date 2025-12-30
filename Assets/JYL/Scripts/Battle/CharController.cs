@@ -96,6 +96,10 @@ public class CharController : MonoBehaviour, IAttackable
             var bulletPrefab 
                 = Resources.Load<BulletController>(
                     BULLET_PATH+model.characterName);
+            if (bulletPrefab == null)
+            {
+                bulletPrefab = Resources.Load<BulletController>(BULLET_PATH + "TestBullet");
+            }
             var go = new GameObject($"BulletPool_{model.characterName}");
             go.transform.SetParent(transform);
             bulletPool = go.AddComponent<ObjectPool>();

@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class StageSaveService
 {
-    [Header("Database")]
-    [SerializeField] private StageDatabaseSO stageDatabase;
-
     private StageProgressData data;
 
     #region Init
@@ -51,7 +50,15 @@ public class StageSaveService
             return false;
 
         var key = StageKeyUtil.ToKey(world, stage);
-        return data.Cache.TryGetValue(key, out var r) && r.cleared;
+        
+        if (data.Cache.TryGetValue(key, out var r))
+        {
+            return r.cleared;
+        }
+        
+        Manager.Save.CurrentData.RebuildStageProgress();
+        
+        return Manager.Save.CurrentData.stageProgress.Cache.TryGetValue(key, out var s) && s.cleared;
     }
 
     public bool CanEnter(int world, int stage)
@@ -69,7 +76,17 @@ public class StageSaveService
 
         // 이전 스테이지 기준
         var curRecord = GetStageRecord(world, stage);
-        var prevRecord = GetStageRecord(curRecord.prevWorld, curRecord.prevLevel); 
+        if (curRecord == null)
+        {
+            return false;
+        }
+        Debug.Log($"{world}_{stage}");
+        var prevRecord = GetStageRecord(curRecord.prevWorld, curRecord.prevLevel);
+        if (prevRecord == null)
+        {
+            Debug.Log($"이전 스테이지가 null{curRecord.prevWorld}_{curRecord.prevLevel}");
+            return false;
+        }
 
         return IsCleared(prevRecord.world, prevRecord.level);
     }
@@ -79,10 +96,8 @@ public class StageSaveService
         if (!EnsureInitialized())
             return null;
 
-        data.Cache.TryGetValue(StageKeyUtil.ToKey(world, stage), out var r);
-        return r;
+        return data.Cache.GetValueOrDefault(StageKeyUtil.ToKey(world, stage));
     }
-
     #endregion
 
     #region Apply

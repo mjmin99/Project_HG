@@ -6,6 +6,7 @@ using TMPro;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
@@ -106,12 +107,16 @@ public class BattleManager : MonoBehaviour
     
     public void StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
     {
-        // TODO : Stage Clear UI 띄우기 구현 필요
         clearTime = DateTime.Now.Millisecond - clearTime;
         Manager.Game.stageService
             .ApplyClearResult(stageData.world, stageData.stage, clearTime, score);
+        Manager.Save.SaveCurrentUser();
+        Time.timeScale = 0f;
+        // TODO : Stage Clear UI 띄우기 구현 필요
         // TODO: 전투 관련 조작 막기, ESC 조작 막기
-        
+        // UI에서 재시작, 메인으로 돌아가기 클릭 시 까지 수행 멈춤
+        SceneManager.LoadScene("MainScene");
+        Time.timeScale = 1f;
     }
     
     private void GameOver()

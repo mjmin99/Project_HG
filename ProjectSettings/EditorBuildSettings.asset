@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/MMJ/MainScene/MainScene.unity
     guid: 057d580d949ce1a438b03dfa1afc9c42
   - enabled: 1
-    path: Assets/MMJ/BattleScene/BattleScene.unity
-    guid: 639069ecca1412445a39cbb34c1f4aae
+    path: Assets/JYL/Scenes/BattleScene.unity
+    guid: 992e551c541466c40a7907a7322a0696
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: b232c1147cc13894387f2379105fab0a, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

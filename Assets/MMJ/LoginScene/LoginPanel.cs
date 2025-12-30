@@ -67,12 +67,14 @@ public class LoginPanel : MonoBehaviour
                 // 1-1. 아직 닉네임 설정을 하지 않은 경우
                 if (user.DisplayName == "")
                 {
+                    Debug.Log("닉네임 설정 아직 안됨");
                     nicknamePanel.SetActive(true);
                     gameObject.SetActive (false);
                 }
                 // 1-2. 닉네임 설정완료된 경우
                 else
                 {
+                    Debug.Log("닉네임 설정 됐음 로비 패널 On");
                     lobbyPanel.SetActive(true);
                     gameObject.SetActive(false);
                 }

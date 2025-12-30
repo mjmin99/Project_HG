@@ -9,7 +9,7 @@ public class BossHpPresenter : EnemyHpPresenter
     {
         base. UpdateUI(amount);
         bossHpText.SetText($"{amount} / {maxHp}");
-        if (amount <= 0.001f)
+        if (amount <= 0.01f)
         {
             Destroy(gameObject);
         }

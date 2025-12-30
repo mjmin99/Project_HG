@@ -7,7 +7,7 @@ public class MainScenePresenter : MonoBehaviour
 {
     public TMP_Text goldText;
     public Button shopButton;
-    public StageSelectUIController stageSelectUI;
+    public TestStageSelectUIController testStageSelectUI;
     public Button expeditionButton;
     private void Awake()
     {

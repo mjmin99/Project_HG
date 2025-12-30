@@ -174,5 +174,7 @@ public class LobbyPanel : MonoBehaviour
         // 4단계: 메인씬 이동
         Debug.Log("[LobbyPanel] ========== 로딩 완료! MainScene 이동 ==========");
         SceneChanger.Instance.LoadScene("MainScene");
+        // 5단계: 스테이지 세이브 서비스 초기화
+        Manager.Game.StageServiceInit();
     }
 }
