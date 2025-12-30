@@ -15,8 +15,8 @@ MonoBehaviour:
   enemies:
   - id: 1000
     enemyName: slime
-    maxHP: 2000
-    attack: 300
+    maxHP: 200
+    attack: 10
     magicAttack: 1
     defense: 3
     attackSpeed: 1.2
@@ -25,7 +25,7 @@ MonoBehaviour:
     isBoss: 0
   - id: 1001
     enemyName: goblin
-    maxHP: 200
+    maxHP: 2000
     attack: 50
     magicAttack: 2
     defense: 6

@@ -143,63 +143,63 @@ Scene9,ad46,탐험가,WithVoice,...차갑게 얼어붙은 빙산에서 용암이
 Scene9,ad47,탐험가,WithVoice,말도 안되는 풍경이야.. 공중에 떠잇는 바위. 폭팔중에 멈춘 시간. 이제는 얼음에서 흐르는 용암이라니
 Scene9,ad48,탐험가,WithVoice,이 현상도 분명 이상현상이겠지. 빨리 해결해야만 해
 Scene9,0,,ChangeBackground,BG_iceberg
-Scene9,0,,DialogStart,
-Scene9,ad49,탐험가,WithVoice,니가 이 장소의 이상현상 원인이야?
-Scene9,0,snakebot,CharacterIn,
-Scene9,ad50,snakebot,WithVoice,음...여기까지 오다니..
-Scene9,ad51,탐험가,WithVoice,사람이 질문을 했으면 대답을 해야지. 니가 이곳의 이상현상 원인이냐니까?
-Scene9,ad52,snakebot,WithVoice,원인이라.. 아니 나로인해 이 현상이 생겼을 순 있지만. 나는 한낯 실험체에 불과하다
-Scene9,ad53,탐험가,WithVoice,실험? 그럼 이 현상이 실험에 의해 생긴거라고?
-Scene9,ad54,snakebot,WithVoice,그렇다. 하지만 이 이상의 질문에 답할 필요는 없을 것 같군. 탐험가라는 존재는 어느 시간에도 곤란한 결과를 나타내니
-Scene9,ad55,snakebot,WithVoice,자 탐험가. 너 또한 변수로써 작용이 되는지 시험해보지
-Scene10,0,snakebot,CharacterOut,
-Scene10,0,,ChangeBackground,BG_otherWorld
 Scene10,0,,DialogStart,
-Scene10,ad56,탐험가,WithVoice,이 공간은....현실이고 말고 할 문제가 아니잖아..
-Scene10,ad57,탐험가,WithVoice,우주..? 아니 더 이상한거같은데
-Scene10,0,리젠,CharacterIn,
-Scene10,ad58,리젠,WithVoice,탐험가는 우주에 가본적 있어? 이렇게 생긴곳이야?
-Scene10,0,브루가,CharacterIn,
-Scene10,ad59,브루가,WithVoice,그럴리가. 생명체는 우주에 갈 수 없다는걸 알고있지않나
-Scene10,0,루미아,CharacterIn,
-Scene10,ad60,루미아,WithVoice,하지만 언젠가는 우주에 가보고싶긴 하네
-Scene10,0,탐험가,NoVoice,레진과 브루가. 그리고 루미아가 긴장감을 잃은 상태로 말을 하기 시작했다.
-Scene10,ad61,탐험가,WithVoice,하아..여기 그래도 이상현상발생지.. 아니지 여긴 그냥 이상현상 그 자체겠구나.
-Scene10,ad62,탐험가,WithVoice,이상현상 한 복판에서 긴장감이 너무 없는거 아니야?
-Scene10,0,탐험가,NoVoice,나는 주변을 둘러보며 말을 했다.
-Scene10,ad63,리젠,WithVoice,그럼 빨리 마무리하자. 이제 슬슬 마을로 돌아가고싶어
-Scene10,ad64,탐험가,WithVoice,...그래 이 장소도 빨리 마무리 하자
-Scene10,0,탐험가,NoVoice,파티원과 함께 앞으로 나가아기 시작했다.
-Scene10,0,리젠,CharacterOut,
-Scene10,0,브루가,CharacterOut,
-Scene10,0,루미아,CharacterOut,
+Scene10,ad49,탐험가,WithVoice,니가 이 장소의 이상현상 원인이야?
+Scene10,0,snakebot,CharacterIn,
+Scene10,ad50,snakebot,WithVoice,음...여기까지 오다니..
+Scene10,ad51,탐험가,WithVoice,사람이 질문을 했으면 대답을 해야지. 니가 이곳의 이상현상 원인이냐니까?
+Scene10,ad52,snakebot,WithVoice,원인이라.. 아니 나로인해 이 현상이 생겼을 순 있지만. 나는 한낯 실험체에 불과하다
+Scene10,ad53,탐험가,WithVoice,실험? 그럼 이 현상이 실험에 의해 생긴거라고?
+Scene10,ad54,snakebot,WithVoice,그렇다. 하지만 이 이상의 질문에 답할 필요는 없을 것 같군. 탐험가라는 존재는 어느 시간에도 곤란한 결과를 나타내니
+Scene10,ad55,snakebot,WithVoice,자 탐험가. 너 또한 변수로써 작용이 되는지 시험해보지
+Scene11,0,snakebot,CharacterOut,
 Scene11,0,,ChangeBackground,BG_otherWorld
 Scene11,0,,DialogStart,
-Scene11,ad65,탐험가,WithVoice,생긴걸 보아하니 정말 마지막인거같은데 어떻게 생각해?
+Scene11,ad56,탐험가,WithVoice,이 공간은....현실이고 말고 할 문제가 아니잖아..
+Scene11,ad57,탐험가,WithVoice,우주..? 아니 더 이상한거같은데
 Scene11,0,리젠,CharacterIn,
-Scene11,ad66,리젠,WithVoice,저렇게 생긴게 마지막이 아니라면...그것대로 최악이라 생각해
+Scene11,ad58,리젠,WithVoice,탐험가는 우주에 가본적 있어? 이렇게 생긴곳이야?
 Scene11,0,브루가,CharacterIn,
-Scene11,ad67,브루가,WithVoice,나도 동감이야. 무조건 마지막에 나와야할 것 처럼 생겼군
+Scene11,ad59,브루가,WithVoice,그럴리가. 생명체는 우주에 갈 수 없다는걸 알고있지않나
 Scene11,0,루미아,CharacterIn,
-Scene11,ad68,루미아,WithVoice,외모로 판단하면 안되지만 같은 생각이야. 무조건 마지막일거라고 생각해
-Scene11,0,boneriaper,CharacterIn,
-Scene11,ad69,boneriaper,WithVoice,...탐험가라는 것들은 항상 긴장감이 없는 존재다만..이번 탐험가는 더 심하군
-Scene11,ad70,boneriaper,WithVoice,와라 빨리 처리하고 다음 단계로 넘어가야겠군
+Scene11,ad60,루미아,WithVoice,하지만 언젠가는 우주에 가보고싶긴 하네
+Scene11,0,탐험가,NoVoice,레진과 브루가. 그리고 루미아가 긴장감을 잃은 상태로 말을 하기 시작했다.
+Scene11,ad61,탐험가,WithVoice,하아..여기 그래도 이상현상발생지.. 아니지 여긴 그냥 이상현상 그 자체겠구나.
+Scene11,ad62,탐험가,WithVoice,이상현상 한 복판에서 긴장감이 너무 없는거 아니야?
+Scene11,0,탐험가,NoVoice,나는 주변을 둘러보며 말을 했다.
+Scene11,ad63,리젠,WithVoice,그럼 빨리 마무리하자. 이제 슬슬 마을로 돌아가고싶어
+Scene11,ad64,탐험가,WithVoice,...그래 이 장소도 빨리 마무리 하자
+Scene11,0,탐험가,NoVoice,파티원과 함께 앞으로 나가아기 시작했다.
 Scene11,0,리젠,CharacterOut,
 Scene11,0,브루가,CharacterOut,
 Scene11,0,루미아,CharacterOut,
-Scene11,0,boneriaper,CharacterOut,
-Scene12,0,,ChangeBackground,BG_forest
+Scene12,0,,ChangeBackground,BG_otherWorld
 Scene12,0,,DialogStart,
+Scene12,0,boneriaper,CharacterIn,
+Scene12,ad65,탐험가,WithVoice,생긴걸 보아하니 정말 마지막인거같은데 어떻게 생각해?
 Scene12,0,리젠,CharacterIn,
+Scene12,ad66,리젠,WithVoice,저렇게 생긴게 마지막이 아니라면...그것대로 최악이라 생각해
 Scene12,0,브루가,CharacterIn,
+Scene12,ad67,브루가,WithVoice,나도 동감이야. 무조건 마지막에 나와야할 것 처럼 생겼군
 Scene12,0,루미아,CharacterIn,
-Scene12,ad71,탐험가,WithVoice,끝났네...드디어...드디어 끝내이야 나는 이제 한달동안은 아무것도 안하고 쉴거야
-Scene12,ad72,브루가,WithVoice,나는 사람은 아니지만 인간적인 부분에서 동의한다. 나도 당분간은 아무것도 하고싶지 않군.
-Scene12,ad73,리젠,WithVoice,그래 마을에 도착했으니 이제 푹 쉬어버리자!!
-Scene12,ad74,루미아,WithVoice,우선! 집에가서 푹 자고싶어! 끝이다!
-Scene12,ad75,탐험가,WithVoice,다들 고생했어. 물론 내가 제일 고생했다고 생각하지만.
-Scene12,0,,NoVoice,End.
-Scene12,0,루미아,CharacterOut,
+Scene12,ad68,루미아,WithVoice,외모로 판단하면 안되지만 같은 생각이야. 무조건 마지막일거라고 생각해
+Scene12,ad69,boneriaper,WithVoice,...탐험가라는 것들은 항상 긴장감이 없는 존재다만..이번 탐험가는 더 심하군
+Scene12,ad70,boneriaper,WithVoice,와라 빨리 처리하고 다음 단계로 넘어가야겠군
 Scene12,0,리젠,CharacterOut,
 Scene12,0,브루가,CharacterOut,
+Scene12,0,루미아,CharacterOut,
+Scene12,0,boneriaper,CharacterOut,
+Scene13,0,,ChangeBackground,BG_forest
+Scene13,0,,DialogStart,
+Scene13,0,리젠,CharacterIn,
+Scene13,0,브루가,CharacterIn,
+Scene13,0,루미아,CharacterIn,
+Scene13,ad71,탐험가,WithVoice,끝났네...드디어...드디어 끝내이야 나는 이제 한달동안은 아무것도 안하고 쉴거야
+Scene13,ad72,브루가,WithVoice,나는 사람은 아니지만 인간적인 부분에서 동의한다. 나도 당분간은 아무것도 하고싶지 않군.
+Scene13,ad73,리젠,WithVoice,그래 마을에 도착했으니 이제 푹 쉬어버리자!!
+Scene13,ad74,루미아,WithVoice,우선! 집에가서 푹 자고싶어! 끝이다!
+Scene13,ad75,탐험가,WithVoice,다들 고생했어. 물론 내가 제일 고생했다고 생각하지만.
+Scene13,0,,NoVoice,End.
+Scene13,0,루미아,CharacterOut,
+Scene13,0,리젠,CharacterOut,
+Scene13,0,브루가,CharacterOut,
