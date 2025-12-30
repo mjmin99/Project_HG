@@ -8,6 +8,6 @@ public class ManagerTestButton : MonoBehaviour
     void Awake()
     {
         testButton = GetComponent<Button>();
-        testButton.onClick.AddListener(()=>_ = Manager.Dialog.StartDialog(DialogKey.Scene1));
+        testButton.onClick.AddListener(()=>_ = Manager.Dialog.StartDialog(DialogKey.Scene12));
     }
 }

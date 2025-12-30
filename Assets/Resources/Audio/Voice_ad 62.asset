@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b609ee0aa037ec45b1ef7f7c5bd7233, type: 3}
   m_Name: Voice_ad 62
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
-  clipSource: {fileID: 8300000, guid: eab7dd0ff3e21474c831278c9c8b3363, type: 3}
+  clipSource: {fileID: 8300000, guid: b7795cc12243dc44c93db410b3fb8b2a, type: 3}
   clipName: ad62
   volume: 0.9
   audioType: 4
