@@ -31,7 +31,7 @@ public class DamageUI : MonoBehaviour
         textPool.Push(newText);
     }
     
-    public async UniTaskVoid ShowDamageEffect(int damage, Transform targetTransform, bool isPlayerHit)
+    public async UniTask ShowDamageEffect(int damage, Transform targetTransform, bool isPlayerHit)
     {
         if(textPool.Count == 0) CreateTextInstance();
         var newText = textPool.Pop();
@@ -67,11 +67,15 @@ public class DamageUI : MonoBehaviour
             .SetEase(Ease.OutBounce));
         seq.Insert(1f,newText
             .DOFade(0f, 0.2f));
-        await seq.AsyncWaitForCompletion();
         
-        newText.gameObject.SetActive(false);
-        newText.transform.SetParent(returnPool);
-        textPool.Push(newText);
+        Manager.Game.tasks.Add(seq.AsyncWaitForCompletion().AsUniTask());
+        await seq.AsyncWaitForCompletion();
+        if (newText.gameObject)
+        {
+            newText.gameObject.SetActive(false);
+            newText.transform.SetParent(returnPool);
+            textPool.Push(newText);
+        }
     }
 
     public RectTransform CheckChildCanvas(Transform targetTransform)

@@ -30,9 +30,16 @@ public class UIManager : MonoBehaviour
             if (uiStack.Count > 0)
             { CloseTop(); }
             else
-            { 
-                // 여기에 어느 씬인지에 대한 변수값을 두고 배틀씬 일때 배틀씬 옵션 패널이 켜질 수 있게 제어
-                OpenUI<UIPanel>("OptionPanel"); 
+            {
+                if (Manager.Game.IsBattle)
+                {
+                    if (Manager.Game.IsGameOver || Manager.Game.IsGameClear) return;
+                    OpenUI<UIPanel>("BattleOptionPanel");
+                }
+                else
+                {
+                    OpenUI<UIPanel>("OptionPanel"); 
+                }
             }
         }
     }
@@ -143,7 +150,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public PartyUI CurrentPartyUI { get; private set; }
+    private PartyUI CurrentPartyUI { get; set; }
 
     public void RegisterPartyUI(PartyUI partyUI)
     {

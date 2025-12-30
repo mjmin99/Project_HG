@@ -36,7 +36,7 @@ public record StageRecord
 public class StageProgressData
 {
     // 저장용 (JsonUtility가 직렬화 가능)
-    public List<StageRecord> records = new();
+    public List<StageRecord> records;
 
     // 런타임 캐시 (저장 안 됨)
     [NonSerialized]
@@ -47,7 +47,10 @@ public class StageProgressData
         get
         {
             if (cache == null)
+            {
+                Debug.Log("Getter으로 들어옴");
                 RebuildCache();
+            }
             return cache;
         }
     }
@@ -56,6 +59,7 @@ public class StageProgressData
     public StageProgressData(StageDataSO[] stages)
     {
         Debug.Log("신규 스테이지 프로그레스 생성");
+        records = new List<StageRecord>();
         records.Clear();
         foreach (var d in stages)
         {
@@ -68,12 +72,21 @@ public class StageProgressData
     {
         Debug.Log("리빌드 캐시");
         // 방어
-        if (records.Count == 0)
+        if (records == null|| records.Count == 0)
         {
-            Debug.Log("레코드가 없음");
+            Debug.LogWarning("레코드가 없음");
+            records = new List<StageRecord>();
+            var stages = Resources.LoadAll<StageDataSO>($"Stage/StageDataSO");
+            records.Clear();
+            foreach (var d in stages)
+            {
+                records.Add(new StageRecord(d));
+            }
+            return;
         }
-        records ??= new List<StageRecord>();
 
+        if (cache != null) return;
+        
         cache = new Dictionary<string, StageRecord>();
 
         foreach (var r in records)

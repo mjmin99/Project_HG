@@ -44,7 +44,7 @@ public abstract class UIBase : MonoBehaviour
 
         canvasGroup.alpha = 0f;
         sequence = DOTween.Sequence()
-            .Append(canvasGroup.DOFade(1f, animDuration));
+            .Append(canvasGroup.DOFade(1f, animDuration)).SetUpdate(true);
     }
 
     protected virtual void PlayCloseAnimation()
@@ -59,6 +59,7 @@ public abstract class UIBase : MonoBehaviour
 
         sequence = DOTween.Sequence()
             .Append(canvasGroup.DOFade(0f, animDuration))
+            .SetUpdate(true)
             .OnComplete(() =>
             {
                 Destroy(gameObject);

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,8 +22,6 @@ public class DropSkill : MonoBehaviour
         if (cam)
         {
             pos = cam.WorldToScreenPoint(enemyTransform.position);
-            Debug.Log($"시작 좌표: X :{pos.x} Y:{pos.y} Z:{pos.z} " +
-                      $"\n 목표 좌표: X: {targetTransform.anchoredPosition.x} Y: {targetTransform.anchoredPosition.y}");
         }
         rectTransform.position = new Vector2(pos.x + 300, pos.y);
         Sequence sequence = DOTween.Sequence();
@@ -32,5 +31,6 @@ public class DropSkill : MonoBehaviour
             => battleManager.GetSkill(index));
         sequence.AppendCallback(() 
             => Destroy(gameObject));
+        Manager.Game.tasks.Add(sequence.AsyncWaitForCompletion().AsUniTask());
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UniRx;
@@ -28,6 +29,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] public RectTransform uiCanvas;
     [SerializeField] private CharacterHpPresenter characterHpPresenter;
     [SerializeField] public SkillPresenter skillPresenter;
+    [SerializeField] private StageClearPanel  stageClearPanel;
     
     private readonly List<CharController> characters = new();
     private List<Transform> charTransforms = new();
@@ -41,12 +43,10 @@ public class BattleManager : MonoBehaviour
     // 배치된 스킬 타입에 따라 UI의 이미지도 정해짐
     // 클릭 시, 해당 스킬을 소지한 캐릭터 중, 배치된 캐릭터를 찾아 스킬 사용
     private StageDataSO stageData;
-    private long clearTime;
+    private float clearTime;
     public int score;
 
     private float gameOverTimer;
-    private bool isGameOver;
-
     private void Start()
     {
         StartStage();
@@ -74,7 +74,7 @@ public class BattleManager : MonoBehaviour
     
     private void Update()
     {
-        if (!(gameOverTimer > 0f) || !isGameOver) return;
+        if (!(gameOverTimer > 0f) || !Manager.Game.IsGameOver) return;
         
         gameOverTimer -= Time.deltaTime;
         
@@ -92,54 +92,46 @@ public class BattleManager : MonoBehaviour
         SetMaps();
         InitCharacters();
         enemyManager.Init();
+        Manager.Game.IsBattle = true;
         Manager.Game.SetCharacters(characters);
         damageUI.Init();
 
         stageData = Manager.Game.GetStageData();
-        clearTime = DateTime.Now.Millisecond; 
+        clearTime = Time.time; 
         charTransforms = characters.Select(c => c.transform).ToList();
         
         // 스킬 연결
         skillPresenter.Init(skills);
         // 캐릭터 UI 연결
         characterHpPresenter.Init();
+        
+        stageClearPanel.gameObject.SetActive(false);
     }
     
-    public void StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
+    public async UniTask StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
     {
-        clearTime = DateTime.Now.Millisecond - clearTime;
+        Debug.Log("BattleManager 스테이지 클리어");
+        Manager.Game.IsGameClear = true;
+        clearTime = Time.time - clearTime;
         Manager.Game.stageService
-            .ApplyClearResult(stageData.world, stageData.stage, clearTime, score);
+            .ApplyClearResult(stageData.world, stageData.stage, (long)clearTime, score);
+        
         Manager.Save.SaveCurrentUser();
-        Time.timeScale = 0f;
-        // TODO : Stage Clear UI 띄우기 구현 필요
-        // TODO: 전투 관련 조작 막기, ESC 조작 막기
-        // UI에서 재시작, 메인으로 돌아가기 클릭 시 까지 수행 멈춤
-        SceneManager.LoadScene("MainScene");
-        Time.timeScale = 1f;
+        await UniTask.WhenAll(Manager.Game.tasks);
+        
+        UIManager.Instance.CloseTop();
+        
+        stageClearPanel.gameObject.SetActive(true);
+        stageClearPanel.Init(clearTime);
     }
     
-    private void GameOver()
+    private void GameOver() // 게임 오버 조건 구독은 CheckAlive, 조건 체크는 Update에서 진행
     {
-        // TODO : 조작 로직 막기 구현 필요
+        Debug.Log("BattleManager 스테이지 클리어 실패");
+        Manager.Game.IsGameOver = true;
+        Time.timeScale = 0f;
         // 게임 오버 UI 띄우기
-    }
-
-    public void PauseGame() // 게임 일시정지. UI매니저 쪽에서 관리함
-    {
-        Time.timeScale = 0;
-    }
-
-    public void ReturnGame() // 일시정지에서 게임으로 되돌아가기. UI 매니저 쪽에서 관리함
-    {
-        Time.timeScale = 1;
-    }
-
-    public void ExitStage()
-    {
-        Time.timeScale = 1;
-        // TODO: 씬 전환
-        Manager.Game.ClearCharacters();
+        UIManager.Instance.OpenUI<UIPanel>("BattleOptionPanel");
     }
 
     public void RewindTime() // 시간 되감기 스킬. 버튼으로 구현
@@ -156,7 +148,7 @@ public class BattleManager : MonoBehaviour
     public void OnClickSkills(int characterId, int index)
     {
         var tmp = skills.Find(x => x.charId == characterId);
-        bool canUse = !isGameOver && tmp.skillCount.Value > 0;
+        bool canUse = !Manager.Game.IsGameOver && tmp.skillCount.Value > 0;
         
         if (!canUse) return;
         
@@ -169,11 +161,17 @@ public class BattleManager : MonoBehaviour
 
     public void GetSkill(int index)
     {
+        if (Manager.Game.IsGameClear) return;
         var tmp = skills[index];
         if (tmp.skillCount.Value >= 3) return;
         tmp.skillCount.Value++;
         skillPresenter.skillButtonPanel[index].transform.localScale = Vector3.one * 0.7f;
-        skillPresenter.skillButtonPanel[index].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InBounce);
+        var t1 = skillPresenter.skillButtonPanel[index].transform
+            .DOScale(Vector3.one, 0.3f)
+            .SetEase(Ease.OutBounce)
+            .AsyncWaitForCompletion()
+            .AsUniTask();
+        Manager.Game.tasks.Add(t1);
     }
     
     //내부로직
@@ -228,11 +226,11 @@ public class BattleManager : MonoBehaviour
         foreach (var c in characters)
         {
             if (c.isDead.Value) continue;
-            isGameOver = false;
+            Manager.Game.IsGameOver = false;
             return;
         }
         
         gameOverTimer = rewindTime;
-        isGameOver = true;
+        Manager.Game.IsGameOver = true;
     }
 }

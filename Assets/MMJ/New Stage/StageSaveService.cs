@@ -35,7 +35,6 @@ public class StageSaveService
             Debug.LogError("[StageSaveService] stageProgress is NULL");
             return false;
         }
-
         data.RebuildCache();
         return true;
     }
@@ -55,7 +54,7 @@ public class StageSaveService
         {
             return r.cleared;
         }
-        
+        Debug.Log($"키로 데이터 찾지못함{world}_{stage}");
         Manager.Save.CurrentData.RebuildStageProgress();
         
         return Manager.Save.CurrentData.stageProgress.Cache.TryGetValue(key, out var s) && s.cleared;
@@ -80,11 +79,10 @@ public class StageSaveService
         {
             return false;
         }
-        Debug.Log($"{world}_{stage}");
         var prevRecord = GetStageRecord(curRecord.prevWorld, curRecord.prevLevel);
         if (prevRecord == null)
         {
-            Debug.Log($"이전 스테이지가 null{curRecord.prevWorld}_{curRecord.prevLevel}");
+            Debug.LogWarning($"이전 스테이지가 null{curRecord.prevWorld}_{curRecord.prevLevel}");
             return false;
         }
 
