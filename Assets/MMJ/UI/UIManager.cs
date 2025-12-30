@@ -28,7 +28,16 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (uiStack.Count > 0)
-            { CloseTop(); }
+            {
+                if (Manager.Game.IsBattle && Manager.Game.IsGameOver)
+                {
+                    if (uiStack.Peek() is BattleOptionPanel)
+                    {
+                        return;
+                    }
+                }
+                CloseTop();
+            }
             else
             {
                 if (Manager.Game.IsBattle)

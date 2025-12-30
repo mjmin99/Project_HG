@@ -15,8 +15,8 @@ MonoBehaviour:
   enemies:
   - id: 1000
     enemyName: slime
-    maxHP: 200
-    attack: 50
+    maxHP: 2000
+    attack: 300
     magicAttack: 1
     defense: 3
     attackSpeed: 1.2
