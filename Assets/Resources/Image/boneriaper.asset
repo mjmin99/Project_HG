@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: boneriaper
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
   spriteName: boneriaper
-  sprite: {fileID: 21300000, guid: 8d2e859dc0328f844b23f46e79d69b3e, type: 3}
+  sprite: {fileID: 21300000, guid: e89b624d1c368594dac2ae936c8fcd4b, type: 3}

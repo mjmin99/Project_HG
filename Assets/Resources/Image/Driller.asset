@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Driller
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
   spriteName: Driller
-  sprite: {fileID: 21300000, guid: 8d2e859dc0328f844b23f46e79d69b3e, type: 3}
+  sprite: {fileID: 21300000, guid: d585b3146d806ef44968d61eeddbc9d0, type: 3}

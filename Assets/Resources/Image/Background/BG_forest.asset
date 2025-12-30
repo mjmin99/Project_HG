@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BG_forest
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
   spriteName: BG_forest
-  sprite: {fileID: 21300000, guid: cc0c13b0a1d770c4794db48fcc77b253, type: 3}
+  sprite: {fileID: 21300000, guid: 70bb8d70479c75c40a425482c3bb3f14, type: 3}

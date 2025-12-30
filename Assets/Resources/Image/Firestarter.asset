@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Firestarter
   m_EditorClassIdentifier: Assembly-CSharp::SpriteContainer
   spriteName: Firestarter
-  sprite: {fileID: 21300000, guid: 8d2e859dc0328f844b23f46e79d69b3e, type: 3}
+  sprite: {fileID: 21300000, guid: 36572528f96f6774bbfc641e13abd8a7, type: 3}

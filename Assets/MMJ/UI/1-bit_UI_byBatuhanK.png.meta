@@ -426,7 +426,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -448,7 +448,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -457,6 +457,50 @@ TextureImporter:
       bones: []
       spriteID: 3cb66bfe896e96244ace02d3cb85d429
       internalID: -342137897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1-bit_UI_byBatuhanK_16
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 221
+        width: 32
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4179b881258d2eb4fb15eb374ea41ab7
+      internalID: 1748649993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1-bit_UI_byBatuhanK_17
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 83
+        width: 29
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00cf74a014175c646b836c0d0482fd6d
+      internalID: -2147379201
       vertices: []
       indices: 
       edges: []
@@ -483,6 +527,8 @@ TextureImporter:
       1-bit_UI_byBatuhanK_13: -977639221
       1-bit_UI_byBatuhanK_14: 56405866
       1-bit_UI_byBatuhanK_15: -342137897
+      1-bit_UI_byBatuhanK_16: 1748649993
+      1-bit_UI_byBatuhanK_17: -2147379201
       1-bit_UI_byBatuhanK_2: 1682437631
       1-bit_UI_byBatuhanK_3: -1875104931
       1-bit_UI_byBatuhanK_4: -469534905
