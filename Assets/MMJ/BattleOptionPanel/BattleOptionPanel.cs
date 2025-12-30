@@ -30,7 +30,9 @@ public class BattleOptionPanel : UIPanel
 
         btnOption.onClick.AddListener(OpenOption);
         
+        btnOption.gameObject.SetActive(!Manager.Game.IsGameOver);
         gameOverText.gameObject.SetActive(Manager.Game.IsGameOver);
+        btnClose.gameObject.SetActive(!Manager.Game.IsGameOver);
     }
 
     private void OpenOption()
@@ -58,6 +60,7 @@ public class BattleOptionPanel : UIPanel
     {
         Debug.Log("스테이지 재시작");
         Time.timeScale = 1f;
+        UIManager.Instance.CloseTop();
         await UniTask.WhenAll(Manager.Game.tasks);
         SceneManager.LoadScene("BattleScene");
         Manager.Game.IsGameOver = false;
@@ -68,6 +71,7 @@ public class BattleOptionPanel : UIPanel
     {
         Debug.Log("스테이지 포기");
         Time.timeScale = 1f;
+        UIManager.Instance.CloseTop();
         await UniTask.WhenAll(Manager.Game.tasks);
         Manager.Game.ClearCharacters();
         Manager.Game.IsBattle = false;
