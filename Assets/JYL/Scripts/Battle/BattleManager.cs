@@ -46,6 +46,10 @@ public class BattleManager : MonoBehaviour
     private float gameOverTimer;
     private bool isGameOver;
 
+    private void Start()
+    {
+        StartStage();
+    }
     private void FixedUpdate()
     {
         if (!cam) return;
@@ -78,16 +82,14 @@ public class BattleManager : MonoBehaviour
             GameOver();
         }
     }
-    
-    // TODO: 테스트용으로 함수 수행
-    [ContextMenu("Start")]
-    public void StartStage() // 스테이지 시작 시
+
+    private void StartStage() // 스테이지 시작 시
     {
         characterLayer = LayerMask.NameToLayer("Player");
         
         cam = Camera.main;
         SetMaps();
-        InitCharacters(true);
+        InitCharacters();
         enemyManager.Init();
         Manager.Game.SetCharacters(characters);
         damageUI.Init();
@@ -96,21 +98,8 @@ public class BattleManager : MonoBehaviour
         clearTime = DateTime.Now.Millisecond; 
         charTransforms = characters.Select(c => c.transform).ToList();
         
-        // TODO: 스킬 테스트. UI 변경 시, 로직 변경
+        // 스킬 연결
         skillPresenter.Init(skills);
-        for(int i = 0; i < skills.Count ; i++)
-        {
-            int index = i;
-            skills[i].skillCount
-                .Subscribe(n 
-                    => skillPresenter.SetTxt(index, $"{skills[index].type}: {n} left"))
-                .AddTo(skillPresenter);
-        }
-        
-        // TODO: 스킬 테스트. 테스트 완료 시 삭제
-        skills[0].skillCount.Value++;
-        skills[0].skillCount.Value++;
-        
         // 캐릭터 UI 연결
         characterHpPresenter.Init();
     }
@@ -122,6 +111,7 @@ public class BattleManager : MonoBehaviour
         Manager.Game.stageService
             .ApplyClearResult(stageData.world, stageData.stage, clearTime, score);
         // TODO: 전투 관련 조작 막기, ESC 조작 막기
+        
     }
     
     private void GameOver()
@@ -177,7 +167,8 @@ public class BattleManager : MonoBehaviour
         var tmp = skills[index];
         if (tmp.skillCount.Value >= 3) return;
         tmp.skillCount.Value++;
-        // TODO: 해당 UI(버튼) 애니메이션 처리(바운스)
+        skillPresenter.skillButtonPanel[index].transform.localScale = Vector3.one * 0.7f;
+        skillPresenter.skillButtonPanel[index].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InBounce);
     }
     
     //내부로직
@@ -187,18 +178,9 @@ public class BattleManager : MonoBehaviour
     } 
 
     // 캐릭터 정보 가져오고 초기화
-    // TODO : 테스트. 캐릭터 정보 미리 정하기. 테스트 완료 후, 임시 로직 삭제 필요
-    private void InitCharacters(bool isTest)
+    private void InitCharacters()
     {
-        int[] partySet;
-        if (isTest) // TODO: 테스트 종료시 삭제
-        {
-            partySet = new[] { 0, 1, 5 };
-        }
-        else
-        {
-            partySet = Manager.Save.CurrentData.partySet;
-        }
+        int[] partySet = Manager.Save.CurrentData.partySet;
         
         int count = 0;
         

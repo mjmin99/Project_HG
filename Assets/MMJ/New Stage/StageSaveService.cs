@@ -10,15 +10,15 @@ public class StageSaveService
 
     #region Init
 
-    public bool EnsureInitialized(bool isTest = false)
+    public bool EnsureInitialized()
     {
-        if (isTest)
-        {
-            var stages = Resources.LoadAll<StageDataSO>($"Stage/");
-            SaveData d = new SaveData(stages);
-            data = d.stageProgress;
-            return true;
-        }
+        // if (isTest)
+        // {
+        //     var stages = Resources.LoadAll<StageDataSO>($"Stage/");
+        //     SaveData d = new SaveData(stages);
+        //     data = d.stageProgress;
+        //     return true;
+        // }
         
         if (data != null)
             return true;

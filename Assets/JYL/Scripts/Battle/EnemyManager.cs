@@ -41,7 +41,6 @@ public class EnemyManager : MonoBehaviour
         {
             GameObject go = new GameObject($"{e.id}");
             go.transform.SetParent(enemiesParent);
-            // TODO: 적 위치 잡아주기
             float rndX = Random.Range(0, 2f);
             var camPos = cam.transform.position;
             go.transform.position = new Vector3(camPos.x + 6f + rndX, 0, 0);

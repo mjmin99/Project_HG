@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private StageDataSO stageData;
+    private StageDataSO stageData;
 
     public StageSaveService stageService;
     public List<CharController> Characters;
@@ -13,8 +13,10 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         stageService = new StageSaveService();
-        // TODO: 테스트용 함수로 변경 사용
-        stageService.EnsureInitialized(true);
+        if (!stageService.EnsureInitialized())
+        {
+            Debug.LogError("스테이지 세이브 서비스 초기화 실패");
+        }
     }
 
 
@@ -22,6 +24,9 @@ public class GameManager : Singleton<GameManager>
     {
         return stageData;
     }
+    
+    public void SetStageData(StageDataSO stageData) => this.stageData = stageData;
+    
     public void SetCharacters(List<CharController> characters)
     {
         Characters = characters;
