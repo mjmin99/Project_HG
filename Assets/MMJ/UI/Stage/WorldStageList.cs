@@ -33,7 +33,6 @@ public class WorldStageList : MonoBehaviour
                 continue;
 
             bool canEnter = stageSave.CanEnter(world, stage);
-            Debug.Log($"{world}_{stage}: 입장가능:{canEnter}");
             bool isCleared = stageSave.IsCleared(world, stage);
 
             var btn = Instantiate(stageButtonPrefab, contentRoot);

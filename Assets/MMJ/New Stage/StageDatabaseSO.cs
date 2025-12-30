@@ -27,7 +27,6 @@ public class StageDatabaseSO : ScriptableObject
     // 스테이지 조회
     public bool TryGet(int world, int stage, out StageDataSO data)
     {
-        Debug.Log($"스테이지 조회TryGet: {world}_{stage}");
         if (cache == null) BuildCache();
         return cache.TryGetValue(StageKeyUtil.ToKey(world, stage), out data);
     }

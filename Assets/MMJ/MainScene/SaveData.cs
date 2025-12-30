@@ -26,7 +26,7 @@ public class SaveData
 
     public void RebuildStageProgress()
     {
-        var stages = Resources.LoadAll<StageDataSO>($"Stage/");
+        var stages = Resources.LoadAll<StageDataSO>($"Stage/StageDataSO");
         stageProgress = new StageProgressData(stages);
     }
 

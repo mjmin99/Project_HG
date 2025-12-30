@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -9,6 +10,13 @@ public class GameManager : Singleton<GameManager>
     public StageSaveService stageService;
     public List<CharController> Characters;
 
+    public bool IsBattle { get; set; }
+    public bool IsGameOver { get; set; }
+    public bool IsGameClear { get; set; }
+    public bool IsPaused { get; set; }
+
+    public List<UniTask> tasks = new();
+    
     protected override void Awake()
     {
         base.Awake();

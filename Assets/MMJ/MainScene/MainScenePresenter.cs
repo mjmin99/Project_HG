@@ -27,7 +27,7 @@ public class MainScenePresenter : MonoBehaviour
             var inst = pair.Value;
             var model = Manager.Character.models[inst.id];
             string ownedStr = inst.isOwned ? "보유" : "미보유";
-            Debug.Log($"캐릭터 id={inst.id}, name={model.characterName}, 상태={ownedStr}, 레벨={inst.level}");
+            // Debug.Log($"캐릭터 id={inst.id}, name={model.characterName}, 상태={ownedStr}, 레벨={inst.level}");
         }
 
         // 여기서 PartyUI.Initialize() 같은거 호출하면 됨

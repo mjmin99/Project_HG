@@ -144,7 +144,7 @@ public class SaveManager : Singleton<SaveManager>
 
     private SaveData CreateDefaultSaveData()
     {
-        var stages = Resources.LoadAll<StageDataSO>($"Stage/");
+        var stages = Resources.LoadAll<StageDataSO>($"Stage/StageDataSO");
         SaveData data = new SaveData(stages);
 
         if (Manager.Character.models.Count == 0)

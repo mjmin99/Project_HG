@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
 using Random = UnityEngine.Random;
@@ -84,7 +85,7 @@ public class EnemyManager : MonoBehaviour
         
         if (waveIndex == lastWaveIndex)
         {
-            battleManager.StageClear();
+            battleManager.StageClear().Forget();
             return;
         }
 

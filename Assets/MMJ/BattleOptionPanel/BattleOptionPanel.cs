@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using TMPro;
+using UniRx;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -7,8 +11,10 @@ public class BattleOptionPanel : UIPanel
     [Header("Buttons")]
     [SerializeField] private Button btnClose;
     [SerializeField] private Button btnRetry; 
-    [SerializeField] private Button btnGiveup;
+    [SerializeField] private Button btnGiveUp;
     [SerializeField] private Button btnOption;
+    [SerializeField] private TMP_Text gameOverText;
+    
     protected override void Awake()
     {
         base.Awake();
@@ -18,20 +24,13 @@ public class BattleOptionPanel : UIPanel
             UIManager.Instance.CloseTop();
         });
 
-        btnRetry.onClick.AddListener(() =>
-        {
-            RetryBattle();
-        });
+        btnRetry.OnClickAsObservable().Subscribe(_ => RetryBattle().Forget());
 
-        btnGiveup.onClick.AddListener(() =>
-        {
-            GiveUpBattle();
-        });
+        btnGiveUp.OnClickAsObservable().Subscribe(_ => GiveUpBattle().Forget());
 
-        btnOption.onClick.AddListener(() =>
-        {
-            OpenOption();
-        });
+        btnOption.onClick.AddListener(OpenOption);
+        
+        gameOverText.gameObject.SetActive(Manager.Game.IsGameOver);
     }
 
     private void OpenOption()
@@ -51,25 +50,29 @@ public class BattleOptionPanel : UIPanel
         base.OnClose();
     }
 
-    private void PauseBattle()
-    {
-        Time.timeScale = 0f;
-    }
+    private void PauseBattle() => Time.timeScale = 0f;
 
-    private void ResumeBattle()
-    {
-        Time.timeScale = 1f;
-    }
+    private void ResumeBattle() => Time.timeScale = 1f;
 
-    private void RetryBattle()
+    private async UniTaskVoid RetryBattle()
     {
+        Debug.Log("스테이지 재시작");
         Time.timeScale = 1f;
+        await UniTask.WhenAll(Manager.Game.tasks);
         SceneManager.LoadScene("BattleScene");
+        Manager.Game.IsGameOver = false;
+        Manager.Game.IsGameClear = false;
     }
 
-    private void GiveUpBattle() // 현재 스테이지 포기. 씬전환
+    private async UniTaskVoid GiveUpBattle() // 현재 스테이지 포기. 씬전환
     {
+        Debug.Log("스테이지 포기");
         Time.timeScale = 1f;
+        await UniTask.WhenAll(Manager.Game.tasks);
+        Manager.Game.ClearCharacters();
+        Manager.Game.IsBattle = false;
+        Manager.Game.IsGameOver = false;
+        Manager.Game.IsGameClear = false;
         SceneManager.LoadScene("MainScene");
     }
 }

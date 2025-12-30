@@ -79,7 +79,6 @@ public class SkillPresenter : MonoBehaviour
             int index = i;
             skillButton[i].OnClickAsObservable().Subscribe(x => battleManager.OnClickSkills(skills[index].charId, 0)).AddTo(this);
             skillButton[i].OnClickAsObservable().Subscribe(x => OnClickSkillButton(index)).AddTo(this);
-            Debug.Log($"{i}_{skills[i].skillCount.Value}");
             skills[i].skillCount.Subscribe(x =>
                     SetSkillButtonInteractable(index, x, 
                         battleManager.skillDict[skills[index].charId].isDead.Value))

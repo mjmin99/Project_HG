@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UniRx;
 using UnityEngine;
@@ -132,7 +133,7 @@ public class EnemyController : MonoBehaviour, IAttackable
             : (int)(info.atk * (1 - enemyInfo.defense / 100));
 
         // 해당 데미지를 Toast UI로 표현
-        damageUi.ShowDamageEffect(damage, transform, false).Forget(); // ToAsyncLazy()로 값을 받을 필요없음
+        damageUi.ShowDamageEffect(damage, transform, false).Forget(); // ToAsyncLazy()로 값을 받을 필요없음. Forget()으로 가비지 없앨 수 있음
 
         if (curShield > 0 && damage > 0)
         {
