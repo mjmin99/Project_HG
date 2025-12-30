@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class CharController : MonoBehaviour, IAttackable
 {
+    public int characterId;
     public CharacterStats stats;
-    public AttackType atkType;
     public Animator animator;
     public Rigidbody rb;
     public BoxCollider col;
@@ -17,25 +17,41 @@ public class CharController : MonoBehaviour, IAttackable
     // 해싱
     private const string CONTROLLER_PATH = "Battle/Characters/Controllers/";
     private const string BULLET_PATH = "Battle/Characters/Bullets/";
+    private const string LAZER_PATH = "Battle/Characters/Lazer/";
+    private const string SKILL_PATH = "Skill/";
     
     // 컨트롤러 전용 스탯
-    private float maxHp;
-    private float curHp;
+    public float maxHp;
+    public ReactiveProperty<float> curHp = new();
     public float shield;
     public bool isRewinding;
     
-    public ReactiveProperty<bool> isDead;
+    public ReactiveProperty<bool> isDead = new();
     
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
-    
-    private BulletController bulletPrefab;
+
     private TimeRecorder timeRecorder;
+    public Skill skillPrefab;
+    private Parrying parry;
+    private readonly Stack<Skill> skillPool = new();
+
+    private DamageUI damageUi;
+    private ObjectPool bulletPool;
+    
     private float maxRecordTime;
     private const float HIT_COOLDOWN = 3f;
     private float hitTimer;
+
+    private readonly Vector3 lazerVec = Vector3.up * 0.25f - Vector3.back * 0.05f + Vector3.right * 0.2f;
+    private readonly Vector3 bulletVec = Vector3.up * 0.2f + Vector3.right * 0.1f;
     
-    public void Init(int characterId, CharacterStats charStats, float recordTime)
+    public void Init(int characterID, CharacterStats charStats, float recordTime, DamageUI damageUI)
     {
+        characterId = characterID;
+        gameObject.AddComponent<SpriteRenderer>();
+        
+        damageUi = damageUI;
+        
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         rb.useGravity = false;
         rb.freezeRotation = true;
@@ -45,10 +61,13 @@ public class CharController : MonoBehaviour, IAttackable
         col.center = new Vector3(0f, 0.25f, 0f);
         col.size = new Vector3(0.5f, 0.5f, 0.2f);
         
+        var inst = Manager.Character.instances[characterID];
+        var model = Manager.Character.models[characterID];
+        
         animator = gameObject.GetOrAddComponent<Animator>();
         animator.runtimeAnimatorController 
             = Resources.Load<RuntimeAnimatorController>(
-                CONTROLLER_PATH + characterId);
+                CONTROLLER_PATH + model.characterName);
         maxRecordTime =  recordTime;
         
         timeRecorder = new TimeRecorder(maxRecordTime, Time.fixedDeltaTime);
@@ -57,7 +76,7 @@ public class CharController : MonoBehaviour, IAttackable
         stateDict.Add(CharStateType.Idle, new CharacterIdle(this) );
         stateDict.Add(CharStateType.Run, new CharacterRun(this));
         stateDict.Add(CharStateType.Attack, new CharacterAttack(this));
-        stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
+        // stateDict.Add(CharStateType.Skill, new CharacterSkill(this));
         stateDict.Add(CharStateType.Hit, new CharacterHit(this));
         stateDict.Add(CharStateType.Dead, new CharacterDead(this));
         stateDict.Add(CharStateType.Rewind, new CharacterRewind(this));
@@ -69,19 +88,42 @@ public class CharController : MonoBehaviour, IAttackable
         // 스텟 설정
         stats = charStats;
         maxHp = charStats.hp;
-        curHp = maxHp;
+        curHp.Value = maxHp;
         
-        if (charStats.atkType != AttackType.Melee)
+        // 원거리나 레이저 타입일 경우 오브젝트 풀 생성
+        if (charStats.atkType == AttackType.Ranged)
         {
-            bulletPrefab 
+            var bulletPrefab 
                 = Resources.Load<BulletController>(
-                    BULLET_PATH+characterId);
+                    BULLET_PATH+model.characterName);
+            if (bulletPrefab == null)
+            {
+                bulletPrefab = Resources.Load<BulletController>(BULLET_PATH + "TestBullet");
+            }
+            var go = new GameObject($"BulletPool_{model.characterName}");
+            go.transform.SetParent(transform);
+            bulletPool = go.AddComponent<ObjectPool>();
+            bulletPool.CreatePool(bulletPrefab);
         }
+        else if(charStats.atkType == AttackType.Lazer)
+        {
+            var lazerPrefab 
+                = Resources.Load<LazerController>(
+                    LAZER_PATH+model.characterName);
+            var go = new GameObject($"LazerPool_{model.characterName}");
+            go.transform.SetParent(transform);
+            bulletPool = go.AddComponent<ObjectPool>();
+            bulletPool.CreatePool(lazerPrefab);
+        }
+
+        // 스킬 정보 가져오기
+        skillPrefab = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
     }
     
     private void Update()
     {
         stateMachine.Update();
+        
         if (hitTimer > 0f) hitTimer += Time.deltaTime;
     }
     
@@ -90,7 +132,7 @@ public class CharController : MonoBehaviour, IAttackable
         stateMachine.FixedUpdate();
         
         if (!isRewinding) 
-            timeRecorder.Record(transform.position, curHp, shield);
+            timeRecorder.Record(transform.position, curHp.Value, shield);
     }
     
     private void LateUpdate()
@@ -118,47 +160,111 @@ public class CharController : MonoBehaviour, IAttackable
     {
         if (hitInfo.collider == null) return;
         
-        switch (atkType)
+        switch (stats.atkType)
         {
             case AttackType.Melee:
                 var info = new AttackInfo(gameObject.layer, stats.attack);
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 break;
             case AttackType.Ranged:
-                // 힐러일 경우 전체 힐
+                // TODO: 힐러일 경우 전체 힐. 이펙트 재생 필요함
                 if (stats.role == CharacterRole.Healer)
                 {
                     foreach (var c in Manager.Game.Characters)
                     {
                         c.Heal(stats.magicAttack);
                     }
-                    break;
+                    // break;
                 }
-                var bullet = Instantiate(bulletPrefab, gameObject.transform);
-                bullet.Init(gameObject.layer, stats.magicAttack);
-                bullet.FireToPosition(hitInfo.transform.position);
+                var bullet = bulletPool.GetObject() as BulletController;
+                if (bullet != null)
+                {
+                    bullet.transform.position = transform.position + bulletVec;
+                    
+                    if (!bullet.isInit) bullet.Init(gameObject.layer, stats.attack);
+                    bullet.FireToPosition(hitInfo.transform.position);
+                }
+
                 break;
             case AttackType.Lazer:
                 // OnTriggerEnter로 알아서 처리됨
-                bullet = Instantiate(bulletPrefab, gameObject.transform);
-                bullet.Init(gameObject.layer,stats.magicAttack);
+                var lazer = bulletPool.GetObject() as LazerController;
+                if (lazer != null)
+                {
+                    lazer.transform.position = transform.position + lazerVec;
+
+                    if (!lazer.isInit) lazer.Init(gameObject.layer, stats.magicAttack);
+                    
+                    lazer.InitiateLazer();
+                }
                 break;
             default:
                 Debug.Log("어택 타입 안정해짐");
                 break;
         }
     }
-
-    public void UseSkill()
+    // 스킬 아이콘 클릭으로 사용. 사용에 성공 시 true 반환
+    // 배틀 매니저에서, isGameOver일 경우 조작 막아야 함
+    public bool UseSkill()
     {
+        Skill newSkill;
+        if (skillPool.Count <= 0)
+        {
+            newSkill = Instantiate(skillPrefab,transform);
+            newSkill.Init(skillPool);
+        }
+        else
+        {
+            newSkill =  skillPool.Pop();
+        }
         
+        switch (skillPrefab.skillType)
+        {
+            case SkillType.StrongAttack:
+                newSkill.transform.position = transform.position + Vector3.right * 0.25f;
+                if (hitInfo.collider == null) return false;
+                var info = new AttackInfo(gameObject.layer, stats.attack * 5f);
+                hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
+                newSkill.SkillEffect();
+                break;
+            case SkillType.Parrying:
+                parry = newSkill as Parrying;
+                if (parry != null)
+                {
+                    parry.transform.position = transform.position + Vector3.right * 0.25f;
+                    parry.SkillEffect();
+                }
+                break;
+            case SkillType.AllHeal:
+                newSkill.SkillEffect();
+                newSkill.transform.position = transform.position;
+                foreach (var c in Manager.Game.Characters)
+                {
+                    c.Heal(stats.magicAttack);
+                }
+                break;
+        }
+
+        return true;
     }
+    
     
     public void TakeHit(AttackInfo attackInfo)
     {
         if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
+        if (parry != null)
+        {
+            if (parry.isParrying)
+            {
+                parry.SuccessParry();
+                hitInfo.collider.GetComponent<EnemyController>().GetStun(parry.stunTime);
+                return;
+            }
+        }
         int damage = (int)(attackInfo.atk * (1 - stats.defense / 100));
+        
         // 해당 데미지를 Toast UI로 표현
+        damageUi.ShowDamageEffect(damage, transform, true).Forget();
         
         if (shield > 0 && damage > 0)
         {
@@ -168,11 +274,11 @@ public class CharController : MonoBehaviour, IAttackable
         }
         if (damage <= 0) return;
         
-        curHp -= damage;
+        curHp.Value -= damage;
         
-        if (curHp <= 0)
+        if (curHp.Value <= 0)
         {
-            curHp = 0;
+            curHp.Value = 0;
             stateMachine.ChangeState(
                 stateDict[CharStateType.Dead]);
         }
@@ -187,17 +293,19 @@ public class CharController : MonoBehaviour, IAttackable
     
     public void Heal(float amount)
     {
-        int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp);
+        if (isDead.Value) return;
+        
+        int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp.Value);
         if (healAmount > 0)
         {
-            curHp += healAmount;
+            curHp.Value += healAmount;
             // TODO : 힐 이펙트 및 Toast UI 생성
         }
     }
     
     public void SetHp(float value)
     {
-        curHp = value;
+        curHp.Value = value;
     }
     
     public void SetShield(float value)

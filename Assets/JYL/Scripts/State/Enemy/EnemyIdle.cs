@@ -20,9 +20,4 @@ public class EnemyIdle : EnemyState
             controller.ChangeState(CharStateType.Attack);
         }
     }
-    
-    public override void Exit()
-    {
-        
-    }
 }

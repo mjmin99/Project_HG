@@ -1,4 +1,5 @@
-﻿using Firebase.Database;
+﻿using System;
+using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
 using System.Collections.Generic;
@@ -10,15 +11,29 @@ public class SaveManager : Singleton<SaveManager>
 
     private DatabaseReference db;
 
+    public static event System.Action<CharacterInstance> OnCharacterAcquired;
+
     // 유저 세이브 시 사용되는 함수
     public void SaveCurrentUser()
     {
+        Debug.Log("[SaveManager] SaveCurrentUser START");
+
+        if (CurrentData == null)
+        {
+            Debug.LogError("[SaveManager] CurrentData is NULL");
+            return;
+        }
+
         var user = FirebaseManager.Auth.CurrentUser;
-        if (user != null)
-            SaveToFirebase(user.UserId);
-        else
-            Debug.LogWarning("[SaveManager] 로그인된 유저 없음!");
+        if (user == null)
+        {
+            Debug.LogWarning("[SaveManager] 로그인된 유저 없음 → 저장 취소");
+            return;
+        }
+
+        SaveToFirebase(user.UserId);
     }
+
 
     protected override void Awake()
     {
@@ -143,15 +158,22 @@ public class SaveManager : Singleton<SaveManager>
         {
             var model = pair.Value;
 
-            CharacterInstance inst = new CharacterInstance
+            var inst = new CharacterInstance
             {
                 id = model.id,
                 isOwned = (model.id == 0),
                 level = 1,
                 exp = 0,
-                shard = 0
+                shard = 0,
+                skillType = model.role switch
+                {
+                    CharacterRole.Dealer => SkillType.StrongAttack,
+                    CharacterRole.Tank => SkillType.Parrying,
+                    CharacterRole.Healer => SkillType.AllHeal,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
             };
-
+            
             data.characters.Add(inst);
         }
 
@@ -181,5 +203,9 @@ public class SaveManager : Singleton<SaveManager>
             CurrentData.characters.Add(inst);
 
         Debug.Log($"[SaveManager] ID 순으로 {CurrentData.characters.Count}개 캐릭터 동기화");
+    }
+    public static void RaiseCharacterAcquired(CharacterInstance inst)
+    {
+        OnCharacterAcquired?.Invoke(inst);
     }
 }

@@ -38,10 +38,10 @@ public class AbilityRunner
             ctx.attackIndex = attackCounter;
         }
 
-        foreach (var a in Set.EventAbilities)
-        {
-            a.OnEvent(ref ctx);
-        }
+        // foreach (var a in Set.EventAbilities)
+        // {
+        //     a.OnEvent(ref ctx);
+        // }
     }
 
     public void ResetAttackCounter() => attackCounter = 0;

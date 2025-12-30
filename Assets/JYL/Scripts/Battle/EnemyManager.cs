@@ -9,6 +9,8 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private EnemyDatabase enemyDatabase;
     [SerializeField] private BattleManager battleManager;
     [SerializeField] private Transform enemiesParent;
+    [SerializeField] public DamageUI enemyDamageUI;
+    [SerializeField] public DropSkill skillDropPrefab;
 
     private StageDataSO stageData;
 
@@ -17,14 +19,18 @@ public class EnemyManager : MonoBehaviour
     private List<StageSpawn> curWaveSpawns;
     private List<EnemyController> curWaveEnemies;
     private Camera cam;
+
+    private int enemyLayer;
     
     public void Init()
     {
+        enemyLayer = LayerMask.NameToLayer("Enemy");
+        cam = Camera.main;
         stageData = Manager.Game.GetStageData();
         curWaveSpawns = stageData.waves[waveIndex].spawns;
         lastWaveIndex = stageData.waves.Count - 1;
+        enemyDamageUI.Init();
         curWaveEnemies = CreateEnemy();
-        cam = Camera.main;
     }
 
     private List<EnemyController> CreateEnemy() 
@@ -35,21 +41,40 @@ public class EnemyManager : MonoBehaviour
         {
             GameObject go = new GameObject($"{e.id}");
             go.transform.SetParent(enemiesParent);
-            // TODO: 적 위치 잡아주기
             float rndX = Random.Range(0, 2f);
             var camPos = cam.transform.position;
-            go.transform.position = new Vector3(camPos.x + 2f + rndX, 0, 0);
+            go.transform.position = new Vector3(camPos.x + 6f + rndX, 0, 0);
+            go.layer = enemyLayer;
+            
             var enemy = go.AddComponent<EnemyController>();
+            
             var info = enemyDatabase.Get(e.id);
-            enemy.Init(info);
-            enemy.isDead.Subscribe(x=>EnemySubscribe(x,enemy)).AddTo(enemy);
+            if (info.isBoss)
+            {
+                enemy.Init(info, enemyDamageUI, battleManager.uiCanvas);
+            }
+            else
+            {
+                enemy.Init(info, enemyDamageUI);
+            }
+            
+            enemy.isDead.Subscribe(x=>EnemyDeadEvent(x,enemy)).AddTo(enemy);
+            if (info.isBoss)
+            { 
+                enemy.curHp.Subscribe(x => DropSkillBoss(enemy, x)).AddTo(enemy);
+            }
+            else
+            {
+                enemy.isDead.Subscribe(x => DropSkillEnemy(enemy, x)).AddTo(enemy);
+            }
+            
             list.Add(enemy);
         }
         
         return list;
     }
 
-    private void EnemySubscribe(bool isDead, EnemyController controller)
+    private void EnemyDeadEvent(bool isDead, EnemyController controller)
     {
         if (!isDead) return;
         
@@ -66,5 +91,63 @@ public class EnemyManager : MonoBehaviour
         waveIndex++;
         curWaveSpawns = stageData.waves[waveIndex].spawns;
         curWaveEnemies = CreateEnemy();
+    }
+
+    private void DropSkillEnemy(EnemyController controller, bool isDead) // 일반 에너미 죽을 시 스킬 드롭
+    {
+        if (!isDead) return;
+        // 랜덤 확률 적용
+        int rnd = Random.Range(0, 100);
+        if (rnd > 50) // 50퍼 확률로
+        {
+            int index = Random.Range(0, battleManager.skills.Count - 1);
+            var skill = battleManager.skills[index];
+            var go = Instantiate(skillDropPrefab, battleManager.uiCanvas);
+            go.Init(index, skill.skillIcon, controller.transform, battleManager);
+            go.transform.SetParent(battleManager.uiCanvas);
+        }
+    }
+
+    private void DropSkillBoss(EnemyController controller, float curHp)
+    {
+        float hpPercent = controller.GetHpPercent();
+        
+        int skillIndex = 0;
+        
+        switch (hpPercent)
+        {
+            case < 0.2f:
+                skillIndex = 3;
+                break;
+            case < 0.4f:
+                skillIndex = 2;
+                break;
+            case < 0.6f:
+                skillIndex = 1;
+                break;
+            case < 0.8f:
+                skillIndex = 0;
+                break;
+            default:
+                return;
+        }
+        
+        for (int i = 0; i < skillIndex; i++)
+        {
+            if (!controller.skillDropHp[i])
+            {
+                controller.skillDropHp[i] = true;
+            }
+        }
+
+        if (controller.skillDropHp[skillIndex]) return;
+        Debug.Log($"보스 스킬 드랍 시작{hpPercent}");
+        controller.skillDropHp[skillIndex] = true;
+
+        int rndIndex = Random.Range(0, battleManager.skills.Count - 1);
+        var skill = battleManager.skills[rndIndex];
+        var go = Instantiate(skillDropPrefab, battleManager.uiCanvas);
+        go.Init(rndIndex, skill.skillIcon, controller.transform, battleManager);
+        go.transform.SetParent(battleManager.uiCanvas);
     }
 }

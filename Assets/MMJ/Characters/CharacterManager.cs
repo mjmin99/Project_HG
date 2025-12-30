@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class CharacterManager : Singleton<CharacterManager>
@@ -7,11 +8,34 @@ public class CharacterManager : Singleton<CharacterManager>
     public Dictionary<int, CharacterInstance> instances = new();
 
 
+    // public void LoadModels() // 테스트용 함수. 테스트 끝난 후 지우기
+    // {
+    //     var characterModels = CharacterCSVLoader.Load();
+    //     LoadModels(characterModels);
+    //     for (int i = 0; i < characterModels.Count; i++)
+    //     {
+    //         instances[i] = new CharacterInstance();
+    //         switch(characterModels[i].role)
+    //         {
+    //             case CharacterRole.Dealer:
+    //                 instances[i].skillType = SkillType.StrongAttack;
+    //                 break;
+    //             case CharacterRole.Tank:
+    //                 instances[i].skillType = SkillType.Parrying;
+    //                 break;
+    //             case CharacterRole.Healer:
+    //                 instances[i].skillType = SkillType.AllHeal;
+    //                 break;
+    //         }
+    //     }
+    // }
     public void LoadModels(List<CharacterModel> list)
     {
         models.Clear();
         foreach (var m in list)
+        {
             models[m.id] = m;
+        }
 
         Debug.Log($"[CharacterManager] 모델 {list.Count}개 로드됨");
     }
@@ -81,6 +105,7 @@ public class CharacterManager : Singleton<CharacterManager>
             };
 
             instances[id] = inst;
+            SaveManager.RaiseCharacterAcquired(inst);
             Debug.Log($"[CharacterManager] 신규 캐릭터 획득! ID: {id}");
             return;
         }
@@ -92,7 +117,7 @@ public class CharacterManager : Singleton<CharacterManager>
             inst.level = 1;
             inst.exp = 0;
             inst.shard = 0;
-
+            SaveManager.RaiseCharacterAcquired(inst);
             Debug.Log($"[CharacterManager] 캐릭터 획득! ID: {id}");
         }
         else
@@ -105,7 +130,19 @@ public class CharacterManager : Singleton<CharacterManager>
 
     public int RequiredExp(int level)
     {
-        return level * 5;
+        // 레벨당 필요한 강화 횟수
+        int enhanceCount = level * 3;
+
+        // 강화 1회당 EXP (골드와 1:1)
+        int enhanceExp = GetEnhanceCostByLevel(level);
+
+        return enhanceCount * enhanceExp;
+    }
+
+    public int GetEnhanceCostByLevel(int level)
+    {
+        const int BASE_COST = 5;
+        return BASE_COST + level * 5;
     }
 
     // 장착과 해제용으로 만들었는데 더이상 안쓰게 됨
@@ -162,14 +199,13 @@ public class CharacterManager : Singleton<CharacterManager>
         int cost = 10 + lockedCount * 10;
 
         // 만약 골드로 하고 싶다면 아래
-        if (!Manager.Save.TrySpendGold(cost))
+        // if (!Manager.Save.TrySpendGold(cost))
+        //   return false;
+
+        if (inst.shard < cost)
             return false;
 
-        // 만약 캐릭터 중복 뽑기 재화로 돌리고 싶다면 아래-> ui는 뭐 상관 없음 ㅋ 호환 가능
-        // if (inst.shard < cost)
-        //    return false;
-        //
-        // inst.shard -= cost;
+        inst.shard -= cost;
 
         var pool = AbilityDatabase.GetPoolFor(model);
 
@@ -213,14 +249,31 @@ public class CharacterManager : Singleton<CharacterManager>
 
     public bool TryEnhanceCharacter(int characterId)
     {
-        const int COST_GOLD = 100;
-        const int EXP_GAIN = 100;
-
-        if (!Manager.Save.TrySpendGold(COST_GOLD))
+        if (!instances.TryGetValue(characterId, out var inst))
             return false;
 
-        AddExp(characterId, EXP_GAIN);
+        int cost = GetEnhanceCost(characterId);
+
+        // 골드 소모
+        if (!Manager.Save.TrySpendGold(cost))
+            return false;
+
+        // 경험치 = 소모 골드 (1:1)
+        AddExp(characterId, cost);
+
         Manager.Save.SaveCurrentUser();
         return true;
+    }
+
+    public int GetEnhanceCost(int characterId)
+    {
+        if (!instances.TryGetValue(characterId, out var inst))
+            return int.MaxValue;
+
+        // 기본 비용
+        const int BASE_COST = 5;
+
+        // 레벨 비례 증가
+        return BASE_COST + inst.level * 5;
     }
 }

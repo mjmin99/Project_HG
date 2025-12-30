@@ -18,10 +18,16 @@ public class MapPresenter : MonoBehaviour
     private int playerLayer;
 
     private readonly Queue<Transform> mapQueue = new();
+    private readonly string testPrefabPath = "Test/TestTerrain";
 
     public void Init()
     {
         var map = Resources.Load<GameObject>(Manager.Game.GetStageData().mapPrefabPath);
+        if (map == null)
+        {
+            Debug.LogWarning("맵 프리팹 경로 설정 안되어 있음");
+            map = Resources.Load<GameObject>(testPrefabPath);
+        }
         CreateMap(map);
         playerLayer = LayerMask.NameToLayer("Player");
     }
