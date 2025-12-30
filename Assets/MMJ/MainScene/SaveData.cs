@@ -30,4 +30,19 @@ public class SaveData
         stageProgress = new StageProgressData(stages);
     }
 
+
+    // ---------------------------------------
+    // 만드는 중
+    public List<DialogKey> playedDialogs = new();
+
+    public bool HasPlayedDialog(DialogKey key)
+    {
+        return playedDialogs.Contains(key);
+    }
+
+    public void MarkDialogPlayed(DialogKey key)
+    {
+        if (!playedDialogs.Contains(key))
+            playedDialogs.Add(key);
+    }
 }
