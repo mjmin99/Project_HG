@@ -1,9 +1,12 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UniRx;
 using Cysharp.Threading.Tasks;
-using UnityEditor.UIElements;
 using UnityEngine;
 using Random = UnityEngine.Random;
+
+#if UNITY_EDITOR
+using UnityEditor.UIElements;
+#endif
 
 public class CharController : MonoBehaviour, IAttackable
 {

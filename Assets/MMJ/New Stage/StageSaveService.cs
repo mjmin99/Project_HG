@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor.Rendering;
+#endif
 
 public class StageSaveService
 {

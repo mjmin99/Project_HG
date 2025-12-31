@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Build.Pipeline.Utilities;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor.Build.Pipeline.Utilities;
+#endif
 
 [CreateAssetMenu(menuName = "Enemy/Enemy Database", fileName = "EnemyDatabase")]
 public class EnemyDatabase : ScriptableObject
