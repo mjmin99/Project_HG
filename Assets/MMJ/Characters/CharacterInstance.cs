@@ -26,13 +26,13 @@ public class CharacterInstance
 
         stats.atkType = model.attackType;
         stats.role = model.role;
-        stats.hp = model.baseHP + level * 10;
-        stats.attack = model.baseAttack + level * 2;
-        stats.magicAttack = model.baseMagicAttack + level * 3;
-        stats.defense = model.baseDefense + level;
+        stats.hp = model.baseHP + level * 22;
+        stats.attack = model.baseAttack + level * 4;
+        stats.magicAttack = model.baseMagicAttack + level * 5;
+        stats.defense = model.baseDefense + level * 1.2f;
 
         stats.attackSpeed = model.baseAttackSpeed;
-        stats.critRate = model.baseCritRate;
+        stats.critRate = model.baseCritRate + level * 0.1f;
         stats.critDamage = model.baseCritDamage;
 
         stats.attackRange = model.attackRange;
@@ -171,9 +171,9 @@ public class CharacterInstance
                 case AbilityIds.AttackRangeUp:
                     stats.attackRange += AbilityTiers.Value(
                         ability.rarity,
-                        0.5f,
-                        1.0f,
-                        1.5f
+                        0.2f,
+                        0.4f,
+                        0.6f
                     );
                     break;
 
@@ -189,9 +189,9 @@ public class CharacterInstance
                 case AbilityIds.CritDamageUp:
                     stats.critDamage += AbilityTiers.Value(
                         ability.rarity,
-                        0.15f,
-                        0.30f,
-                        0.50f
+                        0.10f,
+                        0.20f,
+                        0.30f
                     );
                     break;
 

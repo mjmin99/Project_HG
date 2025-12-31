@@ -14,52 +14,152 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDatabase
   enemies:
   - id: 1000
-    enemyName: slime
-    maxHP: 2000
-    attack: 10
-    magicAttack: 1
-    defense: 3
-    attackSpeed: 1.2
-    attackRange: 3
+    enemyName: sprialmystic
+    maxHP: 80
+    attack: 8
+    magicAttack: 8
+    defense: 2
+    attackSpeed: 0.9
+    attackRange: 0.35
     attackType: 0
     isBoss: 0
   - id: 1001
-    enemyName: goblin
-    maxHP: 200
-    attack: 50
-    magicAttack: 2
+    enemyName: firevamp
+    maxHP: 65
+    attack: 7
+    magicAttack: 7
+    defense: 1
+    attackSpeed: 1.1
+    attackRange: 0.3
+    attackType: 0
+    isBoss: 0
+  - id: 2000
+    enemyName: diamondgolem
+    maxHP: 120
+    attack: 11
+    magicAttack: 11
+    defense: 3
+    attackSpeed: 1
+    attackRange: 0.33
+    attackType: 0
+    isBoss: 0
+  - id: 2001
+    enemyName: demonlocust
+    maxHP: 105
+    attack: 12
+    magicAttack: 12
+    defense: 2
+    attackSpeed: 1.15
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 3000
+    enemyName: wingedguard
+    maxHP: 170
+    attack: 16
+    magicAttack: 16
+    defense: 4
+    attackSpeed: 1
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 3001
+    enemyName: shieldguard
+    maxHP: 210
+    attack: 14
+    magicAttack: 14
     defense: 6
-    attackSpeed: 1.5
-    attackRange: 3
+    attackSpeed: 0.9
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 4000
+    enemyName: shieldguard
+    maxHP: 260
+    attack: 20
+    magicAttack: 20
+    defense: 6
+    attackSpeed: 0.85
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 4001
+    enemyName: butterdog
+    maxHP: 320
+    attack: 18
+    magicAttack: 18
+    defense: 8
+    attackSpeed: 0.8
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 5000
+    enemyName: spinetiger
+    maxHP: 380
+    attack: 26
+    magicAttack: 26
+    defense: 7
+    attackSpeed: 0.9
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 5001
+    enemyName: lynx
+    maxHP: 520
+    attack: 22
+    magicAttack: 22
+    defense: 10
+    attackSpeed: 0.75
+    attackRange: 0.35
+    attackType: 0
+    isBoss: 0
+  - id: 1111
+    enemyName: firestarter
+    maxHP: 1200
+    attack: 20
+    magicAttack: 20
+    defense: 6
+    attackSpeed: 0.8
+    attackRange: 0.4
     attackType: 0
     isBoss: 1
-  - id: 1002
-    enemyName: jinyoung
-    maxHP: 100
-    attack: 3
-    magicAttack: 3
-    defense: 2
-    attackSpeed: 1.3
-    attackRange: 3
+  - id: 2222
+    enemyName: snakebot
+    maxHP: 2200
+    attack: 30
+    magicAttack: 30
+    defense: 8
+    attackSpeed: 0.9
+    attackRange: 0.45
     attackType: 0
-    isBoss: 0
-  - id: 1003
-    enemyName: guyjin
-    maxHP: 100
-    attack: 4
-    magicAttack: 4
-    defense: 2
-    attackSpeed: 1.2
-    attackRange: 3
-    attackType: 1
-    isBoss: 0
-  - id: 1004
-    enemyName: manjun
-    maxHP: 100
-    attack: 5
-    magicAttack: 5
-    defense: 6
-    attackSpeed: 1
-    attackRange: 3
-    attackType: 1
-    isBoss: 0
+    isBoss: 1
+  - id: 3333
+    enemyName: neon_vail
+    maxHP: 3600
+    attack: 42
+    magicAttack: 42
+    defense: 10
+    attackSpeed: 0.85
+    attackRange: 0.85
+    attackType: 0
+    isBoss: 1
+  - id: 4444
+    enemyName: driller
+    maxHP: 5200
+    attack: 56
+    magicAttack: 56
+    defense: 12
+    attackSpeed: 0.8
+    attackRange: 0.8
+    attackType: 0
+    isBoss: 1
+  - id: 5555
+    enemyName: bonereaper
+    maxHP: 7200
+    attack: 72
+    magicAttack: 72
+    defense: 14
+    attackSpeed: 0.75
+    attackRange: 0.8
+    attackType: 0
+    isBoss: 1
