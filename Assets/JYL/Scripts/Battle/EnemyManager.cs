@@ -52,14 +52,16 @@ public class EnemyManager : MonoBehaviour
             var info = enemyDatabase.Get(e.id);
             if (info.isBoss)
             {
-                enemy.Init(info, enemyDamageUI, battleManager.uiCanvas);
+                enemy.Init(info, enemyDamageUI, battleManager.uiCanvas); 
+                CheckBossDialog().Forget(); // 다이얼로그 재생을 위한 확인
             }
             else
             {
                 enemy.Init(info, enemyDamageUI);
             }
             
-            enemy.isDead.Subscribe(x=>EnemyDeadEvent(x,enemy)).AddTo(enemy);
+            enemy.isDead.Subscribe(x=>EnemyDeadEvent(x,enemy).Forget()).AddTo(enemy);
+            
             if (info.isBoss)
             { 
                 enemy.curHp.Subscribe(x => DropSkillBoss(enemy, x)).AddTo(enemy);
@@ -75,9 +77,71 @@ public class EnemyManager : MonoBehaviour
         return list;
     }
 
-    private void EnemyDeadEvent(bool isDead, EnemyController controller)
+    private async UniTask CheckBossDialog()
+    {
+        DialogCondition condition;
+        switch(stageData.world)
+        {
+            case 1:
+                condition = DialogCondition.WorldBoss1;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene3);
+                break;
+            case 2:
+                condition = DialogCondition.WorldBoss2;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene6);
+                break;
+            case 3:
+                condition = DialogCondition.WorldBoss3;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene8);
+                break;
+            case 4:
+                condition = DialogCondition.WorldBoss4;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene10);
+                break;
+            case 5:
+                condition = DialogCondition.WorldBoss5;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene12);
+                break;
+            default:
+                Debug.LogWarning($"다이얼로그 컨디션이 설정되지 않은 보스임!! : 월드 {stageData.world}");
+                return;
+        }
+        Manager.Dialog.MarkDialogCondition(condition);
+    }
+
+    private async UniTask CheckBossDeadDialog()
+    {
+        DialogCondition condition;
+        switch(stageData.world)
+        {
+            case 1:
+                condition = DialogCondition.WorldBoss1Down;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene4);
+                break;
+            case 5:
+                condition = DialogCondition.WorldBoss5Down;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene13);
+                break;
+            default:
+                return;
+        }
+        Manager.Dialog.MarkDialogCondition(condition);
+    }
+
+    private async UniTask EnemyDeadEvent(bool isDead, EnemyController controller)
     {
         if (!isDead) return;
+        if (controller.enemyInfo.isBoss)
+        {
+            await CheckBossDeadDialog();
+        }
         
         curWaveEnemies.Remove(controller);
         

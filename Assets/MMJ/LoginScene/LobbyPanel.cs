@@ -39,16 +39,6 @@ public class LobbyPanel : MonoBehaviour
         userIDContent.text = user.UserId;
     }
 
-    private async UniTaskVoid CheckFirstRun()
-    {
-        if (!Manager.Dialog.CheckDialogCondition(DialogCondition.IsFirstRun))
-        {
-            Debug.Log($"다이얼로그 재생 시작함{DialogCondition.IsFirstRun}");
-            await Manager.Dialog.StartDialog(DialogKey.Prologue);
-            Manager.Dialog.MarkDialogCondition(DialogCondition.IsFirstRun);
-        }
-    }
-
     private void Logout()
     {
         FirebaseManager.Auth.SignOut();
@@ -187,6 +177,5 @@ public class LobbyPanel : MonoBehaviour
         SceneChanger.Instance.LoadScene("MainScene");
         // 5단계: 스테이지 세이브 서비스 초기화
         Manager.Game.StageServiceInit();
-        _ = CheckFirstRun();
     }
 }

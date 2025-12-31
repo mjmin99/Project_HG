@@ -73,6 +73,7 @@ public class DialogManager : Singleton<DialogManager>
         foreach (DialogLine line in dialog.dialogContents)
         {
             await ProcessDialogLine(line); // 한 줄 처리
+            await UniTask.Yield(PlayerLoopTiming.Update);
         }
 
         await EndDialog();
@@ -86,9 +87,6 @@ public class DialogManager : Singleton<DialogManager>
 
     public bool CheckDialogCondition(DialogCondition condition)
     {
-        Debug.Log($"체크 시작{condition}");
-        Debug.Log($"세이브 데이터 체크{Manager.Save.CurrentData != null}");
-        Debug.Log($"세이브 데이터의 dialogRecord체크{Manager.Save.CurrentData.dialogRecord}");
         return Manager.Save.CurrentData.dialogRecord.CheckDialogCondition(condition);
     }
 
@@ -104,8 +102,10 @@ public class DialogManager : Singleton<DialogManager>
     {
         // 대사의 종류에 따른 처리
         await TaskDialogLine(line);
+        await UniTask.Yield(PlayerLoopTiming.Update);
         
         await TypeText(line.dialogContent);
+        await UniTask.Yield(PlayerLoopTiming.Update);
     }
 
     // 글자 출력 함수

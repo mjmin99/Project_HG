@@ -21,7 +21,6 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         stageService = new StageSaveService();
-
     }
 
     public void StageServiceInit()

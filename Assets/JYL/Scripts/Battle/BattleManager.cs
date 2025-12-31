@@ -106,6 +106,47 @@ public class BattleManager : MonoBehaviour
         characterHpPresenter.Init();
         
         stageClearPanel.gameObject.SetActive(false);
+        DialogCheck().Forget();
+    }
+
+    private async UniTask DialogCheck()
+    {
+        if (stageData.stage != 1) return;
+        
+        DialogCondition condition;
+        
+        switch(stageData.world)
+        {
+            case 1:
+                condition = DialogCondition.EnterW1S1;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene2);
+                break;
+            case 2:
+                condition = DialogCondition.EnterW2S1;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene5);
+                break;
+            case 3:
+                condition = DialogCondition.EnterW3S1;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene7);
+                break;
+            case 4:
+                condition = DialogCondition.EnterW4S1;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene9);
+                break;
+            case 5:
+                condition = DialogCondition.EnterW5S1;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene11);
+                break;
+            default:
+                Debug.LogWarning("다이얼로그가 설정되지 않은 월드임");
+                return;
+        }
+        Manager.Dialog.MarkDialogCondition(condition);
     }
     
     public async UniTask StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장

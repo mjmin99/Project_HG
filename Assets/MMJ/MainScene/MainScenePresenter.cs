@@ -19,6 +19,7 @@ public class MainScenePresenter : MonoBehaviour
 
     private void Start()
     {
+        _ = CheckFirstBase();
         UpdateGoldUI();
 
         Debug.Log("<color=lime>MainScene 시작</color>");
@@ -33,11 +34,16 @@ public class MainScenePresenter : MonoBehaviour
         }
 
         // 여기서 PartyUI.Initialize() 같은거 호출하면 됨
-        _ = CheckFirstBase();
     }
 
+    // 게임 첫 시작 시 재생하는 다이얼로그
     private async UniTask CheckFirstBase()
     {
+        if (!Manager.Dialog.CheckDialogCondition(DialogCondition.IsFirstRun))
+        {
+            await Manager.Dialog.StartDialog(DialogKey.Prologue);
+            Manager.Dialog.MarkDialogCondition(DialogCondition.IsFirstRun);
+        }
         if (!Manager.Dialog.CheckDialogCondition(DialogCondition.IsFirstBase))
         {
             await Manager.Dialog.StartDialog(DialogKey.Scene1);
