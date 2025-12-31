@@ -60,7 +60,7 @@ public class EnemyManager : MonoBehaviour
                 enemy.Init(info, enemyDamageUI);
             }
             
-            enemy.isDead.Subscribe(x=>EnemyDeadEvent(x,enemy).Forget()).AddTo(enemy);
+            enemy.isDead.Subscribe(x=>EnemyDeadEvent(x,enemy)).AddTo(enemy);
             
             if (info.isBoss)
             { 
@@ -114,34 +114,9 @@ public class EnemyManager : MonoBehaviour
         Manager.Dialog.MarkDialogCondition(condition);
     }
 
-    private async UniTask CheckBossDeadDialog()
-    {
-        DialogCondition condition;
-        switch(stageData.world)
-        {
-            case 1:
-                condition = DialogCondition.WorldBoss1Down;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene4);
-                break;
-            case 5:
-                condition = DialogCondition.WorldBoss5Down;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene13);
-                break;
-            default:
-                return;
-        }
-        Manager.Dialog.MarkDialogCondition(condition);
-    }
-
-    private async UniTask EnemyDeadEvent(bool isDead, EnemyController controller)
+    private void EnemyDeadEvent(bool isDead, EnemyController controller)
     {
         if (!isDead) return;
-        if (controller.enemyInfo.isBoss)
-        {
-            await CheckBossDeadDialog();
-        }
         
         curWaveEnemies.Remove(controller);
         

@@ -54,6 +54,27 @@ public class StageClearPanel : MonoBehaviour
         await UniTask.WhenAll(Manager.Game.tasks);
         
         DOTween.KillAll();
-        SceneManager.LoadScene("MainScene");
+        await SceneManager.LoadSceneAsync("MainScene");
+        await CheckBossDeadDialog();
+    }
+    private static async UniTask CheckBossDeadDialog()
+    {
+        DialogCondition condition;
+        switch(Manager.Game.GetStageData().world)
+        {
+            case 1:
+                condition = DialogCondition.WorldBoss1Down;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene4);
+                break;
+            case 5:
+                condition = DialogCondition.WorldBoss5Down;
+                Manager.Dialog.CheckDialogCondition(condition);
+                await Manager.Dialog.StartDialog(DialogKey.Scene13);
+                break;
+            default:
+                return;
+        }
+        Manager.Dialog.MarkDialogCondition(condition);
     }
 }
