@@ -21,11 +21,22 @@ MonoBehaviour:
   waves:
   - waitBeforeWave: 2
     spawns:
-    - id: 0
+    - id: 5001
       count: 1
       spawnInterval: 1
   - waitBeforeWave: 2
     spawns:
-    - id: 0
-      count: 1
-      spawnInterval: 1
+    - id: 5000
+      count: 2
+      spawnInterval: 2
+    - id: 5000
+      count: 2
+      spawnInterval: 2
+  - waitBeforeWave: 2
+    spawns:
+    - id: 4000
+      count: 2
+      spawnInterval: 2
+    - id: 4000
+      count: 2
+      spawnInterval: 2
