@@ -11,7 +11,7 @@ public class SaveManager : Singleton<SaveManager>
 
     private DatabaseReference db;
 
-    public static event System.Action<CharacterInstance> OnCharacterAcquired;
+    public static event Action<CharacterInstance> OnCharacterAcquired;
 
     // 유저 세이브 시 사용되는 함수
     public void SaveCurrentUser()
@@ -41,12 +41,12 @@ public class SaveManager : Singleton<SaveManager>
         db = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public void InitForUser(string userId, System.Action onComplete)
+    public void InitForUser(string userId, Action onComplete)
     {
         LoadFromFirebase(userId, onComplete);
     }
 
-    private void LoadFromFirebase(string userId, System.Action onComplete)
+    private void LoadFromFirebase(string userId, Action onComplete)
     {
         Debug.Log($"[SaveManager] Firebase 로드 시작: users/{userId}/saveData");
 

@@ -229,6 +229,11 @@ public class AudioManager : Singleton<AudioManager>
         voiceSource.Play();
         
     }
+
+    public void StopVoice()
+    {
+        voiceSource.Stop();
+    }
     
     // 믹서 볼륨 조절
     public void SetMixerVolume(string key, float value)

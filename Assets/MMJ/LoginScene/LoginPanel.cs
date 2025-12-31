@@ -1,6 +1,8 @@
-﻿using Firebase.Auth;
+﻿using Cysharp.Threading.Tasks;
+using Firebase.Auth;
 using Firebase.Extensions;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +24,7 @@ public class LoginPanel : MonoBehaviour
     private void Awake()
     {
         signUpButton.onClick.AddListener(SignUp);
-        loginButton.onClick.AddListener(Login);
+        loginButton.OnClickAsObservable().Subscribe(_ => Login());
         resetPassButton.onClick.AddListener(ResetPass);
     }
 
@@ -87,8 +89,6 @@ public class LoginPanel : MonoBehaviour
                 gameObject.SetActive(false);
             }
         });
-
-
     }
     private void ResetPass()
     {
