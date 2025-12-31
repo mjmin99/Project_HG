@@ -115,28 +115,38 @@ public class BattleManager : MonoBehaviour
         {
             case 1:
                 condition = DialogCondition.EnterW1S1;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene2);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene2);
+                }
                 break;
             case 2:
                 condition = DialogCondition.EnterW2S1;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene5);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene5);
+                }
                 break;
             case 3:
                 condition = DialogCondition.EnterW3S1;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene7);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene7);
+                }
                 break;
             case 4:
                 condition = DialogCondition.EnterW4S1;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene9);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene9);
+                }
                 break;
             case 5:
                 condition = DialogCondition.EnterW5S1;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene11);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene11);
+                }
                 break;
             default:
                 Debug.LogWarning("다이얼로그가 설정되지 않은 월드임");
@@ -205,7 +215,7 @@ public class BattleManager : MonoBehaviour
         skillPresenter.skillButtonPanel[index].transform.localScale = Vector3.one * 0.7f;
         var t1 = skillPresenter.skillButtonPanel[index].transform
             .DOScale(Vector3.one, 0.3f)
-            .SetEase(Ease.OutBounce)
+            .SetEase(Ease.OutElastic)
             .AsyncWaitForCompletion()
             .AsUniTask();
         Manager.Game.tasks.Add(t1);

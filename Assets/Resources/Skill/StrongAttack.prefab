@@ -105,9 +105,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StrongAttack
   skillType: 0
-  returnTime: 1
-  coolDown: 2
-  skillIcon: {fileID: 21300000, guid: 2dc4b8f8d9246ee4c8f28f9706e93a02, type: 3}
+  returnTime: 1.5
+  coolDown: 3
+  skillIcon: {fileID: -311382108, guid: cec26bbebcc3ddc43afa5490c991af87, type: 3}
 --- !u!95 &1397234923398173657
 Animator:
   serializedVersion: 7
@@ -118,7 +118,7 @@ Animator:
   m_GameObject: {fileID: 2177982085702520747}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: afa76987491e9314ea35f7ad69eb22e3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

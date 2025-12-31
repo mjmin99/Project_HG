@@ -106,10 +106,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Parrying
   skillType: 1
   returnTime: 2
-  coolDown: 3
-  skillIcon: {fileID: 287862186, guid: c9107754e891ca0468931bbf4a74265f, type: 3}
-  parryTime: 1.5
-  stunTime: 5
+  coolDown: 5
+  skillIcon: {fileID: 1532004019, guid: 98bd74b78512c3243ac0b73ad73569bc, type: 3}
+  parryTime: 1
+  stunTime: 3
   isParrying: 0
 --- !u!95 &1657441530452394642
 Animator:
@@ -121,7 +121,7 @@ Animator:
   m_GameObject: {fileID: 2577504530969430220}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7e21d03cc09aa0f49843ffe687d61e98, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2667b91a836b33144b2f49f3ee59fc2d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

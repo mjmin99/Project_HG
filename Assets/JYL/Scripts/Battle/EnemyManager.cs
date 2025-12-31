@@ -84,28 +84,38 @@ public class EnemyManager : MonoBehaviour
         {
             case 1:
                 condition = DialogCondition.WorldBoss1;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene3);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene3);
+                }
                 break;
             case 2:
                 condition = DialogCondition.WorldBoss2;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene6);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene6);
+                }
                 break;
             case 3:
                 condition = DialogCondition.WorldBoss3;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene8);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene8);
+                }
                 break;
             case 4:
                 condition = DialogCondition.WorldBoss4;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene10);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene10);
+                }
                 break;
             case 5:
                 condition = DialogCondition.WorldBoss5;
-                Manager.Dialog.CheckDialogCondition(condition);
-                await Manager.Dialog.StartDialog(DialogKey.Scene12);
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene12);
+                }
                 break;
             default:
                 Debug.LogWarning($"다이얼로그 컨디션이 설정되지 않은 보스임!! : 월드 {stageData.world}");

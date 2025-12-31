@@ -104,10 +104,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eac327ccd1dbc44f876bcfe6be58902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AllHeal
-  skillType: 0
+  skillType: 2
   returnTime: 1.5
   coolDown: 3
-  skillIcon: {fileID: 1777807460, guid: f222ee7b64db8914f9df026abefcec6a, type: 3}
+  skillIcon: {fileID: 338833046, guid: 7965abc7af6e3c14087cd1d44c43b58a, type: 3}
 --- !u!95 &1415234173729591266
 Animator:
   serializedVersion: 7
@@ -118,7 +118,7 @@ Animator:
   m_GameObject: {fileID: 1385517028519838786}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f6269239c7d046d4dbb68767a706054d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

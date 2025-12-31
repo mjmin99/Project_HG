@@ -118,8 +118,24 @@ public class CharController : MonoBehaviour, IAttackable
             bulletPool.CreatePool(lazerPrefab);
         }
 
+        SkillType type;
         // 스킬 정보 가져오기
-        skillPrefab = Resources.Load<Skill>(SKILL_PATH + inst.skillType);
+        switch (model.role)
+        {
+            case CharacterRole.Dealer:
+                type = SkillType.StrongAttack;
+                break;
+            case CharacterRole.Healer:
+                type = SkillType.AllHeal;
+                break;
+            case CharacterRole.Tank:
+                type = SkillType.Parrying;
+                break;
+            default:
+                type = SkillType.StrongAttack;
+                break;
+        }
+        skillPrefab = Resources.Load<Skill>(SKILL_PATH + type);
         // AttackInfo 초기화
         atkInfo = new AttackInfo(gameObject.layer, stats.attack, false);
     }

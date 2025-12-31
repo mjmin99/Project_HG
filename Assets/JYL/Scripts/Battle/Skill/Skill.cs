@@ -54,7 +54,8 @@ public abstract class Skill : MonoBehaviour
         gameObject.SetActive(false);
         skillPool.Push(this);
     }
-    public void AfterEffect()
+
+    protected void AfterEffect()
     {
         animator.Play(AFTER);
         animator.Update(0f);
