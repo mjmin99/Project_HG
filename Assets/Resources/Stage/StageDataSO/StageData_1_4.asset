@@ -21,11 +21,41 @@ MonoBehaviour:
   waves:
   - waitBeforeWave: 2
     spawns:
-    - id: 0
-      count: 1
-      spawnInterval: 1
+    - id: 1000
+      count: 3
+      spawnInterval: 3
+    - id: 1000
+      count: 3
+      spawnInterval: 3
+    - id: 1000
+      count: 3
+      spawnInterval: 3
+    - id: 1000
+      count: 3
+      spawnInterval: 3
   - waitBeforeWave: 2
     spawns:
-    - id: 0
-      count: 1
-      spawnInterval: 1
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2
+    - id: 1001
+      count: 8
+      spawnInterval: 2

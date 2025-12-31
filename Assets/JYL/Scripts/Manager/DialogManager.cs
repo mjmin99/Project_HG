@@ -61,6 +61,7 @@ public class DialogManager : Singleton<DialogManager>
     }
     #endregion
     
+    #region 외부 요청 함수
     // 대화 씬 시작에 쓰이는 외부용 함수
     public async UniTask StartDialog(DialogKey key)
     {
@@ -82,6 +83,20 @@ public class DialogManager : Singleton<DialogManager>
     {
         isSkip = true;
     }
+
+    public bool CheckDialogCondition(DialogCondition condition)
+    {
+        Debug.Log($"체크 시작{condition}");
+        Debug.Log($"세이브 데이터 체크{Manager.Save.CurrentData != null}");
+        Debug.Log($"세이브 데이터의 dialogRecord체크{Manager.Save.CurrentData.dialogRecord}");
+        return Manager.Save.CurrentData.dialogRecord.CheckDialogCondition(condition);
+    }
+
+    public void MarkDialogCondition(DialogCondition condition)
+    {
+        Manager.Save.CurrentData.dialogRecord.MarkDialogCondition(condition);
+    }
+    #endregion
     
     #region Inner Logic
     // Dialog의 Line을 한 줄씩 로직처리
@@ -218,6 +233,7 @@ public class DialogManager : Singleton<DialogManager>
         Time.timeScale = 1f;
         isSkip = false;
         isTyping = false;
+        Manager.Audio.StopVoice();
     }
     
     // 배경 변경

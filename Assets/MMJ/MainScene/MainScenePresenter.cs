@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -32,6 +33,16 @@ public class MainScenePresenter : MonoBehaviour
         }
 
         // 여기서 PartyUI.Initialize() 같은거 호출하면 됨
+        _ = CheckFirstBase();
+    }
+
+    private async UniTask CheckFirstBase()
+    {
+        if (!Manager.Dialog.CheckDialogCondition(DialogCondition.IsFirstBase))
+        {
+            await Manager.Dialog.StartDialog(DialogKey.Scene1);
+            Manager.Dialog.MarkDialogCondition(DialogCondition.IsFirstBase);
+        }
     }
 
     public void UpdateGoldUI()
