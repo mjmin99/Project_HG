@@ -84,7 +84,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &319636130637359237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,3 +116,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageUI
   damageTextPrefab: {fileID: 3730301902483645935, guid: 79e8b5a095d338943aedaeb692ba7bd4, type: 3}
   poolSize: 10
+  returnPool: {fileID: 0}

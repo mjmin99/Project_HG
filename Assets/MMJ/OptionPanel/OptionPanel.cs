@@ -10,10 +10,12 @@ public class OptionPanel : UIPanel
     [Header("Tabs")]
     [SerializeField] private Button btnSound;
     [SerializeField] private Button btnHowToPlay;
+    [SerializeField] private Button btnQuit;
 
     [Header("Tab Contents")]
     [SerializeField] private GameObject soundTab;
     [SerializeField] private GameObject howToPlayTab;
+    [SerializeField] private GameObject QuitTab;
 
     private GameObject currentTab;
 
@@ -34,6 +36,11 @@ public class OptionPanel : UIPanel
         btnHowToPlay.onClick.AddListener(() =>
         {
             OpenTab(howToPlayTab);
+        });
+
+        btnQuit.onClick.AddListener(() => 
+        {
+            OpenTab(QuitTab);
         });
     }
 

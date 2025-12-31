@@ -17,15 +17,15 @@ MonoBehaviour:
   stage: 2
   prevWorld: 1
   prevStage: 1
-  rewardGold: 10
+  rewardGold: 43
   waves:
   - waitBeforeWave: 2
     spawns:
-    - id: 0
+    - id: 1000
       count: 1
       spawnInterval: 1
   - waitBeforeWave: 2
     spawns:
-    - id: 0
+    - id: 1001
       count: 1
       spawnInterval: 1

@@ -17,7 +17,7 @@ MonoBehaviour:
   stage: 1
   prevWorld: 2
   prevStage: 5
-  rewardGold: 10
+  rewardGold: 79
   waves:
   - waitBeforeWave: 2
     spawns:
