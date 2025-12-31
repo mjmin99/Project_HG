@@ -24,6 +24,9 @@ MonoBehaviour:
     - id: 4001
       count: 2
       spawnInterval: 2
+    - id: 4001
+      count: 2
+      spawnInterval: 2
   - waitBeforeWave: 2
     spawns:
     - id: 5000
@@ -31,6 +34,9 @@ MonoBehaviour:
       spawnInterval: 1
   - waitBeforeWave: 2
     spawns:
+    - id: 4000
+      count: 2
+      spawnInterval: 2
     - id: 4000
       count: 2
       spawnInterval: 2

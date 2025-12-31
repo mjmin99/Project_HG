@@ -24,8 +24,38 @@ MonoBehaviour:
     - id: 1000
       count: 4
       spawnInterval: 3
+    - id: 1000
+      count: 4
+      spawnInterval: 3
+    - id: 1000
+      count: 4
+      spawnInterval: 3
+    - id: 1000
+      count: 4
+      spawnInterval: 3
+    - id: 1000
+      count: 4
+      spawnInterval: 3
   - waitBeforeWave: 2
     spawns:
-    - id: 0
+    - id: 1001
+      count: 6
+      spawnInterval: 2
+    - id: 1001
+      count: 6
+      spawnInterval: 2
+    - id: 1001
+      count: 6
+      spawnInterval: 2
+    - id: 1001
+      count: 6
+      spawnInterval: 2
+    - id: 1001
+      count: 6
+      spawnInterval: 2
+    - id: 1001
+      count: 6
+      spawnInterval: 2
+    - id: 1001
       count: 6
       spawnInterval: 2

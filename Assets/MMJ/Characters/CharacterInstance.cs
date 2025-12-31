@@ -26,13 +26,13 @@ public class CharacterInstance
 
         stats.atkType = model.attackType;
         stats.role = model.role;
-        stats.hp = model.baseHP + level * 22;
-        stats.attack = model.baseAttack + level * 4;
-        stats.magicAttack = model.baseMagicAttack + level * 5;
-        stats.defense = model.baseDefense + level * 1.2f;
+        stats.hp = model.baseHP + (level - 1) * 22;
+        stats.attack = model.baseAttack + (level - 1) * 4;
+        stats.magicAttack = model.baseMagicAttack + (level - 1) * 5;
+        stats.defense = model.baseDefense + (level - 1) * 1.2f;
 
         stats.attackSpeed = model.baseAttackSpeed;
-        stats.critRate = model.baseCritRate + level * 0.1f;
+        stats.critRate = model.baseCritRate + (level - 1) * 0.1f;
         stats.critDamage = model.baseCritDamage;
 
         stats.attackRange = model.attackRange;
@@ -126,45 +126,45 @@ public class CharacterInstance
                 case AbilityIds.MaxHPUp:
                     stats.hp += AbilityTiers.Value(
                         ability.rarity,
-                        50,    // Tier1
-                        100,   // Tier2
-                        200    // Tier3
+                        30,    // Tier1
+                        60,   // Tier2
+                        120    // Tier3
                     );
                     break;
 
                 case AbilityIds.AttackUp:
                     stats.attack += AbilityTiers.Value(
                         ability.rarity,
-                        5,
-                        10,
-                        20
+                        3,
+                        6,
+                        12
                     );
                     break;
 
                 case AbilityIds.MagicAttackUp:
                     stats.magicAttack += AbilityTiers.Value(
                         ability.rarity,
-                        6,
-                        12,
-                        25
+                        4,
+                        8,
+                        15
                     );
                     break;
 
                 case AbilityIds.DefenseUp:
                     stats.defense += AbilityTiers.Value(
                         ability.rarity,
-                        5,
-                        10,
-                        20
+                        2,
+                        4,
+                        8
                     );
                     break;
 
                 case AbilityIds.AttackSpeedUp:
                     stats.attackSpeed += AbilityTiers.Value(
                         ability.rarity,
-                        0.05f,
-                        0.10f,
-                        0.20f
+                        0.03f,
+                        0.03f,
+                        0.10f
                     );
                     break;
 
@@ -180,9 +180,9 @@ public class CharacterInstance
                 case AbilityIds.CritRateUp:
                     stats.critRate += AbilityTiers.Value(
                         ability.rarity,
-                        0.05f,
-                        0.10f,
-                        0.15f
+                        0.03f,
+                        0.06f,
+                        0.10f
                     );
                     break;
 
@@ -191,7 +191,7 @@ public class CharacterInstance
                         ability.rarity,
                         0.10f,
                         0.20f,
-                        0.30f
+                        0.35f
                     );
                     break;
 

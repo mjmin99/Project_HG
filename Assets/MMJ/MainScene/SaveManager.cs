@@ -177,8 +177,8 @@ public class SaveManager : Singleton<SaveManager>
             data.characters.Add(inst);
         }
 
-        data.gold = 1000;
-        data.gem = 100;
+        data.gold = 500;
+        data.gem = 0;
 
         Debug.Log($"[SaveManager] 기본 세이브 생성: 캐릭터 {data.characters.Count}개, 골드 {data.gold}, 젬 {data.gem}");
         return data;

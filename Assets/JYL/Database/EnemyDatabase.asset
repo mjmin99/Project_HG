@@ -20,7 +20,7 @@ MonoBehaviour:
     magicAttack: 8
     defense: 2
     attackSpeed: 0.9
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 1001
@@ -30,7 +30,7 @@ MonoBehaviour:
     magicAttack: 7
     defense: 1
     attackSpeed: 1.1
-    attackRange: 0.3
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 2000
@@ -40,7 +40,7 @@ MonoBehaviour:
     magicAttack: 11
     defense: 3
     attackSpeed: 1
-    attackRange: 0.33
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 2001
@@ -50,7 +50,7 @@ MonoBehaviour:
     magicAttack: 12
     defense: 2
     attackSpeed: 1.15
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 3000
@@ -60,7 +60,7 @@ MonoBehaviour:
     magicAttack: 16
     defense: 4
     attackSpeed: 1
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 3001
@@ -70,17 +70,17 @@ MonoBehaviour:
     magicAttack: 14
     defense: 6
     attackSpeed: 0.9
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 4000
-    enemyName: shieldguard
+    enemyName: swordguard
     maxHP: 260
     attack: 20
     magicAttack: 20
     defense: 6
     attackSpeed: 0.85
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 4001
@@ -90,7 +90,7 @@ MonoBehaviour:
     magicAttack: 18
     defense: 8
     attackSpeed: 0.8
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 5000
@@ -100,7 +100,7 @@ MonoBehaviour:
     magicAttack: 26
     defense: 7
     attackSpeed: 0.9
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 5001
@@ -110,47 +110,47 @@ MonoBehaviour:
     magicAttack: 22
     defense: 10
     attackSpeed: 0.75
-    attackRange: 0.35
+    attackRange: 2
     attackType: 0
     isBoss: 0
   - id: 1111
     enemyName: firestarter
     maxHP: 1200
-    attack: 20
+    attack: 2
     magicAttack: 20
     defense: 6
-    attackSpeed: 0.8
-    attackRange: 0.4
+    attackSpeed: 0.7
+    attackRange: 2
     attackType: 0
     isBoss: 1
   - id: 2222
-    enemyName: snakebot
+    enemyName: driller
     maxHP: 2200
-    attack: 30
-    magicAttack: 30
+    attack: 4
+    magicAttack: 4
     defense: 8
-    attackSpeed: 0.9
-    attackRange: 0.45
+    attackSpeed: 0.8
+    attackRange: 2
     attackType: 0
     isBoss: 1
   - id: 3333
     enemyName: neon_vail
     maxHP: 3600
-    attack: 42
-    magicAttack: 42
+    attack: 14
+    magicAttack: 14
     defense: 10
     attackSpeed: 0.85
-    attackRange: 0.85
+    attackRange: 2
     attackType: 0
     isBoss: 1
   - id: 4444
-    enemyName: driller
+    enemyName: snakebot
     maxHP: 5200
     attack: 56
     magicAttack: 56
     defense: 12
     attackSpeed: 0.8
-    attackRange: 0.8
+    attackRange: 2
     attackType: 0
     isBoss: 1
   - id: 5555
@@ -160,6 +160,6 @@ MonoBehaviour:
     magicAttack: 72
     defense: 14
     attackSpeed: 0.75
-    attackRange: 0.8
+    attackRange: 2
     attackType: 0
     isBoss: 1
