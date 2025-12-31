@@ -34,6 +34,7 @@ public class MainScenePresenter : MonoBehaviour
         }
 
         // 여기서 PartyUI.Initialize() 같은거 호출하면 됨
+        Manager.Audio.SwapClip(AudioClipType.BGM, "MainBGM").Forget();
     }
 
     // 게임 첫 시작 시 재생하는 다이얼로그

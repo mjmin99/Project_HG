@@ -171,6 +171,12 @@ public class EnemyController : MonoBehaviour, IAttackable
             curHp.Value = 0;
             stateMachine.ChangeState(stateDict[CharStateType.Dead]);
             isDead.Value = true;
+            Manager.Audio.PlaySfx("MonsterDie");
+        }
+        else
+        {
+            // 히트 사운드 재생
+            Manager.Audio.PlaySfx("MonsterHit");
         }
         // 히트 애니메이션 재생
         HitAnimation();

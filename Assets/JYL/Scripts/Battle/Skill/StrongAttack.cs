@@ -7,5 +7,6 @@ public class StrongAttack : Skill
     {
         base.Init(skillPool);
         skillType = SkillType.StrongAttack;
+        Manager.Audio.PlaySfx("Strike");
     }
 }

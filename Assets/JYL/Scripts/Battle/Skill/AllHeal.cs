@@ -7,5 +7,6 @@ public class AllHeal : Skill
     {
         base.Init(skillPool);
         skillType = SkillType.AllHeal;
+        Manager.Audio.PlaySfx("Heal");
     }
 }

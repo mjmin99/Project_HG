@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b609ee0aa037ec45b1ef7f7c5bd7233, type: 3}
-  m_Name: SFX_1
+  m_Name: SFX_MeleeAttack
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
-  clipSource: {fileID: 8300000, guid: eda50a1dee748674ea1462572251cc9a, type: 3}
-  clipName: LinkHit
+  clipSource: {fileID: 8300000, guid: 7801af1fd4e602342bbc66468ed1ca96, type: 3}
+  clipName: MeleeAttack
   volume: 0.9
   audioType: 3
   loop: 0

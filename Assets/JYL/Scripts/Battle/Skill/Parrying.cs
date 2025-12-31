@@ -34,6 +34,7 @@ public class Parrying : Skill
 
     public void SuccessParry()
     {
+        Manager.Audio.PlaySfx("Parry");
         Debug.Log("패리 성공");
         isParrying = false;
         AfterEffect();

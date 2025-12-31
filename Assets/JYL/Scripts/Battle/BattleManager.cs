@@ -103,6 +103,7 @@ public class BattleManager : MonoBehaviour
         
         stageClearPanel.gameObject.SetActive(false);
         DialogCheck().Forget();
+        Manager.Audio.SwapClip(AudioClipType.BGM, $"W{stageData.world}BGM").Forget();
     }
 
     private async UniTask DialogCheck()

@@ -191,6 +191,7 @@ public class CharController : MonoBehaviour, IAttackable
                 atkInfo.atk = attackDamage;
                 atkInfo.isCritical = isCritical;
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(atkInfo);
+                Manager.Audio.PlaySfx("MeleeAttack");
                 break;
             case AttackType.Ranged:
                 attackDamage = isCritical ? stats.critDamage * stats.attack : stats.attack;
@@ -201,7 +202,7 @@ public class CharController : MonoBehaviour, IAttackable
                     {
                         c.Heal(stats.magicAttack);
                     }
-                    // break;
+                    break;
                 }
                 var bullet = bulletPool.GetObject() as BulletController;
                 if (bullet != null)
@@ -210,8 +211,8 @@ public class CharController : MonoBehaviour, IAttackable
                     
                     if (!bullet.isInit) bullet.Init(gameObject.layer, attackDamage);
                     bullet.FireToPosition(hitInfo.transform.position, isCritical);
+                    Manager.Audio.PlaySfx("BulletAttack");
                 }
-
                 break;
             case AttackType.Lazer:
                 float magicAttack = isCritical ? stats.critDamage * stats.magicAttack : stats.magicAttack;
@@ -224,6 +225,7 @@ public class CharController : MonoBehaviour, IAttackable
                     if (!lazer.isInit) lazer.Init(gameObject.layer, magicAttack);
                     
                     lazer.InitiateLazer(isCritical);
+                    Manager.Audio.PlaySfx("Lazer");
                 }
                 break;
             default:

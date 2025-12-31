@@ -63,6 +63,7 @@ public class AudioManager : Singleton<AudioManager>
     void Start()
     {
         SetMixerVolume();
+        Manager.Audio.SwapClip(AudioClipType.BGM, "MainBGM").Forget();
     }
     #endregion
     
@@ -254,7 +255,7 @@ public class AudioManager : Singleton<AudioManager>
     
     #region 내부 기능
     // 페이드 인-아웃
-    private async UniTask FadeIn(AudioSource source, float setVolume, float duration = 2f)
+    private async UniTask FadeIn(AudioSource source, float setVolume, float duration = 1f)
     {
         source.Play();
         await source.DOFade(setVolume, duration)
@@ -262,7 +263,7 @@ public class AudioManager : Singleton<AudioManager>
             .AsyncWaitForCompletion();
     }
 
-    private async UniTask FadeOut(AudioSource source, float duration = 2f)
+    private async UniTask FadeOut(AudioSource source, float duration = 1f)
     {
         await source.DOFade(0f, duration)
             .SetEase(easeOutType)
