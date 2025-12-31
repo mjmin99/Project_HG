@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 
 public class LobbyPanel : MonoBehaviour
 {
@@ -53,27 +54,33 @@ public class LobbyPanel : MonoBehaviour
 
     private void DeleteUser()
     {
-        FirebaseUser user = FirebaseManager.Auth.CurrentUser;
-        user.DeleteAsync()
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsCanceled)
-                {
-                    Debug.LogError("[LobbyPanel] 유저 삭제 취소됨");
-                    return;
-                }
-                if (task.IsFaulted)
-                {
-                    Debug.LogError($"[LobbyPanel] 유저 삭제 실패: {task.Exception}");
-                    return;
-                }
-
-                Debug.Log("[LobbyPanel] 유저 삭제 성공");
-                FirebaseManager.Auth.SignOut();
-                loginPanel.SetActive(true);
-                gameObject.SetActive(false);
-            });
+        UIManager.Instance.OpenUI<UIPopup>("ConfirmDeleteUserPopup");
     }
+
+    // 옛날 유저 삭제
+    // private void DeleteUser()
+    // {
+    //     FirebaseUser user = FirebaseManager.Auth.CurrentUser;
+    //     user.DeleteAsync()
+    //         .ContinueWithOnMainThread(task =>
+    //         {
+    //             if (task.IsCanceled)
+    //             {
+    //                 Debug.LogError("[LobbyPanel] 유저 삭제 취소됨");
+    //                 return;
+    //             }
+    //             if (task.IsFaulted)
+    //             {
+    //                 Debug.LogError($"[LobbyPanel] 유저 삭제 실패: {task.Exception}");
+    //                 return;
+    //             }
+    // 
+    //             Debug.Log("[LobbyPanel] 유저 삭제 성공");
+    //             FirebaseManager.Auth.SignOut();
+    //             loginPanel.SetActive(true);
+    //             gameObject.SetActive(false);
+    //         });
+    // }
 
     private void GameStart()
     {
@@ -168,5 +175,7 @@ public class LobbyPanel : MonoBehaviour
         // 4단계: 메인씬 이동
         Debug.Log("[LobbyPanel] ========== 로딩 완료! MainScene 이동 ==========");
         SceneChanger.Instance.LoadScene("MainScene");
+        // 5단계: 스테이지 세이브 서비스 초기화
+        Manager.Game.StageServiceInit();
     }
 }

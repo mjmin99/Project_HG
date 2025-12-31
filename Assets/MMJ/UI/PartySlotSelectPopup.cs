@@ -41,6 +41,17 @@ public class PartySlotSelectPopup : UIPopup
     {
         int characterId = PartyAssignmentContext.PendingCharacterId;
 
+        if (!Manager.Character.models.TryGetValue(characterId, out var model))
+            return;
+
+        var requiredRole = PartyService.SlotRoles[slotIndex];
+
+        if (model.role != requiredRole)
+        {
+            ToastUtil.Error($"이 슬롯에는 {requiredRole}만 배치할 수 있어요");
+            return;
+        }
+
         PartyService.AssignToSlot(slotIndex, characterId);
         PartyAssignmentContext.Clear();
 

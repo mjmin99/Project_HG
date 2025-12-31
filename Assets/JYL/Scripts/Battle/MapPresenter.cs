@@ -18,10 +18,46 @@ public class MapPresenter : MonoBehaviour
     private int playerLayer;
 
     private readonly Queue<Transform> mapQueue = new();
+    private const string TestPrefabPath = "Test/TestTerrain";
+    private readonly string mapPath = "Prefabs/Map/";
+    private string mapPrefabName;
 
     public void Init()
     {
-        var map = Resources.Load<GameObject>(Manager.Game.GetStageData().mapPrefabPath);
+        var stageData = Manager.Game.GetStageData();
+        mapPrefabName = stageData.mapPrefabName;
+        var map = Resources.Load<GameObject>(mapPath + mapPrefabName);
+        
+        if (map != null)
+        {
+            switch (mapPrefabName)
+            {
+                case "Forest":
+                    posGap = 6.15f;
+                    break;
+                case "Cave":
+                    posGap = 5.6f;
+                    break;
+                case "Ruins":
+                    posGap = 5.35f;
+                    break;
+                case "Ice":
+                    posGap = 5.2f;
+                    break;
+                case "Isekai":
+                    posGap = 6.15f;
+                    break;
+                default:
+                    posGap = 10f;
+                    break;
+            }
+        }
+        
+        if (map == null)
+        {
+            Debug.LogWarning("맵 프리팹 경로 설정 안되어 있음");
+            map = Resources.Load<GameObject>(TestPrefabPath);
+        }
         CreateMap(map);
         playerLayer = LayerMask.NameToLayer("Player");
     }
@@ -38,6 +74,7 @@ public class MapPresenter : MonoBehaviour
             mapQueue.Enqueue(map.transform);
          
             BoxCollider col = map.GetComponent<BoxCollider>();
+            
             col.OnTriggerEnterAsObservable()
                 .Subscribe(TranslateMap)
                 .AddTo(this);
@@ -52,7 +89,6 @@ public class MapPresenter : MonoBehaviour
       
         hitList.Add(hitCol.bounds.center.x);
         if (hitList.Count <= 1) return;
-      
         foreach (float x in hitList.SkipLast(1) )
         {
             var abs = Mathf.Abs(x - hitCol.bounds.center.x);

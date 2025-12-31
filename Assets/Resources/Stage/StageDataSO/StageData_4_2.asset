@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3769dc54512972b47a03eb58fdfda5f7, type: 3}
+  m_Name: StageData_4_2
+  m_EditorClassIdentifier: Assembly-CSharp::StageDataSO
+  mapPrefabName: Ice
+  world: 4
+  stage: 2
+  prevWorld: 4
+  prevStage: 1
+  rewardGold: 118
+  waves:
+  - waitBeforeWave: 2
+    spawns:
+    - id: 4000
+      count: 3
+      spawnInterval: 3
+    - id: 4000
+      count: 3
+      spawnInterval: 3
+    - id: 4000
+      count: 3
+      spawnInterval: 3
+  - waitBeforeWave: 2
+    spawns:
+    - id: 3001
+      count: 2
+      spawnInterval: 2
+    - id: 3001
+      count: 2
+      spawnInterval: 2
+  - waitBeforeWave: 2
+    spawns:
+    - id: 3000
+      count: 2
+      spawnInterval: 2
+    - id: 3000
+      count: 2
+      spawnInterval: 2

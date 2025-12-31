@@ -27,8 +27,29 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (uiStack.Count > 0) CloseTop();
-            else OpenUI<UIPanel>("OptionPanel");
+            if (uiStack.Count > 0)
+            {
+                if (Manager.Game.IsBattle && Manager.Game.IsGameOver)
+                {
+                    if (uiStack.Peek() is BattleOptionPanel)
+                    {
+                        return;
+                    }
+                }
+                CloseTop();
+            }
+            else
+            {
+                if (Manager.Game.IsBattle)
+                {
+                    if (Manager.Game.IsGameOver || Manager.Game.IsGameClear) return;
+                    OpenUI<UIPanel>("BattleOptionPanel");
+                }
+                else
+                {
+                    OpenUI<UIPanel>("OptionPanel"); 
+                }
+            }
         }
     }
 
@@ -138,7 +159,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public PartyUI CurrentPartyUI { get; private set; }
+    private PartyUI CurrentPartyUI { get; set; }
 
     public void RegisterPartyUI(PartyUI partyUI)
     {

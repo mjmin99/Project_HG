@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d7debaac138e94458a2423e76bad2cb, type: 3}
+  m_Name: EnemyDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDatabase
+  enemies:
+  - id: 1000
+    enemyName: sprialmystic
+    maxHP: 80
+    attack: 8
+    magicAttack: 8
+    defense: 2
+    attackSpeed: 0.9
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 1001
+    enemyName: firevamp
+    maxHP: 65
+    attack: 7
+    magicAttack: 7
+    defense: 1
+    attackSpeed: 1.1
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 2000
+    enemyName: diamondgolem
+    maxHP: 120
+    attack: 11
+    magicAttack: 11
+    defense: 3
+    attackSpeed: 1
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 2001
+    enemyName: demonlocust
+    maxHP: 105
+    attack: 12
+    magicAttack: 12
+    defense: 2
+    attackSpeed: 1.15
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 3000
+    enemyName: wingedguard
+    maxHP: 170
+    attack: 16
+    magicAttack: 16
+    defense: 4
+    attackSpeed: 1
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 3001
+    enemyName: shieldguard
+    maxHP: 210
+    attack: 14
+    magicAttack: 14
+    defense: 6
+    attackSpeed: 0.9
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 4000
+    enemyName: swordguard
+    maxHP: 260
+    attack: 20
+    magicAttack: 20
+    defense: 6
+    attackSpeed: 0.85
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 4001
+    enemyName: butterdog
+    maxHP: 320
+    attack: 18
+    magicAttack: 18
+    defense: 8
+    attackSpeed: 0.8
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 5000
+    enemyName: spinetiger
+    maxHP: 380
+    attack: 26
+    magicAttack: 26
+    defense: 7
+    attackSpeed: 0.9
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 5001
+    enemyName: lynx
+    maxHP: 520
+    attack: 22
+    magicAttack: 22
+    defense: 10
+    attackSpeed: 0.75
+    attackRange: 2
+    attackType: 0
+    isBoss: 0
+  - id: 1111
+    enemyName: firestarter
+    maxHP: 1200
+    attack: 2
+    magicAttack: 20
+    defense: 6
+    attackSpeed: 0.7
+    attackRange: 2
+    attackType: 0
+    isBoss: 1
+  - id: 2222
+    enemyName: driller
+    maxHP: 2200
+    attack: 4
+    magicAttack: 4
+    defense: 8
+    attackSpeed: 0.8
+    attackRange: 2
+    attackType: 0
+    isBoss: 1
+  - id: 3333
+    enemyName: neon_vail
+    maxHP: 3600
+    attack: 14
+    magicAttack: 14
+    defense: 10
+    attackSpeed: 0.85
+    attackRange: 2
+    attackType: 0
+    isBoss: 1
+  - id: 4444
+    enemyName: snakebot
+    maxHP: 5200
+    attack: 56
+    magicAttack: 56
+    defense: 12
+    attackSpeed: 0.8
+    attackRange: 2
+    attackType: 0
+    isBoss: 1
+  - id: 5555
+    enemyName: bonereaper
+    maxHP: 7200
+    attack: 72
+    magicAttack: 72
+    defense: 14
+    attackSpeed: 0.75
+    attackRange: 2
+    attackType: 0
+    isBoss: 1

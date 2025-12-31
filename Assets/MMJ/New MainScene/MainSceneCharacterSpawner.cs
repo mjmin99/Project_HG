@@ -28,6 +28,16 @@ public class MainSceneCharacterSpawner : MonoBehaviour
     // Main
     // ==============================
 
+    private void OnEnable()
+    {
+        SaveManager.OnCharacterAcquired += HandleCharacterAcquired;
+    }
+
+    private void OnDisable()
+    {
+        SaveManager.OnCharacterAcquired -= HandleCharacterAcquired;
+    }
+
     private void SpawnOwnedCharacters()
     {
         var models = Manager.Character.models;
@@ -118,5 +128,24 @@ public class MainSceneCharacterSpawner : MonoBehaviour
         {
             character.StartMove();  // Run
         }
+    }
+
+    private void HandleCharacterAcquired(CharacterInstance inst)
+    {
+        var model = Manager.Character.models[inst.id];
+        if (model == null || model.prefab == null)
+            return;
+
+        float spawnX = GetRandomSpawnX();
+        Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+
+        GameObject obj = Instantiate(
+            model.prefab,
+            spawnPos,
+            Quaternion.identity,
+            characterRoot
+        );
+
+        ApplyInitialFeel(obj.GetComponent<MainSceneCharacter>());
     }
 }

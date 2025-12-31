@@ -15,6 +15,7 @@ public class StageDatabaseSO : ScriptableObject
     // 런타임 조회용 캐시 생성
     public void BuildCache()
     {
+        Debug.Log("런타임용 스테이지데이터베이스 캐시 생성");
         cache = new Dictionary<string, StageDataSO>(stages.Count);
         foreach (var s in stages)
         {

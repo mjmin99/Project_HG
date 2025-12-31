@@ -15,8 +15,9 @@ public interface IStatModifierAbility : IAbility
     void ModifyStats(ref CharacterStats stats, ICombatActor owner);
 }
 
-public interface IEventAbility : IAbility
-{
-    // 이벤트 발생 시 반응
-    void OnEvent(ref AbilityContext ctx);
-}
+// 임시로 막아둠
+// public interface IEventAbility : IAbility
+// {
+//     // 이벤트 발생 시 반응
+//     void OnEvent(ref AbilityContext ctx);
+// }

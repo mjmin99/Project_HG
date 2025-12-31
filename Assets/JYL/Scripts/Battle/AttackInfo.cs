@@ -4,11 +4,13 @@ using UnityEngine;
 public struct AttackInfo
 {
     public readonly LayerMask layer; 
-    public readonly float atk;
+    public float atk;
+    public bool isCritical;
 
-    public AttackInfo(LayerMask layer, float atk)
+    public AttackInfo(LayerMask layer, float atk,  bool isCritical)
     {
         this.layer = layer;
         this.atk = atk;
+        this.isCritical = isCritical;
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterRun : CharacterState
 {
-    private const float MOVE_SPEED = 3f;
+    private const float MOVE_SPEED = 1.5f;
     public CharacterRun(CharController controller) : base(controller) { }
 
     public override void Enter()

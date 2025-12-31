@@ -1,6 +1,8 @@
-﻿using Firebase.Auth;
+﻿using Cysharp.Threading.Tasks;
+using Firebase.Auth;
 using Firebase.Extensions;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +24,7 @@ public class LoginPanel : MonoBehaviour
     private void Awake()
     {
         signUpButton.onClick.AddListener(SignUp);
-        loginButton.onClick.AddListener(Login);
+        loginButton.OnClickAsObservable().Subscribe(_ => Login());
         resetPassButton.onClick.AddListener(ResetPass);
     }
 
@@ -67,12 +69,14 @@ public class LoginPanel : MonoBehaviour
                 // 1-1. 아직 닉네임 설정을 하지 않은 경우
                 if (user.DisplayName == "")
                 {
+                    Debug.Log("닉네임 설정 아직 안됨");
                     nicknamePanel.SetActive(true);
                     gameObject.SetActive (false);
                 }
                 // 1-2. 닉네임 설정완료된 경우
                 else
                 {
+                    Debug.Log("닉네임 설정 됐음 로비 패널 On");
                     lobbyPanel.SetActive(true);
                     gameObject.SetActive(false);
                 }
@@ -85,27 +89,31 @@ public class LoginPanel : MonoBehaviour
                 gameObject.SetActive(false);
             }
         });
-
-
     }
-
     private void ResetPass()
     {
-        FirebaseManager.Auth.SendPasswordResetEmailAsync(idInput.text)
-                .ContinueWithOnMainThread(task =>
-                {
-                    if (!task.IsCanceled)
-                    {
-                        Debug.LogError("패스워드 재설정 이메일 전송 취소됨");
-                        return;
-                    }
-                    if (!task.IsFaulted)
-                    {
-                        Debug.LogError($"패스워드 재설정 이메일 전송 실패. 이유 : {task.Exception}");
-                        return;
-                    }
-
-                    Debug.Log("패스워드 재설정 이메일 전송 성공");
-                });
+        UIManager.Instance.OpenUI<UIPopup>("ResetPasswordPopup");
     }
+
+
+    // 흐름 변경으로 인한 이전 함수
+    // private void ResetPass()
+    // {
+    //     FirebaseManager.Auth.SendPasswordResetEmailAsync(idInput.text)
+    //             .ContinueWithOnMainThread(task =>
+    //             {
+    //                 if (!task.IsCanceled)
+    //                 {
+    //                     Debug.LogError("패스워드 재설정 이메일 전송 취소됨");
+    //                     return;
+    //                 }
+    //                 if (!task.IsFaulted)
+    //                 {
+    //                     Debug.LogError($"패스워드 재설정 이메일 전송 실패. 이유 : {task.Exception}");
+    //                     return;
+    //                 }
+    // 
+    //                 Debug.Log("패스워드 재설정 이메일 전송 성공");
+    //             });
+    // }
 }

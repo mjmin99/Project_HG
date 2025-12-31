@@ -14,15 +14,10 @@ public class EnemyIdle : EnemyState
     public override void Update()
     {
         ray = new Ray(controller.transform.position, Vector3.left);
-        if (Physics.Raycast(ray, out var hit, 0.5f, PlayerMask))
+        if (Physics.Raycast(ray, out var hit, controller.enemyInfo.attackRange, PlayerMask))
         {
             controller.hitInfo = hit;
             controller.ChangeState(CharStateType.Attack);
         }
-    }
-    
-    public override void Exit()
-    {
-        
     }
 }

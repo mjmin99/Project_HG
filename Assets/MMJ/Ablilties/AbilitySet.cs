@@ -4,15 +4,15 @@
 public class AbilitySet
 {
     private readonly List<IStatModifierAbility> statAbilities = new();
-    private readonly List<IEventAbility> eventAbilities = new();
+    // private readonly List<IEventAbility> eventAbilities = new();
 
     public IReadOnlyList<IStatModifierAbility> StatAbilities => statAbilities;
-    public IReadOnlyList<IEventAbility> EventAbilities => eventAbilities;
+    // public IReadOnlyList<IEventAbility> EventAbilities => eventAbilities;
 
     public void Clear()
     {
         statAbilities.Clear();
-        eventAbilities.Clear();
+        // eventAbilities.Clear();
     }
 
     public void Add(IAbility ability, ICombatActor owner)
@@ -23,7 +23,7 @@ public class AbilitySet
         if (ability is IStatModifierAbility s)
             statAbilities.Add(s);
 
-        if (ability is IEventAbility e)
-            eventAbilities.Add(e);
+        // if (ability is IEventAbility e)
+        //     eventAbilities.Add(e);
     }
 }

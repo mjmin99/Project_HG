@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 
@@ -8,6 +11,7 @@ public class BattleManager : MonoBehaviour
     [Header("Set Refs")] 
     [SerializeField] private MapPresenter mapPresenter;
     [SerializeField] private EnemyManager enemyManager;
+    [SerializeField] public DamageUI damageUI;
     
     [Header("Set Character Refs")]
     [SerializeField] private Transform characterParent;
@@ -15,81 +19,210 @@ public class BattleManager : MonoBehaviour
     
     [Header("Set Values")]
     [SerializeField] private float rewindTime = 5f;
+    [SerializeField] private float rewindCoolDown = 15f;
+
+    [Header("Set UI")] 
+    [SerializeField] public RectTransform uiCanvas;
+    [SerializeField] private CharacterHpPresenter characterHpPresenter;
+    [SerializeField] public SkillPresenter skillPresenter;
+    [SerializeField] private StageClearPanel  stageClearPanel;
     
     private readonly List<CharController> characters = new();
+    private List<Transform> charTransforms = new();
+    public readonly Dictionary<int, CharController> skillDict = new();
+
+    private int characterLayer;
+    private Camera cam;
+    public readonly List<SkillInfo> skills = new();
     
+    // 스킬 타입 딕셔너리
+    // 배치된 스킬 타입에 따라 UI의 이미지도 정해짐
+    // 클릭 시, 해당 스킬을 소지한 캐릭터 중, 배치된 캐릭터를 찾아 스킬 사용
     private StageDataSO stageData;
-    private long clearTime;
+    private float clearTime;
     public int score;
 
     private float gameOverTimer;
-    private bool isGameOver;
+    private void Start()
+    {
+        StartStage();
+    }
+    private void FixedUpdate()
+    {
+        if (!cam) return;
+        
+        float x = 0f;
+        int count = 0;
+        for(int i = 0; i< characters.Count; i++)
+        {
+            if (!characters[i].isDead.Value)
+            {
+                x += charTransforms[i].position.x;
+                count++;
+            }
+            
+        }
+        if (count == 0) return;
+        
+        x /= count;
+        cam.transform.position = Vector3.Lerp(cam.transform.position,new Vector3(x + 1f,cam.transform.position.y,cam.transform.position.z), Time.fixedDeltaTime * 10);
+    }
     
     private void Update()
     {
-        if (gameOverTimer > 0f && isGameOver)
+        if (!(gameOverTimer > 0f) || !Manager.Game.IsGameOver) return;
+        
+        gameOverTimer -= Time.deltaTime;
+        
+        if (gameOverTimer <= 0f)
         {
-            gameOverTimer -= Time.deltaTime;
-            if (gameOverTimer <= 0f)
-            {
-                GameOver();
-            }
+            GameOver();
         }
     }
-    public void StartStage() // 스테이지 시작 시
+
+    private void StartStage() // 스테이지 시작 시
     {
+        characterLayer = LayerMask.NameToLayer("Player");
+        
+        cam = Camera.main;
         SetMaps();
         InitCharacters();
         enemyManager.Init();
+        Manager.Game.IsBattle = true;
         Manager.Game.SetCharacters(characters);
+        damageUI.Init();
 
         stageData = Manager.Game.GetStageData();
-        clearTime = DateTime.Now.Millisecond;
+        clearTime = Time.time; 
+        charTransforms = characters.Select(c => c.transform).ToList();
+        
+        // 스킬 연결
+        skillPresenter.Init(skills);
+        // 캐릭터 UI 연결
+        characterHpPresenter.Init();
+        
+        stageClearPanel.gameObject.SetActive(false);
+        DialogCheck().Forget();
+        Manager.Audio.SwapClip(AudioClipType.BGM, $"W{stageData.world}BGM").Forget();
+    }
+
+    private async UniTask DialogCheck()
+    {
+        if (stageData.stage != 1) return;
+        
+        DialogCondition condition;
+        
+        switch(stageData.world)
+        {
+            case 1:
+                condition = DialogCondition.EnterW1S1;
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene2);
+                }
+                break;
+            case 2:
+                condition = DialogCondition.EnterW2S1;
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene5);
+                }
+                break;
+            case 3:
+                condition = DialogCondition.EnterW3S1;
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene7);
+                }
+                break;
+            case 4:
+                condition = DialogCondition.EnterW4S1;
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene9);
+                }
+                break;
+            case 5:
+                condition = DialogCondition.EnterW5S1;
+                if (!Manager.Dialog.CheckDialogCondition(condition))
+                {
+                    await Manager.Dialog.StartDialog(DialogKey.Scene11);
+                }
+                break;
+            default:
+                Debug.LogWarning("다이얼로그가 설정되지 않은 월드임");
+                return;
+        }
+        Manager.Dialog.MarkDialogCondition(condition);
     }
     
-    public void StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
+    public async UniTask StageClear() // 스테이지 클리어 시 세이브 데이터에 클리어 정보 저장
     {
-        // TODO : Stage Clear UI 띄우기
-        clearTime = DateTime.Now.Millisecond - clearTime;
+        Debug.Log("BattleManager 스테이지 클리어");
+        Manager.Game.IsGameClear = true;
+        clearTime = Time.time - clearTime;
         Manager.Game.stageService
-            .ApplyClearResult(stageData.world, stageData.stage, clearTime, score);
-        // TODO: 전투 관련 조작 막기, ESC 조작 막기
+            .ApplyClearResult(stageData.world, stageData.stage, (long)clearTime, score);
+        Manager.Save.AddGold(Manager.Game.GetStageData().rewardGold);
+        Manager.Save.SaveCurrentUser();
+        await UniTask.WhenAll(Manager.Game.tasks);
+        
+        UIManager.Instance.CloseTop();
+        
+        stageClearPanel.gameObject.SetActive(true);
+        stageClearPanel.Init(clearTime);
     }
     
-    private void GameOver()
+    private void GameOver() // 게임 오버 조건 구독은 CheckAlive, 조건 체크는 Update에서 진행
     {
-        // TODO : 조작 로직 막기
+        Debug.Log("BattleManager 스테이지 클리어 실패");
+        Manager.Game.IsGameOver = true;
+        Time.timeScale = 0f;
         // 게임 오버 UI 띄우기
+        UIManager.Instance.OpenUI<UIPanel>("BattleOptionPanel");
     }
 
-    public void PauseGame() // 게임 일시정지
-    {
-        Time.timeScale = 0;
-        // TODO: UI 띄우기
-    }
-
-    public void ReturnGame()
-    {
-        Time.timeScale = 1;
-        // TODO: UI 닫기
-    }
-
-    public void ExitStage()
-    {
-        Time.timeScale = 1;
-        // TODO: 씬 전환
-    }
-
-    public void RewindTime() // 시간 되감기 스킬
+    public void RewindTime() // 시간 되감기 스킬. 버튼으로 구현
     {
         foreach (var c in characters)
         {
             c.RewindTime();
         }
+
+        skillPresenter.SetRewind(rewindTime, rewindCoolDown);
     }
 
-    //내부로직
+    // 스킬 아이콘 클릭 시 스킬 사용
+    public void OnClickSkills(int characterId, int index)
+    {
+        var tmp = skills.Find(x => x.charId == characterId);
+        bool canUse = !Manager.Game.IsGameOver && tmp.skillCount.Value > 0;
+        
+        if (!canUse) return;
+        
+        if (skillDict[characterId].UseSkill())
+        {
+            tmp.skillCount.Value--;
+            skillPresenter.SetTxt(index,$"{tmp.type} : {tmp.skillCount}");
+        }
+    }
+
+    public void GetSkill(int index)
+    {
+        if (Manager.Game.IsGameClear) return;
+        var tmp = skills[index];
+        if (tmp.skillCount.Value >= 3) return;
+        tmp.skillCount.Value++;
+        skillPresenter.skillButtonPanel[index].transform.localScale = Vector3.one * 0.7f;
+        var t1 = skillPresenter.skillButtonPanel[index].transform
+            .DOScale(Vector3.one, 0.3f)
+            .SetEase(Ease.OutElastic)
+            .AsyncWaitForCompletion()
+            .AsUniTask();
+        Manager.Game.tasks.Add(t1);
+    }
     
+    //내부로직
     private void SetMaps() // 맵 생성
     {
         mapPresenter.Init();
@@ -98,11 +231,12 @@ public class BattleManager : MonoBehaviour
     // 캐릭터 정보 가져오고 초기화
     private void InitCharacters()
     {
-        var partySet = Manager.Save.CurrentData.partySet;
+        int[] partySet = Manager.Save.CurrentData.partySet;
+        
         int count = 0;
+        
         foreach (var member in partySet)
         {
-            var stat = Manager.Character.GetStats(member);
             var model = Manager.Character.models[member];
             var go = new GameObject(model.characterName)
             {
@@ -112,10 +246,24 @@ public class BattleManager : MonoBehaviour
                 }
             };
             go.transform.SetParent(characterParent);
+            go.tag = "Player";
+            go.layer = characterLayer; 
+            
+            var stat = Manager.Character.GetStats(member);
             var character = go.AddComponent<CharController>();
-            character.Init(member, stat, rewindTime);
-            characters.Add(character);
+            character.Init(member, stat, rewindTime, damageUI);
             character.isDead.Subscribe(_ => CheckAlive()).AddTo(character);
+            
+            var inst = Manager.Character.instances[member];
+            skillDict.Add(model.id, character);
+            var skillInfo = character.skillPrefab;
+            var skillCooldown = skillInfo.GetSkillCooldown();
+            skills.Add(new SkillInfo(
+                model.id,skillInfo.skillIcon,
+                skillInfo.skillType,
+                0,
+                skillCooldown));
+            characters.Add(character);
         }
     }
 
@@ -126,12 +274,11 @@ public class BattleManager : MonoBehaviour
         foreach (var c in characters)
         {
             if (c.isDead.Value) continue;
-            isGameOver = false;
+            Manager.Game.IsGameOver = false;
             return;
         }
         
         gameOverTimer = rewindTime;
-        isGameOver = true;
+        Manager.Game.IsGameOver = true;
     }
-    
 }
