@@ -11,7 +11,7 @@ public class LazerController : PooledObject
     
     public void Init(LayerMask attacker, float firePower, float playSpeed = 1f)
     {
-        gameObject.layer = LayerMask.NameToLayer("Player");
+        gameObject.layer = LayerMask.NameToLayer("PlayerBullet");
         gameObject.GetComponent<SpriteRenderer>().sprite = null;
         
         rb = gameObject.GetOrAddComponent<Rigidbody>();

@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour, IAttackable
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
     public ReactiveProperty<bool> isDead = new();
     private SpriteRenderer spriteRenderer;
+    private LayerMask playerLayer;
 
     //스테이터스
     private float maxHp;
@@ -27,7 +28,7 @@ public class EnemyController : MonoBehaviour, IAttackable
     // 피격 애니메이션용 캐싱
     private Transform rendererTransform;
     // 피격 상태 전용 변수
-    Vector3 hitDir = new Vector3(0.15f, 0.5f, 0);
+    Vector3 hitDir = new Vector3(0.15f, 0.05f, 0);
     // private const float HIT_COOLDOWN = 3f;
     // private float hitCoolTimer;
     
@@ -79,6 +80,7 @@ public class EnemyController : MonoBehaviour, IAttackable
         enemyInfo = info;
         maxHp = info.maxHP;
         curHp.Value = info.maxHP;
+        playerLayer = LayerMask.GetMask("Player","PlayerBullet");
         
         // UI 설정
         damageUi = damageUI;
@@ -142,7 +144,8 @@ public class EnemyController : MonoBehaviour, IAttackable
 
     public void TakeHit(AttackInfo info)
     {
-        if (info.layer != LayerMask.NameToLayer("Player")) return;
+        var infoLayer = 1 << info.layer;
+        if ((infoLayer & playerLayer) == 0) return; // 비트로 체크
         
         // 현재 스턴 상태일 경우 추가 데미지
         int damage = stunTime > 0 

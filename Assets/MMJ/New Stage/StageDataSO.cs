@@ -10,7 +10,7 @@ using UnityEngine;
 public class StageDataSO : ScriptableObject
 {
     [Header("Set Map Prefab Path")]
-    public string mapPrefabPath;
+    public string mapPrefabName;
 
     [Header("Set Stage Values")]
     public int world;

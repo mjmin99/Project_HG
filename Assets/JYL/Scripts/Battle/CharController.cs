@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UniRx;
 using Cysharp.Threading.Tasks;
+using UnityEditor.UIElements;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,7 +14,7 @@ public class CharController : MonoBehaviour, IAttackable
     public BoxCollider col;
     public StateMachine stateMachine;
     public readonly Dictionary<CharStateType, BaseState> stateDict = new();
-    public AttackInfo atkInfo;
+    public Skill skillPrefab;
 
     // 해싱
     private const string CONTROLLER_PATH = "Battle/Characters/Controllers/";
@@ -31,8 +32,8 @@ public class CharController : MonoBehaviour, IAttackable
     
     public RaycastHit hitInfo; // 어택 시 사용하는 정보
 
+    private AttackInfo atkInfo;
     private TimeRecorder timeRecorder;
-    public Skill skillPrefab;
     private Parrying parry;
     private readonly Stack<Skill> skillPool = new();
 
@@ -180,7 +181,6 @@ public class CharController : MonoBehaviour, IAttackable
                 // TODO: 힐러일 경우 전체 힐. 이펙트 재생 필요함
                 if (stats.role == CharacterRole.Healer)
                 {
-                    Debug.Log("어택에서 힐 들어옴");
                     foreach (var c in Manager.Game.Characters)
                     {
                         c.Heal(stats.magicAttack);
@@ -305,11 +305,9 @@ public class CharController : MonoBehaviour, IAttackable
     
     public void Heal(float amount)
     {
-        Debug.Log($"힐 들어옴{amount}");
         if (isDead.Value) return;
         
         int healAmount = (int)Mathf.Clamp(amount, 0, maxHp - curHp.Value);
-        Debug.Log($"힐 시작{healAmount}");
         if (healAmount > 0)
         {
             curHp.Value += healAmount;

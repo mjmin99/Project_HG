@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3769dc54512972b47a03eb58fdfda5f7, type: 3}
   m_Name: StageData_4_3
   m_EditorClassIdentifier: Assembly-CSharp::StageDataSO
-  mapPrefabPath: 
+  mapPrefabName: Ice
   world: 4
   stage: 3
   prevWorld: 4

@@ -12,7 +12,7 @@ public class BulletController : PooledObject
     public void Init(LayerMask attacker, float firePower, float fireSpeed = 2f)
     {
         gameObject.GetComponent<SpriteRenderer>().sprite = null;
-        gameObject.layer = LayerMask.NameToLayer("Player");
+        gameObject.layer = LayerMask.NameToLayer("PlayerBullet");
         
         rb = gameObject.GetOrAddComponent<Rigidbody>();
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;

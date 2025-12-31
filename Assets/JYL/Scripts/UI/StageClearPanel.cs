@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -21,29 +23,37 @@ public class StageClearPanel : MonoBehaviour
         clearTimeText.SetText($"{minutes:00} : {seconds:00}");
         restartButton
             .OnClickAsObservable()
-            .Subscribe(_ => RestartStage())
+            .Subscribe(_ => RestartStage().Forget())
             .AddTo(this);
         returnButton
             .OnClickAsObservable()
-            .Subscribe(_ => ReturnToBase())
+            .Subscribe(_ => ReturnToBase().Forget())
             .AddTo(this);
     }
 
-    private static void RestartStage()
+    private static async UniTask RestartStage()
     {
         Manager.Game.IsBattle = false;
         Manager.Game.IsGameClear = false;
         Manager.Game.IsGameOver = false;
         Time.timeScale = 1f;
+        
+        await UniTask.WhenAll(Manager.Game.tasks);
+        
+        DOTween.KillAll();
         SceneManager.LoadScene("BattleScene");
     }
 
-    private static void ReturnToBase()
+    private static async UniTask ReturnToBase()
     {
         Manager.Game.IsBattle = false;
         Manager.Game.IsGameClear = false;
         Manager.Game.IsGameOver = false;
         Time.timeScale = 1f;
+        
+        await UniTask.WhenAll(Manager.Game.tasks);
+        
+        DOTween.KillAll();
         SceneManager.LoadScene("MainScene");
     }
 }
