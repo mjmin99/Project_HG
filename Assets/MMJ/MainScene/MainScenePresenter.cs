@@ -5,14 +5,15 @@ using UnityEngine.UI;
 
 public class MainScenePresenter : MonoBehaviour
 {
-    public TMP_Text goldText;
     public Button shopButton;
-    public TestStageSelectUIController testStageSelectUI;
+    // public TestStageSelectUIController testStageSelectUI;
     public Button expeditionButton;
+    public Button OptionButton;
     private void Awake()
     {
         shopButton.onClick.AddListener(GoToShop);
         expeditionButton.onClick.AddListener(OnClickExpedition);
+        OptionButton.onClick.AddListener(OnClickOption);
     }
 
     private void Start()
@@ -36,7 +37,6 @@ public class MainScenePresenter : MonoBehaviour
     public void UpdateGoldUI()
     {
         int gold = Manager.Save.CurrentData.gold;
-        goldText.text = gold.ToString();
     }
 
     public void GoToShop() // 배틀씬 버튼 처럼 나중에 버튼에 직접 달아서 움직이게 역할 주는 것도 괜찮을듯
@@ -48,5 +48,10 @@ public class MainScenePresenter : MonoBehaviour
     public void OnClickExpedition()
     {
         UIManager.Instance.OpenUI<StageSelectPanel>("StageSelectPanel");
+    }
+
+    public void OnClickOption()
+    {
+        UIManager.Instance.OpenUI<OptionPanel>("OptionPanel");
     }
 }
