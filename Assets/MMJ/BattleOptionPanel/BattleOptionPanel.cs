@@ -5,6 +5,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
 
 public class BattleOptionPanel : UIPanel
 {
@@ -62,7 +63,9 @@ public class BattleOptionPanel : UIPanel
         Time.timeScale = 1f;
         UIManager.Instance.CloseTop();
         await UniTask.WhenAll(Manager.Game.tasks);
-        SceneManager.LoadScene("BattleScene");
+        // SceneManager.LoadScene("BattleScene");
+        // 어드레서블로 수정
+        await Addressables.LoadSceneAsync("Scene/Battle").ToUniTask();
         Manager.Game.IsGameOver = false;
         Manager.Game.IsGameClear = false;
     }
@@ -77,6 +80,8 @@ public class BattleOptionPanel : UIPanel
         Manager.Game.IsBattle = false;
         Manager.Game.IsGameOver = false;
         Manager.Game.IsGameClear = false;
-        SceneManager.LoadScene("MainScene");
+        // SceneManager.LoadScene("MainScene");
+        // 어드레서블로 수정
+        await Addressables.LoadSceneAsync("Scene/Main").ToUniTask();
     }
 }

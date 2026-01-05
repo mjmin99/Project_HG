@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using Cysharp.Threading.Tasks;
+using UnityEngine.AddressableAssets;
 
 public class LobbyPanel : MonoBehaviour
 {
@@ -89,6 +90,10 @@ public class LobbyPanel : MonoBehaviour
 
     private IEnumerator InitializeGameData()
     {
+        // 어드레서블 수정 중
+        // Addressables 초기화 (최초 1회)
+        Addressables.InitializeAsync();
+
         Debug.Log("[LobbyPanel] ========== 게임 데이터 로딩 시작 ==========");
 
         gameStartButton.interactable = false;
@@ -174,7 +179,10 @@ public class LobbyPanel : MonoBehaviour
 
         // 4단계: 메인씬 이동
         Debug.Log("[LobbyPanel] ========== 로딩 완료! MainScene 이동 ==========");
-        SceneChanger.Instance.LoadScene("MainScene");
+        // SceneChanger.Instance.LoadScene("MainScene");
+        // 어드레서블로 변경
+        // todo 유니태스크로 변경은 추후에~
+        Addressables.LoadSceneAsync("Scene/Main");
         // 5단계: 스테이지 세이브 서비스 초기화
         Manager.Game.StageServiceInit();
     }

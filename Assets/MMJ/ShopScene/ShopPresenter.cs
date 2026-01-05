@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -93,6 +94,8 @@ public class ShopPresenter : MonoBehaviour
 
     public void BackToMain()
     {
-        SceneManager.LoadScene("MainScene");
+        // SceneManager.LoadScene("MainScene");
+        // 어드레서블 수정 중
+        Addressables.LoadSceneAsync("Scene/Main");
     }
 }

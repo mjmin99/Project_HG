@@ -1,8 +1,9 @@
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -41,7 +42,10 @@ public class StageClearPanel : MonoBehaviour
         await UniTask.WhenAll(Manager.Game.tasks);
         
         DOTween.KillAll();
-        SceneManager.LoadScene("BattleScene");
+
+        // SceneManager.LoadScene("BattleScene");
+        // 어드레서블 수정 중
+        await Addressables.LoadSceneAsync("Scene/Battle").ToUniTask();
     }
 
     private static async UniTask ReturnToBase()
@@ -54,7 +58,9 @@ public class StageClearPanel : MonoBehaviour
         await UniTask.WhenAll(Manager.Game.tasks);
         
         DOTween.KillAll();
-        await SceneManager.LoadSceneAsync("MainScene");
+        // await SceneManager.LoadSceneAsync("MainScene");
+        // 어드레서블 수정 중
+        await Addressables.LoadSceneAsync("Scene/Main").ToUniTask();
         if (Manager.Game.GetStageData().stage != 5) return;
         await CheckBossDeadDialog();
     }
