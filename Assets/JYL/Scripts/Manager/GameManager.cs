@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -9,6 +9,9 @@ public class GameManager : Singleton<GameManager>
 
     public StageSaveService stageService;
     public List<CharController> Characters;
+
+    // 어드레서블 수정 중 
+    public BattleManager CurrentBattleManager { get; set; }
 
     public bool IsBattle { get; set; }
     public bool IsGameOver { get; set; }

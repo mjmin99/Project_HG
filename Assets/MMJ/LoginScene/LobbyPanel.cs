@@ -114,13 +114,14 @@ public class LobbyPanel : MonoBehaviour
 
             Manager.Character.LoadModels(models);
 
+            // todo 어드레서블로 수정 중 이제 로비패널에서 캐릭터 프리펩 검사할 필요 x 
             // Prefab 연결
-            foreach (var model in Manager.Character.models.Values)
-            {
-                model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
-                if (model.prefab == null)
-                    Debug.LogWarning($"[LobbyPanel] Prefab not found: {model.characterName}");
-            }
+            // foreach (var model in Manager.Character.models.Values)
+            // {
+            //     model.prefab = Resources.Load<GameObject>($"Characters/{model.characterName}");
+            //     if (model.prefab == null)
+            //         Debug.LogWarning($"[LobbyPanel] Prefab not found: {model.characterName}");
+            // }
 
             Debug.Log($"[LobbyPanel] CSV 로드 완료: {models.Count}개 캐릭터");
         }

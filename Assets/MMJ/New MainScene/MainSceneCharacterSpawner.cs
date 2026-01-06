@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class MainSceneCharacterSpawner : MonoBehaviour
@@ -17,11 +18,16 @@ public class MainSceneCharacterSpawner : MonoBehaviour
 
     [SerializeField] private Transform characterRoot;
 
+    // 어드레서블 수정 중
+    private MainSceneCharacterLoader loader;
+
     private readonly List<float> usedXPositions = new List<float>();
 
     private void Start()
     {
-        SpawnOwnedCharacters();
+        loader = new MainSceneCharacterLoader();
+        // 메인씬 캐릭터 스폰은 연출용이므로 await하지 않음
+        SpawnOwnedCharacters().Forget();
     }
 
     // ==============================
@@ -38,7 +44,43 @@ public class MainSceneCharacterSpawner : MonoBehaviour
         SaveManager.OnCharacterAcquired -= HandleCharacterAcquired;
     }
 
-    private void SpawnOwnedCharacters()
+    // todo 어드레서블 사용하기전 버전
+    // private void SpawnOwnedCharacters()
+    // {
+    //     var models = Manager.Character.models;
+    //     var instances = Manager.Character.instances;
+    // 
+    //     foreach (var pair in instances)
+    //     {
+    //         CharacterInstance inst = pair.Value;
+    // 
+    //         if (!inst.isOwned)
+    //             continue;
+    // 
+    //         if (!models.TryGetValue(inst.id, out var model))
+    //             continue;
+    // 
+    //         if (model.prefab == null)
+    //         {
+    //             Debug.LogWarning($"[Spawner] prefab 없음 : {model.characterName}");
+    //             continue;
+    //         }
+    // 
+    //         float spawnX = GetRandomSpawnX();
+    //         Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+    // 
+    //         GameObject obj = Instantiate(
+    //             model.prefab,
+    //             spawnPos,
+    //             Quaternion.identity,
+    //             characterRoot
+    //         );
+    // 
+    //         ApplyInitialFeel(obj.GetComponent<MainSceneCharacter>());
+    //     }
+    // }
+
+    private async UniTask SpawnOwnedCharacters()
     {
         var models = Manager.Character.models;
         var instances = Manager.Character.instances;
@@ -46,26 +88,20 @@ public class MainSceneCharacterSpawner : MonoBehaviour
         foreach (var pair in instances)
         {
             CharacterInstance inst = pair.Value;
-
             if (!inst.isOwned)
                 continue;
 
             if (!models.TryGetValue(inst.id, out var model))
                 continue;
 
-            if (model.prefab == null)
-            {
-                Debug.LogWarning($"[Spawner] prefab 없음 : {model.characterName}");
-                continue;
-            }
-
             float spawnX = GetRandomSpawnX();
             Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
 
-            GameObject obj = Instantiate(
-                model.prefab,
+            string address = $"Characters/{model.characterName}";
+
+            var obj = await loader.Spawn(
+                address,
                 spawnPos,
-                Quaternion.identity,
                 characterRoot
             );
 
@@ -130,22 +166,49 @@ public class MainSceneCharacterSpawner : MonoBehaviour
         }
     }
 
-    private void HandleCharacterAcquired(CharacterInstance inst)
+    // todo 어드레서블 사용하기 전 함수
+    // private void HandleCharacterAcquired(CharacterInstance inst)
+    // {
+    //     var model = Manager.Character.models[inst.id];
+    //     if (model == null || model.prefab == null)
+    //         return;
+    // 
+    //     float spawnX = GetRandomSpawnX();
+    //     Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+    // 
+    //     GameObject obj = Instantiate(
+    //         model.prefab,
+    //         spawnPos,
+    //         Quaternion.identity,
+    //         characterRoot
+    //     );
+    // 
+    //     ApplyInitialFeel(obj.GetComponent<MainSceneCharacter>());
+    // }
+
+    // 어드레서블 사용 중
+    private async void HandleCharacterAcquired(CharacterInstance inst)
     {
         var model = Manager.Character.models[inst.id];
-        if (model == null || model.prefab == null)
+        if (model == null)
             return;
 
         float spawnX = GetRandomSpawnX();
         Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
 
-        GameObject obj = Instantiate(
-            model.prefab,
+        string address = $"Characters/{model.characterName}";
+
+        var obj = await loader.Spawn(
+            address,
             spawnPos,
-            Quaternion.identity,
             characterRoot
         );
 
         ApplyInitialFeel(obj.GetComponent<MainSceneCharacter>());
+    }
+
+    private void OnDestroy()
+    {
+        loader?.ReleaseAll();
     }
 }

@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
@@ -26,7 +28,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private CharacterHpPresenter characterHpPresenter;
     [SerializeField] public SkillPresenter skillPresenter;
     [SerializeField] private StageClearPanel  stageClearPanel;
-    
+
+    // todo --------- 어드레서블 적용 중
+    private BattlePrefabLoader prefabLoader;
+
+
     private readonly List<CharController> characters = new();
     private List<Transform> charTransforms = new();
     public readonly Dictionary<int, CharController> skillDict = new();
@@ -43,25 +49,42 @@ public class BattleManager : MonoBehaviour
     public int score;
 
     private float gameOverTimer;
-    private void Start()
+    private async void Start()
     {
-        StartStage();
+        await StartStageAsync();
     }
+
     private void FixedUpdate()
     {
+        // 어드레서블 수정 중
+        if (characters == null || characters.Count == 0)
+            return;
+
         if (!cam) return;
         
         float x = 0f;
         int count = 0;
-        for(int i = 0; i< characters.Count; i++)
+        // for(int i = 0; i< characters.Count; i++)
+        // {
+        //     if (!characters[i].isDead.Value)
+        //     {
+        //         x += charTransforms[i].position.x;
+        //         count++;
+        //     }
+        //     
+        // }
+
+        int loopCount = Mathf.Min(characters.Count, charTransforms.Count);
+
+        for (int i = 0; i < loopCount; i++)
         {
             if (!characters[i].isDead.Value)
             {
                 x += charTransforms[i].position.x;
                 count++;
             }
-            
         }
+
         if (count == 0) return;
         
         x /= count;
@@ -82,11 +105,15 @@ public class BattleManager : MonoBehaviour
 
     private void StartStage() // 스테이지 시작 시
     {
+        prefabLoader = new BattlePrefabLoader();
+
         characterLayer = LayerMask.NameToLayer("Player");
         
         cam = Camera.main;
         SetMaps();
-        InitCharacters();
+        // todo 어드레서블로 고치는 중
+        // InitCharacters(); 이전거
+        InitCharactersAsync().Forget();
         enemyManager.Init();
         Manager.Game.IsBattle = true;
         Manager.Game.SetCharacters(characters);
@@ -104,6 +131,65 @@ public class BattleManager : MonoBehaviour
         stageClearPanel.gameObject.SetActive(false);
         DialogCheck().Forget();
         Manager.Audio.SwapClip(AudioClipType.BGM, $"W{stageData.world}BGM").Forget();
+    }
+
+    private async UniTask StartStageAsync()
+    {
+        prefabLoader = new BattlePrefabLoader();
+
+        characterLayer = LayerMask.NameToLayer("Player");
+        cam = Camera.main;
+
+        SetMaps();
+
+        // 캐릭터/스킬 로딩이 끝날 때까지 기다린다
+        await InitCharactersAsync();
+
+        // 여기부터는 "캐릭터가 확실히 존재"하는 상태
+        Manager.Game.IsBattle = true;
+        Manager.Game.SetCharacters(characters);
+
+        // (추천) charTransforms는 지우는 게 베스트지만, 유지한다면 여기서 다시 만든다
+        charTransforms = characters.Select(c => c.transform).ToList();
+
+        // UI는 이제 안전하게 초기화 가능
+        skillPresenter.Init(skills);
+        characterHpPresenter.Init();
+
+        // 카메라 첫 프레임 스냅(첫 진입 이상현상 방지)
+        SnapCameraToAliveCharacters();
+
+        // 나머지
+        damageUI.Init();
+        enemyManager.Init();
+
+        stageData = Manager.Game.GetStageData();
+        clearTime = Time.time;
+
+        stageClearPanel.gameObject.SetActive(false);
+
+        DialogCheck().Forget();
+        Manager.Audio.SwapClip(AudioClipType.BGM, $"W{stageData.world}BGM").Forget();
+    }
+
+    private void SnapCameraToAliveCharacters()
+    {
+        if (!cam || characters == null || characters.Count == 0) return;
+
+        float x = 0f;
+        int count = 0;
+
+        foreach (var c in characters)
+        {
+            if (c == null || c.isDead.Value) continue;
+            x += c.transform.position.x;
+            count++;
+        }
+
+        if (count == 0) return;
+
+        x /= count;
+        cam.transform.position = new Vector3(x + 1f, cam.transform.position.y, cam.transform.position.z);
     }
 
     private async UniTask DialogCheck()
@@ -265,6 +351,93 @@ public class BattleManager : MonoBehaviour
                 skillCooldown));
             characters.Add(character);
         }
+    }
+    // todo 어드레서블로 고친 캐릭터 초기화 어싱크
+    private async UniTask InitCharactersAsync()
+    {
+        if (prefabLoader == null)
+        {
+            Debug.LogError("[BattleManager] prefabLoader is null");
+            return;
+        }
+
+        if (characterParent == null || characterPos == null || characterPos.Length == 0)
+        {
+            Debug.LogError("[BattleManager] Character spawn references not set");
+            return;
+        }
+
+        int[] partySet = Manager.Save.CurrentData.partySet;
+        int count = 0;
+
+        foreach (var member in partySet)
+        {
+            if (!Manager.Character.models.TryGetValue(member, out var model))
+            {
+                Debug.LogError($"[BattleManager] Character model not found: {member}");
+                continue;
+            }
+
+            // 배틀 전용 프리팹 주소
+            string address = $"Characters/{model.characterName}_Battle";
+
+            var instance = await prefabLoader.LoadAndSpawn(address, characterParent);
+            if (instance == null)
+                continue;
+
+            if (count >= characterPos.Length)
+            {
+                Debug.LogError("[BattleManager] characterPos overflow");
+                break;
+            }
+
+            instance.transform.position = characterPos[count++].position;
+            instance.tag = "Player";
+            instance.layer = characterLayer;
+
+            var character = instance.GetComponent<CharController>();
+            if (character == null)
+            {
+                Debug.LogError($"[BattleManager] CharController missing on {address}");
+                continue;
+            }
+
+            var stat = Manager.Character.GetStats(member);
+            character.Init(member, stat, rewindTime, damageUI);
+
+            character.isDead
+                .Subscribe(_ => CheckAlive())
+                .AddTo(character);
+
+            characters.Add(character);
+
+            // === 스킬/UI 연동 ===
+            skillDict.Add(model.id, character);
+
+            var skillInfo = character.skillPrefab;
+            if (skillInfo == null)
+            {
+                Debug.LogError($"[BattleManager] SkillPrefab missing on {address}");
+                continue;
+            }
+
+            var cooldown = skillInfo.GetSkillCooldown();
+            skills.Add(new SkillInfo(
+                model.id,
+                skillInfo.skillIcon,
+                skillInfo.skillType,
+                0,
+                cooldown
+            ));
+        }
+
+        Manager.Game.SetCharacters(characters);
+    }
+
+    // 어드레서블용 캐릭터 릴리즈~ 
+    public void ReleaseBattleCharacters()
+    {
+        prefabLoader?.ReleaseAll();
     }
 
     // 플레이어 캐릭터가 전부 죽으면,

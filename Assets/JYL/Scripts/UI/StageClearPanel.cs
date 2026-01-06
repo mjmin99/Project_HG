@@ -45,7 +45,8 @@ public class StageClearPanel : MonoBehaviour
 
         // SceneManager.LoadScene("BattleScene");
         // 어드레서블 수정 중
-        await Addressables.LoadSceneAsync("Scene/Battle").ToUniTask();
+        Manager.Game.CurrentBattleManager?.ReleaseBattleCharacters(); // 어드레서블로 릴리즈 해주기
+        await Addressables.LoadSceneAsync("Scene/Battle").ToUniTask(); // 어드레서블 씬 전환
     }
 
     private static async UniTask ReturnToBase()
@@ -60,7 +61,8 @@ public class StageClearPanel : MonoBehaviour
         DOTween.KillAll();
         // await SceneManager.LoadSceneAsync("MainScene");
         // 어드레서블 수정 중
-        await Addressables.LoadSceneAsync("Scene/Main").ToUniTask();
+        Manager.Game.CurrentBattleManager?.ReleaseBattleCharacters(); // 어드레서블로 릴리즈 해주기
+        await Addressables.LoadSceneAsync("Scene/Main").ToUniTask(); // 어드레서블 씬 전환
         if (Manager.Game.GetStageData().stage != 5) return;
         await CheckBossDeadDialog();
     }

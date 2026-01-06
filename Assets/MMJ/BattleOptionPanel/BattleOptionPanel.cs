@@ -65,7 +65,8 @@ public class BattleOptionPanel : UIPanel
         await UniTask.WhenAll(Manager.Game.tasks);
         // SceneManager.LoadScene("BattleScene");
         // 어드레서블로 수정
-        await Addressables.LoadSceneAsync("Scene/Battle").ToUniTask();
+        Manager.Game.CurrentBattleManager?.ReleaseBattleCharacters(); // 어드레서블로 릴리즈 해주기
+        await Addressables.LoadSceneAsync("Scene/Battle").ToUniTask(); // 어드레서블 씬 전환
         Manager.Game.IsGameOver = false;
         Manager.Game.IsGameClear = false;
     }
@@ -82,6 +83,7 @@ public class BattleOptionPanel : UIPanel
         Manager.Game.IsGameClear = false;
         // SceneManager.LoadScene("MainScene");
         // 어드레서블로 수정
-        await Addressables.LoadSceneAsync("Scene/Main").ToUniTask();
+        Manager.Game.CurrentBattleManager?.ReleaseBattleCharacters(); // 어드레서블로 릴리즈 해주기
+        await Addressables.LoadSceneAsync("Scene/Main").ToUniTask(); // 어드레서블 씬 전환
     }
 }
