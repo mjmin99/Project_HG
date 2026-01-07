@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: d35d64c3acc45c84b976ca11e8ba23f8
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 0f88adee629d889fe39908b079c3234d
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -51,10 +51,10 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: b94158b2ea6c10442a773cc35bc1e385
   m_RemoteCatalogLoadPath:
-    m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+    m_Id: 0e86862ca88ba1b499320e5363f2f009
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 92c8c3f3dc0488841bc084c7a05ba981, type: 2}
   - {fileID: 11400000, guid: 6d42e44ff2a02f146bb59dfb8381b431, type: 2}
+  - {fileID: 11400000, guid: eb00780fdcdf3224aae4a3dbd06a24b3, type: 2}
   - {fileID: 11400000, guid: 557807402fbbe7b408444e05bc88438f, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -73,7 +74,7 @@ MonoBehaviour:
       m_ProfileName: Default
       m_Values:
       - m_Id: 0e86862ca88ba1b499320e5363f2f009
-        m_Value: <undefined>
+        m_Value: 'https://storage.googleapis.com/project-hg-addressables/Addressables/[BuildTarget]'
       - m_Id: 27fe33f47b3b7bf4aab4830c3392ec66
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: 36c3a495325bc494198cc8b53cc81594

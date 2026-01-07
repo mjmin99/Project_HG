@@ -1,6 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,18 +11,25 @@ using Random = UnityEngine.Random;
 public class DamageUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageTextPrefab;
-    [SerializeField] private int poolSize = 30; // 오브젝트 풀링. 풀링 갯수
+    [SerializeField] private int poolSize = 30;
     [SerializeField] private float fontSize = 0.15f;
     [SerializeField] private Transform returnPool;
 
     private readonly Stack<TMP_Text> textPool = new();
     private readonly Dictionary<Transform, RectTransform> parentCanvas = new();
+
     public void Init()
     {
-        for (int i = 0; i < poolSize; i++)
+        // 중복 Init 방지
+        if (damageTextPrefab == null)
         {
-            CreateTextInstance();
+            Debug.LogError("[DamageUI] damageTextPrefab is null");
+            return;
         }
+        if (returnPool == null) returnPool = transform;
+
+        for (int i = textPool.Count; i < poolSize; i++)
+            CreateTextInstance();
     }
 
     private void CreateTextInstance()
@@ -29,133 +38,199 @@ public class DamageUI : MonoBehaviour
         newText.gameObject.SetActive(false);
         textPool.Push(newText);
     }
-    
+
     public async UniTask ShowDamageEffect(int damage, Transform targetTransform, bool isPlayerHit, bool isCritical)
     {
-        if(textPool.Count == 0) CreateTextInstance();
-        
-        var newText = textPool.Pop();
-        var childCanvas = CheckChildCanvas(targetTransform);
-        newText.transform.SetParent(childCanvas);
-        
-        newText.gameObject.SetActive(true);
-        newText.SetText($"{damage}");// damage.ToString(); ...(x)
-                                     // SetText가 가비지가 더 적음
-        // 인스턴스 초기화
-        newText.alpha = 1f;
-        if (isCritical)
-        {
-            newText.color = Color.red;
-            newText.fontSize *= 1.2f;
-        }
-        else
-        {
-            newText.color = Color.white;
-            newText.fontSize = fontSize;
-        }
-        newText.transform.localScale = Vector3.one;
+        // 호출 시점에 대상이 이미 파괴된 경우 방어
+        if (!targetTransform) return;
+        if (!this || !gameObject) return;
 
-        // 위치 값 가져오기. canvas가 적마다 달려있으므로 상관없음
-        newText.rectTransform.anchoredPosition = Vector2.zero;
-        
-        // 랜덤 오프셋 설정
-        float randX = isPlayerHit 
-            ? Random.Range(-0.4f, -0.1f) 
-            : Random.Range(0.1f, 0.4f); // UnityEngine.Random이 더 간편하면서 성능상 문제 없음
-        Vector2 endPos = new Vector2(randX, 0.3f);
-        
-        // 이전 Tween이 실행 중이라면 제거
-        newText.DOKill();
-        
-        Sequence seq = DOTween.Sequence();
-        
-        // Join : 현재 실행중인 Tween에 상관없이 추가함. 즉, 동시재생
-        // Append : 현재 실행 중인 Tween이 종료되면 이어서 수행
-        // Insert : 현재 실행 중인 Tween과 상관없이, 일정 시간이 지나면 시작함
-        seq.Join(newText.rectTransform
-            .DOJumpAnchorPos(endPos,0.75f,1,1.2f)
-            .SetEase(Ease.OutBounce));
-        seq.Insert(1f,newText
-            .DOFade(0f, 0.2f));
-        
-        Manager.Game.tasks.Add(seq.AsyncWaitForCompletion().AsUniTask());
-        await seq.AsyncWaitForCompletion();
-        if (newText.gameObject != null)
+        if (textPool.Count == 0) CreateTextInstance();
+        var newText = textPool.Pop();
+
+        // newText가 혹시 파괴돼있으면 재생성
+        if (!newText)
         {
-            newText.gameObject.SetActive(false);
-            newText.transform.SetParent(returnPool);
-            textPool.Push(newText);
+            CreateTextInstance();
+            newText = textPool.Pop();
+            if (!newText) return;
+        }
+
+        // "부모 캔버스"가 파괴된 경우 재생성하도록
+        var childCanvas = CheckChildCanvas(targetTransform);
+        if (!childCanvas)
+        {
+            ReturnToPoolSafe(newText);
+            return;
+        }
+
+        newText.transform.SetParent(childCanvas, worldPositionStays: false);
+
+        newText.gameObject.SetActive(true);
+        newText.SetText($"{damage}");
+
+        newText.alpha = 1f;
+        newText.color = isCritical ? Color.red : Color.white;
+        newText.fontSize = isCritical ? (fontSize * 1.2f) : fontSize; // *= 누적 버그 방지
+        newText.transform.localScale = Vector3.one;
+        newText.rectTransform.anchoredPosition = Vector2.zero;
+
+        float randX = isPlayerHit ? Random.Range(-0.4f, -0.1f) : Random.Range(0.1f, 0.4f);
+        Vector2 endPos = new Vector2(randX, 0.3f);
+
+        // 이전 트윈 제거
+        newText.DOKill();
+
+        // 트윈을 newText에 링크 (오브젝트 Destroy되면 자동 Kill)
+        Sequence seq = DOTween.Sequence();
+        seq.SetLink(newText.gameObject, LinkBehaviour.KillOnDestroy);
+
+        seq.Join(newText.rectTransform
+            .DOJumpAnchorPos(endPos, 0.75f, 1, 1.2f)
+            .SetEase(Ease.OutBounce));
+
+        seq.Insert(1f, newText
+            .DOFade(0f, 0.2f));
+
+        // 씬 전환/패널 종료 등으로 DamageUI가 Destroy되면 await 즉시 취소
+        var ct = this.GetCancellationTokenOnDestroy();
+
+        try
+        {
+            var task = seq.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(ct);
+
+            // 기존 코드에서 tasks에 넣는 로직 유지하되, 취소 가능한 Task만 넣기
+            // Manager.Game.tasks.Add(task);
+
+            await task;
+        }
+        catch (System.OperationCanceledException)
+        {
+            // 씬 전환/파괴로 취소된 경우 정상 흐름
+        }
+        finally
+        {
+            // 완료/취소 후에도 오브젝트가 살아있을 때만 만지기
+            if (newText)
+                ReturnToPoolSafe(newText);
         }
     }
 
     public async UniTask ShowHealEffect(int amount, Transform targetTransform)
     {
-        if(textPool.Count == 0) CreateTextInstance();
-        
+        if (!targetTransform) return;
+        if (!this || !gameObject) return;
+
+        if (textPool.Count == 0) CreateTextInstance();
         var newText = textPool.Pop();
+
+        if (!newText)
+        {
+            CreateTextInstance();
+            newText = textPool.Pop();
+            if (!newText) return;
+        }
+
         var childCanvas = CheckChildCanvas(targetTransform);
-        newText.transform.SetParent(childCanvas);
-        
+        if (!childCanvas)
+        {
+            ReturnToPoolSafe(newText);
+            return;
+        }
+
+        newText.transform.SetParent(childCanvas, worldPositionStays: false);
+
         newText.gameObject.SetActive(true);
         newText.SetText($"{amount}");
+
         newText.alpha = 1f;
         newText.color = Color.greenYellow;
         newText.fontSize = fontSize;
         newText.transform.localScale = Vector3.one;
-        
-        // 위치 값 가져오기. canvas가 적마다 달려있으므로 상관없음
         newText.rectTransform.anchoredPosition = Vector2.zero;
-        
+
         Vector2 endPos = new Vector2(-0.1f, 0.3f);
-        
-        // 이전 Tween이 실행 중이라면 제거
+
         newText.DOKill();
-        
+
         Sequence seq = DOTween.Sequence();
-        
-        // Join : 현재 실행중인 Tween에 상관없이 추가함. 즉, 동시재생
-        // Append : 현재 실행 중인 Tween이 종료되면 이어서 수행
-        // Insert : 현재 실행 중인 Tween과 상관없이, 일정 시간이 지나면 시작함
+        seq.SetLink(newText.gameObject, LinkBehaviour.KillOnDestroy);
+
         seq.Join(newText.rectTransform
-            .DOAnchorPos(endPos,0.75f)
+            .DOAnchorPos(endPos, 0.75f)
             .SetEase(Ease.OutCubic));
-        seq.Insert(1f,newText
+
+        seq.Insert(1f, newText
             .DOFade(0f, 0.2f));
-        
-        Manager.Game.tasks.Add(seq.AsyncWaitForCompletion().AsUniTask());
-        
-        await seq.AsyncWaitForCompletion();
-        
-        if (newText.gameObject)
+
+        var ct = this.GetCancellationTokenOnDestroy();
+
+        try
         {
-            newText.gameObject.SetActive(false);
-            newText.transform.SetParent(returnPool);
-            textPool.Push(newText);
+            var task = seq.AsyncWaitForCompletion().AsUniTask().AttachExternalCancellation(ct);
+            // Manager.Game.tasks.Add(task);
+            await task;
         }
+        catch (System.OperationCanceledException)
+        {
+            // 정상
+        }
+        finally
+        {
+            if (newText)
+                ReturnToPoolSafe(newText);
+        }
+    }
+
+    private void ReturnToPoolSafe(TMP_Text txt)
+    {
+        if (!txt) return;
+
+        // 트윈 정리
+        txt.DOKill();
+
+        if (returnPool == null) returnPool = transform;
+
+        txt.gameObject.SetActive(false);
+        txt.transform.SetParent(returnPool, worldPositionStays: false);
+        textPool.Push(txt);
     }
 
     public RectTransform CheckChildCanvas(Transform targetTransform)
     {
-        if (parentCanvas.TryGetValue(targetTransform, out var canvas)) return canvas;
-        
+        // targetTransform이 파괴된 경우
+        if (!targetTransform) return null;
+
+        // 캐시된 RectTransform이 Destroy된 경우 캐시 제거
+        if (parentCanvas.TryGetValue(targetTransform, out var cached))
+        {
+            if (cached) return cached;
+            parentCanvas.Remove(targetTransform);
+        }
+
+        // 기존 Canvas가 있으면 그것 사용
         var targetCanvas = targetTransform.GetComponentInChildren<Canvas>();
-        
         if (targetCanvas != null)
         {
-            parentCanvas.Add(targetTransform, targetCanvas.GetComponent<RectTransform>());
-            return parentCanvas[targetTransform];
+            var rt = targetCanvas.GetComponent<RectTransform>();
+            if (rt)
+            {
+                parentCanvas[targetTransform] = rt;
+                return rt;
+            }
         }
-            
+
+        // 없으면 새로 생성
         GameObject go = new GameObject("DamageUI");
-        go.transform.SetParent(targetTransform);
-        
+        go.transform.SetParent(targetTransform, worldPositionStays: false);
+
         var newCanvas = go.AddComponent<Canvas>();
         newCanvas.renderMode = RenderMode.WorldSpace;
-        
+
         var tr = go.GetComponent<RectTransform>();
         tr.anchoredPosition = Vector2.up * 0.25f;
-        parentCanvas.Add(targetTransform, tr);
-        
+
+        parentCanvas[targetTransform] = tr;
         return tr;
     }
 }
