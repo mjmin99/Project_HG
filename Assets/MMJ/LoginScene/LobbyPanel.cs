@@ -154,6 +154,7 @@ public class LobbyPanel : MonoBehaviour
         // 3단계: Firebase 세이브 로드
         bool loadComplete = false;
 
+        Manager.Save.SetUserContext(user.UserId);
         Manager.Save.InitForUser(user.UserId, () =>
         {
             loadComplete = true;

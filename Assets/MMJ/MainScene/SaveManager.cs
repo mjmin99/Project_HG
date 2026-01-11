@@ -1,39 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using System.Linq;
 
-public class SaveManager : Singleton<SaveManager>
+public partial class SaveManager : Singleton<SaveManager>
 {
+    private DatabaseReference db;
+    private string userIdCached;
     public SaveData CurrentData { get; private set; }
 
-    private DatabaseReference db;
+    // patch 배치용
+    private readonly Dictionary<string, object> pending = new();
+    private bool flushScheduled;
 
     public static event Action<CharacterInstance> OnCharacterAcquired;
-
-    // 유저 세이브 시 사용되는 함수
-    public void SaveCurrentUser()
-    {
-        Debug.Log("[SaveManager] SaveCurrentUser START");
-
-        if (CurrentData == null)
-        {
-            Debug.LogError("[SaveManager] CurrentData is NULL");
-            return;
-        }
-
-        var user = FirebaseManager.Auth.CurrentUser;
-        if (user == null)
-        {
-            Debug.LogWarning("[SaveManager] 로그인된 유저 없음 → 저장 취소");
-            return;
-        }
-
-        SaveToFirebase(user.UserId);
-    }
-
 
     protected override void Awake()
     {
@@ -41,6 +24,135 @@ public class SaveManager : Singleton<SaveManager>
         db = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
+    private DatabaseReference UserSaveRef =>
+        db.Child("users").Child(userIdCached).Child("saveData");
+
+    public void SetUserContext(string userId)
+    {
+        userIdCached = userId;
+    }
+
+    // === 핵심: 변경 경로만 누적 ===
+    public void EnqueuePatch(string path, object value)
+    {
+        pending[path] = value;
+        ScheduleFlush();
+    }
+
+    public void EnqueuePatch(IDictionary<string, object> updates)
+    {
+        foreach (var kv in updates)
+            pending[kv.Key] = kv.Value;
+
+        ScheduleFlush();
+    }
+
+    private void ScheduleFlush()
+    {
+        if (flushScheduled) return;
+        flushScheduled = true;
+        FlushLater().Forget();
+    }
+
+    private async UniTaskVoid FlushLater()
+    {
+        // 연타 저장(강화/가챠 등) 묶기
+        await UniTask.Delay(TimeSpan.FromMilliseconds(200));
+        flushScheduled = false;
+
+        if (pending.Count == 0) return;
+
+        var copy = new Dictionary<string, object>(pending);
+        pending.Clear();
+
+        _ = UserSaveRef.UpdateChildrenAsync(copy)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                    Debug.LogError($"[SaveManager] Patch save failed: {task.Exception}");
+                else
+                    Debug.Log($"[SaveManager] Patch saved ({copy.Count} fields)");
+            });
+    }
+    public void PatchGold()
+    {
+        if (CurrentData == null) return;
+        EnqueuePatch("gold", CurrentData.gold);
+    }
+
+    public void PatchGem()
+    {
+        if (CurrentData == null) return;
+        EnqueuePatch("gem", CurrentData.gem);
+    }
+
+    public void PatchPartySet()
+    {
+        if (CurrentData == null || CurrentData.partySet == null || CurrentData.partySet.Length < 3)
+            return;
+
+        var p = CurrentData.partySet;
+        EnqueuePatch(new Dictionary<string, object>
+        {
+            ["partySet/0"] = p[0],
+            ["partySet/1"] = p[1],
+            ["partySet/2"] = p[2],
+        });
+    }
+
+    public void PatchCharacter(int characterId)
+    {
+        if (Manager.Character == null) return;
+        if (!Manager.Character.instances.TryGetValue(characterId, out var inst)) return;
+
+        string root = $"characters/{characterId}";
+
+        var updates = new Dictionary<string, object>
+        {
+            [$"{root}/isOwned"] = inst.isOwned,
+            [$"{root}/level"] = inst.level,
+            [$"{root}/exp"] = inst.exp,
+            [$"{root}/shard"] = inst.shard,
+        };
+
+        // 선택: skillType도 세이브에 포함할 거면
+        // updates[$"{root}/skillType"] = (int)inst.skillType;
+
+        EnqueuePatch(updates);
+    }
+
+    public void PatchStageRecord(string stageKey, StageRecord r)
+    {
+        if (r == null) return;
+        string root = $"stageProgress/{stageKey}";
+
+        EnqueuePatch(new Dictionary<string, object>
+        {
+            [$"{root}/cleared"] = r.cleared,
+            [$"{root}/clearCount"] = r.clearCount,
+            [$"{root}/bestClearTimeMs"] = r.bestClearTimeMs,
+            [$"{root}/bestScore"] = r.bestScore,
+            [$"{root}/bestStars"] = r.bestStars,
+            [$"{root}/lastClearedAtUtc"] = r.lastClearedAtUtc,
+        });
+    }
+    public void PatchDialogFlag(DialogCondition condition, bool value = true)
+    {
+        EnqueuePatch($"dialogFlags/{(int)condition}", value);
+    }
+
+    public static void RaiseCharacterAcquired(CharacterInstance inst)
+    {
+        OnCharacterAcquired?.Invoke(inst);
+    }
+    public bool TrySpendGold(int amount)
+    {
+        if (CurrentData.gold < amount)
+            return false;
+
+        CurrentData.gold -= amount;
+        return true;
+    }
     public void InitForUser(string userId, Action onComplete)
     {
         LoadFromFirebase(userId, onComplete);
@@ -97,50 +209,12 @@ public class SaveManager : Singleton<SaveManager>
             });
     }
 
-    private void SaveToFirebase(string userId)
+    private void ApplyToCharacterManager()
     {
-        SyncFromCharacterManager();
-
-        string json = JsonUtility.ToJson(CurrentData);
-
-        db.Child("users").Child(userId).Child("saveData")
-            .SetRawJsonValueAsync(json)
-            .ContinueWithOnMainThread(task =>
-            {
-                if (task.IsFaulted || task.IsCanceled)
-                    Debug.LogError($"[SaveManager] 세이브 저장 실패: {task.Exception}");
-                else
-                    Debug.Log("[SaveManager] Firebase에 세이브 저장 성공!");
-            });
+        Manager.Character.LoadUserInstances(CurrentData.characters);
+        Debug.Log($"[SaveManager] CharacterManager에 {CurrentData.characters.Count}개 캐릭터 적용");
     }
 
-    public bool TrySpendGold(int amount)
-    {
-        if (CurrentData.gold < amount)
-            return false;
-
-        CurrentData.gold -= amount;
-        return true;
-    }
-
-    public void AddGold(int amount)
-    {
-        CurrentData.gold += amount;
-    }
-
-    public bool TrySpendGem(int amount)
-    {
-        if (CurrentData.gem < amount)
-            return false;
-
-        CurrentData.gem -= amount;
-        return true;
-    }
-
-    public void AddGem(int amount)
-    {
-        CurrentData.gem += amount;
-    }
 
     private SaveData CreateDefaultSaveData()
     {
@@ -173,7 +247,7 @@ public class SaveManager : Singleton<SaveManager>
                     _ => throw new ArgumentOutOfRangeException()
                 }
             };
-            
+
             data.characters.Add(inst);
         }
 
@@ -184,10 +258,21 @@ public class SaveManager : Singleton<SaveManager>
         return data;
     }
 
-    private void ApplyToCharacterManager()
+    private void SaveToFirebase(string userId)
     {
-        Manager.Character.LoadUserInstances(CurrentData.characters);
-        Debug.Log($"[SaveManager] CharacterManager에 {CurrentData.characters.Count}개 캐릭터 적용");
+        SyncFromCharacterManager();
+
+        string json = JsonUtility.ToJson(CurrentData);
+
+        db.Child("users").Child(userId).Child("saveData")
+            .SetRawJsonValueAsync(json)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted || task.IsCanceled)
+                    Debug.LogError($"[SaveManager] 세이브 저장 실패: {task.Exception}");
+                else
+                    Debug.Log("[SaveManager] Firebase에 세이브 저장 성공!");
+            });
     }
 
     private void SyncFromCharacterManager()
@@ -203,9 +288,5 @@ public class SaveManager : Singleton<SaveManager>
             CurrentData.characters.Add(inst);
 
         Debug.Log($"[SaveManager] ID 순으로 {CurrentData.characters.Count}개 캐릭터 동기화");
-    }
-    public static void RaiseCharacterAcquired(CharacterInstance inst)
-    {
-        OnCharacterAcquired?.Invoke(inst);
     }
 }

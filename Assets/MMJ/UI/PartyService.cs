@@ -63,7 +63,7 @@ public static class PartyService
         party[slotIndex] = characterId;
         OnPartyChanged?.Invoke(party, slotIndex, characterId);
 
-        Manager.Save.SaveCurrentUser();
+        Manager.Save.PatchPartySet();
     }
 
     public static void ClearSlot(int slotIndex)
@@ -78,6 +78,6 @@ public static class PartyService
 
         party[slotIndex] = -1;
         OnPartyChanged?.Invoke(party, slotIndex, -1);
-        Manager.Save.SaveCurrentUser();
+        Manager.Save.PatchPartySet();
     }
 }

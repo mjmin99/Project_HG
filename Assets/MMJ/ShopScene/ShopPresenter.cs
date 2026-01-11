@@ -50,7 +50,8 @@ public class ShopPresenter : MonoBehaviour
                      || !Manager.Character.instances[id].isOwned;
 
         Manager.Character.GiveCharacter(id);
-        Manager.Save.SaveCurrentUser();
+        Manager.Save.PatchGold();
+        Manager.Save.PatchCharacter(id);
 
         resultPanel.Show(model, isNew);
     }

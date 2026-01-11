@@ -146,4 +146,11 @@ public class StageSaveService
     }
 
     #endregion
+
+    public StageRecord GetMutableRecord(int world, int stage)
+    {
+        if (!EnsureInitialized()) return null;
+        var key = StageKeyUtil.ToKey(world, stage);
+        return data.Cache.GetValueOrDefault(key);
+    }
 }

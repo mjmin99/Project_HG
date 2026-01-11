@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,7 +81,7 @@ public struct DialogRecord
             condition = condition,
             isFlagged = true
         };
-        Manager.Save.SaveCurrentUser();
+        Manager.Save.PatchDialogFlag(condition, true);
     }
 }
 [Serializable]

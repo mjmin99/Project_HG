@@ -226,8 +226,8 @@ public class CharacterManager : Singleton<CharacterManager>
             int index = Random.Range(0, pool.Count);
             slot.ability = pool[index];
         }
-
-        Manager.Save.SaveCurrentUser();
+        // todo 어빌리티
+        Manager.Save.PatchCharacter(characterId);
         return true;
     }
 
@@ -257,14 +257,15 @@ public class CharacterManager : Singleton<CharacterManager>
 
         int cost = GetEnhanceCost(characterId);
 
-        // 골드 소모
         if (!Manager.Save.TrySpendGold(cost))
             return false;
 
         // 경험치 = 소모 골드 (1:1)
         AddExp(characterId, cost);
 
-        Manager.Save.SaveCurrentUser();
+
+        Manager.Save.PatchGold();
+        Manager.Save.PatchCharacter(characterId);
         return true;
     }
 

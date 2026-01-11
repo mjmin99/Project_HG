@@ -126,8 +126,8 @@ public class ShopPanel : UIPanel
 
     private void AddTestGold()
     {
-        Manager.Save.AddGold(10000);
-        Manager.Save.SaveCurrentUser();
+        // Manager.Save.AddGold(10000);
+        Manager.Save.PatchGold();
         UpdateGoldUI();
 
         Debug.Log("[DEV] 테스트 골드 +10000 지급");
