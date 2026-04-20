@@ -7,6 +7,11 @@ public class AllHeal : Skill
     {
         base.Init(skillPool);
         skillType = SkillType.AllHeal;
+    }
+
+    public override void SkillEffect()
+    {
+        base.SkillEffect();
         Manager.Audio.PlaySfx("Heal");
     }
 }

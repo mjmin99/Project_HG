@@ -254,8 +254,13 @@ public class CharController : MonoBehaviour, IAttackable
         switch (skillPrefab.skillType)
         {
             case SkillType.StrongAttack:
+                if (hitInfo.collider == null)
+                {
+                    newSkill.ReturnToPool();
+                    return false;
+                }
+                newSkill.gameObject.SetActive(true);
                 newSkill.transform.position = transform.position + Vector3.right * 0.25f;
-                if (hitInfo.collider == null) return false;
                 var info = new AttackInfo(gameObject.layer, stats.attack * 5f, false);
                 hitInfo.collider.GetComponent<IAttackable>().TakeHit(info);
                 newSkill.SkillEffect();
@@ -264,11 +269,13 @@ public class CharController : MonoBehaviour, IAttackable
                 parry = newSkill as Parrying;
                 if (parry != null)
                 {
+                    parry.gameObject.SetActive(true);
                     parry.transform.position = transform.position + Vector3.right * 0.25f;
                     parry.SkillEffect();
                 }
                 break;
             case SkillType.AllHeal:
+                newSkill.gameObject.SetActive(true);
                 newSkill.SkillEffect();
                 newSkill.transform.position = transform.position;
                 foreach (var c in Manager.Game.Characters)
@@ -285,12 +292,13 @@ public class CharController : MonoBehaviour, IAttackable
     public void TakeHit(AttackInfo attackInfo)
     {
         if (attackInfo.layer != LayerMask.NameToLayer("Enemy")) return;
-        if (parry != null)
+        if (parry && parry.isParrying)
         {
-            if (parry.isParrying)
+            parry.SuccessParry();
+            if (hitInfo.collider != null)
             {
-                parry.SuccessParry();
-                hitInfo.collider.GetComponent<EnemyController>().GetStun(parry.stunTime);
+                hitInfo.collider.TryGetComponent<EnemyController>(out var enemy);
+                if (enemy) enemy.GetStun(parry.stunTime);
                 return;
             }
         }

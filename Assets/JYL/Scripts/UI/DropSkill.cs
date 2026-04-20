@@ -26,7 +26,7 @@ public class DropSkill : MonoBehaviour
         rectTransform.position = new Vector2(pos.x + 300, pos.y);
         Sequence sequence = DOTween.Sequence();
         sequence.Append(rectTransform
-            .DOJumpAnchorPos(targetTransform.anchoredPosition, 300f, 1, 2f));
+            .DOJumpAnchorPos(targetTransform.anchoredPosition, 300f, 1, 0.5f));
         sequence.AppendCallback(() 
             => battleManager.GetSkill(index));
         sequence.AppendCallback(() 

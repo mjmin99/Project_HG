@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class SkillPresenter : MonoBehaviour
@@ -69,7 +70,7 @@ public class SkillPresenter : MonoBehaviour
             
             if (i >= skills.Count) continue; // 캐릭 숫자만큼만 세팅함
             
-            btnText[i].SetText($"{skills[i].type} : {skills[i].skillCount}");
+            // btnText[i].SetText($"{skills[i].type} : {skills[i].skillCount}");
             skillCooldown[i] = skills[i].skillCooldown;
             
             skillForwardImage[i].sprite = skills[i].skillIcon;
@@ -77,8 +78,7 @@ public class SkillPresenter : MonoBehaviour
             skillBackImage[i].sprite = skills[i].skillIcon;
             
             int index = i;
-            skillButton[i].OnClickAsObservable().Subscribe(x => battleManager.OnClickSkills(skills[index].charId, 0)).AddTo(this);
-            skillButton[i].OnClickAsObservable().Subscribe(x => OnClickSkillButton(index)).AddTo(this);
+            skillButton[i].OnClickAsObservable().Subscribe(x => battleManager.OnClickSkills(skills[index].charId, index)).AddTo(this);
             skills[i].skillCount.Subscribe(x =>
                     SetSkillButtonInteractable(index, x, 
                         battleManager.skillDict[skills[index].charId].isDead.Value))
@@ -102,17 +102,21 @@ public class SkillPresenter : MonoBehaviour
         if (isDead)
         {
             skillButton[index].interactable = false;
-            skillForwardImage[index].fillAmount = 0f;
+            skillForwardImage[index].color = Color.gray2;
             skillTimer[index] = 0f;
         }
-        else if (amount > 0 && skillTimer[index] <= 0f)
+        else if (amount > 0)
         {
-            skillForwardImage[index].fillAmount = 1f;
-            skillButton[index].interactable = true;
+            skillForwardImage[index].color = Color.white;
+            if (skillTimer[index] <= 0f)
+            {
+                skillButton[index].interactable = true;
+                skillForwardImage[index].fillAmount = 1f;
+            }
         }
-        else if(amount == 0 && skillTimer[index] <= 0f)
+        else if(amount == 0)
         {
-            skillForwardImage[index].fillAmount = 0f;
+            skillForwardImage[index].color = Color.gray2;
             skillButton[index].interactable = false;
         }
     }
@@ -126,9 +130,8 @@ public class SkillPresenter : MonoBehaviour
         rewindPanel.SetActive(true);
     }
 
-    private void OnClickSkillButton(int index)
+    public void OnClickSkillButton(int index)
     {
-        if (skillTimer[index] > 0f) return;
         skillTimer[index] = skillCooldown[index];
         skillButton[index].interactable = false;
     }

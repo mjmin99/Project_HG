@@ -134,7 +134,7 @@ MonoBehaviour:
     attackType: 0
     isBoss: 1
   - id: 3333
-    enemyName: neon_vail
+    enemyName: neon_veil
     maxHP: 3600
     attack: 14
     magicAttack: 14

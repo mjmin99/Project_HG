@@ -150,7 +150,7 @@ public class EnemyManager : MonoBehaviour
         int rnd = Random.Range(0, 100);
         if (rnd > 50) // 50퍼 확률로
         {
-            int index = Random.Range(0, battleManager.skills.Count - 1);
+            int index = Random.Range(0, battleManager.skills.Count);
             var skill = battleManager.skills[index];
             var go = Instantiate(skillDropPrefab, battleManager.uiCanvas);
             go.Init(index, skill.skillIcon, controller.transform, battleManager);

@@ -38,7 +38,8 @@ public abstract class Skill : MonoBehaviour
     public virtual void Init(Stack<Skill> skillPool)
     {
         animator = gameObject.GetOrAddComponent<Animator>();
-        this.skillPool =  skillPool;
+        this.skillPool = skillPool;
+        gameObject.SetActive(false);
     }
 
     public virtual void SkillEffect()
@@ -49,9 +50,10 @@ public abstract class Skill : MonoBehaviour
         animator.Update(0f);
     }
 
-    protected void ReturnToPool()
+    public void ReturnToPool()
     {
         gameObject.SetActive(false);
+        timer = 0f;
         skillPool.Push(this);
     }
 

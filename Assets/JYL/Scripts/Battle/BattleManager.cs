@@ -27,13 +27,13 @@ public class BattleManager : MonoBehaviour
     [SerializeField] public SkillPresenter skillPresenter;
     [SerializeField] private StageClearPanel  stageClearPanel;
     
+    public readonly List<SkillInfo> skills = new();
+    public readonly Dictionary<int, CharController> skillDict = new();
+    
     private readonly List<CharController> characters = new();
     private List<Transform> charTransforms = new();
-    public readonly Dictionary<int, CharController> skillDict = new();
-
     private int characterLayer;
     private Camera cam;
-    public readonly List<SkillInfo> skills = new();
     
     // 스킬 타입 딕셔너리
     // 배치된 스킬 타입에 따라 UI의 이미지도 정해짐
@@ -196,6 +196,7 @@ public class BattleManager : MonoBehaviour
     public void OnClickSkills(int characterId, int index)
     {
         var tmp = skills.Find(x => x.charId == characterId);
+        skillPresenter.SetTxt(index,$"{tmp.type}\n{tmp.skillCount.Value}");
         bool canUse = !Manager.Game.IsGameOver && tmp.skillCount.Value > 0;
         
         if (!canUse) return;
@@ -203,7 +204,8 @@ public class BattleManager : MonoBehaviour
         if (skillDict[characterId].UseSkill())
         {
             tmp.skillCount.Value--;
-            skillPresenter.SetTxt(index,$"{tmp.type} : {tmp.skillCount}");
+            skillPresenter.SetTxt(index,$"{tmp.type}\n{tmp.skillCount.Value}");
+            skillPresenter.OnClickSkillButton(index);
         }
     }
 
@@ -213,6 +215,7 @@ public class BattleManager : MonoBehaviour
         var tmp = skills[index];
         if (tmp.skillCount.Value >= 3) return;
         tmp.skillCount.Value++;
+        skillPresenter.SetTxt(index,$"{tmp.type}\n{tmp.skillCount.Value}");
         skillPresenter.skillButtonPanel[index].transform.localScale = Vector3.one * 0.7f;
         var t1 = skillPresenter.skillButtonPanel[index].transform
             .DOScale(Vector3.one, 0.3f)

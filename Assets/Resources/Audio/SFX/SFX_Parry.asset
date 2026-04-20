@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
   clipSource: {fileID: 8300000, guid: c5d57c6cd168e074b8b22b56adfee97b, type: 3}
   clipName: Parry
-  volume: 0.9
+  volume: 0.99
   audioType: 3
   loop: 0

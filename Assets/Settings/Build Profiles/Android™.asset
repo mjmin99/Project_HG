@@ -1,0 +1,778 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5850018399464602949
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f64f689317e344bd94dad777079b3bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AdaptivePerformance.Google.Android::UnityEngine.AdaptivePerformance.Google.Android.GoogleAndroidProviderLoader
+--- !u!114 &-3646122901790227236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19bedd638b17440c6934f09de14d81c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AdaptivePerformance.Google.Android::UnityEngine.AdaptivePerformance.Google.Android.GoogleAndroidProviderSettings
+  m_Logging: 1
+  m_AutomaticPerformanceModeEnabled: 1
+  m_AutomaticGameModeEnabled: 1
+  m_EnableBoostOnStartup: 1
+  m_StatsLoggingFrequencyInFrames: 50
+  m_IndexerSettings:
+    m_Active: 1
+    m_ThermalActionDelay: 10
+    m_PerformanceActionDelay: 4
+  m_ScalerSettings:
+    m_AdaptiveFramerate:
+      m_Name: Adaptive Framerate
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 7
+      m_MaxLevel: 45
+      m_MinBound: 15
+      m_MaxBound: 60
+    m_AdaptiveResolution:
+      m_Name: Adaptive Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 6
+      m_MaxLevel: 9
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveBatching:
+      m_Name: Adaptive Batching
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveLOD:
+      m_Name: Adaptive LOD
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.4
+      m_MaxBound: 1
+    m_AdaptiveLut:
+      m_Name: Adaptive Lut
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveMSAA:
+      m_Name: Adaptive MSAA
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 6
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowCascade:
+      m_Name: Adaptive Shadow Cascade
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowDistance:
+      m_Name: Adaptive Shadow Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowmapResolution:
+      m_Name: Adaptive Shadowmap Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowQuality:
+      m_Name: Adaptive Shadow Quality
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 3
+      m_MaxLevel: 3
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveSorting:
+      m_Name: Adaptive Sorting
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveTransparency:
+      m_Name: Adaptive Transparency
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveViewDistance:
+      m_Name: Adaptive View Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 40
+      m_MinBound: 50
+      m_MaxBound: 1000
+    m_AdaptivePhysics:
+      m_Name: Adaptive Physics
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 1
+      m_MaxLevel: 5
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveDecals:
+      m_Name: Adaptive Decals
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 2
+      m_MaxLevel: 20
+      m_MinBound: 0.01
+      m_MaxBound: 1
+    m_AdaptiveLayerCulling:
+      m_Name: Adaptive Layer Culling
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 40
+      m_MinBound: 0.01
+      m_MaxBound: 1
+  m_AddedScalerViaScan: []
+  m_ActiveScalerProfile:
+    rid: -2
+  m_scalerProfileList:
+  - m_AdaptiveFramerate:
+      m_Name: Adaptive Framerate
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 7
+      m_MaxLevel: 45
+      m_MinBound: 15
+      m_MaxBound: 60
+    m_AdaptiveResolution:
+      m_Name: Adaptive Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 6
+      m_MaxLevel: 9
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveBatching:
+      m_Name: Adaptive Batching
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveLOD:
+      m_Name: Adaptive LOD
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.4
+      m_MaxBound: 1
+    m_AdaptiveLut:
+      m_Name: Adaptive Lut
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveMSAA:
+      m_Name: Adaptive MSAA
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 6
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowCascade:
+      m_Name: Adaptive Shadow Cascade
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowDistance:
+      m_Name: Adaptive Shadow Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowmapResolution:
+      m_Name: Adaptive Shadowmap Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowQuality:
+      m_Name: Adaptive Shadow Quality
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 3
+      m_MaxLevel: 3
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveSorting:
+      m_Name: Adaptive Sorting
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveTransparency:
+      m_Name: Adaptive Transparency
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveViewDistance:
+      m_Name: Adaptive View Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 40
+      m_MinBound: 50
+      m_MaxBound: 1000
+    m_AdaptivePhysics:
+      m_Name: Adaptive Physics
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 1
+      m_MaxLevel: 5
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveDecals:
+      m_Name: Adaptive Decals
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 2
+      m_MaxLevel: 20
+      m_MinBound: 0.01
+      m_MaxBound: 1
+    m_AdaptiveLayerCulling:
+      m_Name: Adaptive Layer Culling
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 40
+      m_MinBound: 0.01
+      m_MaxBound: 1
+    m_AddedScalers: []
+    m_Name: Default Scaler Profile
+  m_DefaultScalerProfilerIndex: 0
+  k_AssetVersion: 3
+  m_GoogleProviderLogging: 0
+  m_FrameStatsDialogDisplayed: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 15003, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: "Android\u2122"
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.Build.Profile.BuildProfile
+  m_AssetVersion: 1
+  m_BuildTarget: 13
+  m_Subtarget: 0
+  m_PlatformId: b9b35072a6f44c2e863f17467ea3dc13
+  m_PlatformBuildProfile:
+    rid: 3393970746592591873
+  m_OverrideGlobalSceneList: 0
+  m_Scenes: []
+  m_HasScriptingDefines: 0
+  m_ScriptingDefines: []
+  m_PlayerSettingsYaml:
+    m_Settings: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 3393970746592591873
+      type: {class: AndroidPlatformBuildSettings, ns: UnityEditor.Android, asm: UnityEditor.Android.Extensions}
+      data:
+        m_Development: 1
+        m_ConnectProfiler: 1
+        m_BuildWithDeepProfilingSupport: 0
+        m_AllowDebugging: 0
+        m_WaitForManagedDebugger: 0
+        m_ManagedDebuggerFixedPort: 0
+        m_ExplicitNullChecks: 0
+        m_ExplicitDivideByZeroChecks: 0
+        m_ExplicitArrayBoundsChecks: 0
+        m_CompressionType: 2
+        m_InstallInBuildFolder: 0
+        m_InsightsSettingsContainer:
+          m_BuildProfileEngineDiagnosticsState: 2
+        m_AdaptivePerformanceEnabled: 1
+        m_BuildSubtarget: 0
+        m_BuildSystem: 1
+        m_ExportAsGoogleAndroidProject: 0
+        m_DebugSymbolLevel: 1
+        m_DebugSymbolFormat: 5
+        m_CurrentDeploymentTargetId: R3CW30QSVSE
+        m_BuildType: 1
+        m_LinkTimeOptimization: 0
+        m_BuildAppBundle: 1
+        m_IPAddressToConnect: 
+        m_SymlinkSources: 0
+--- !u!114 &2592889070043352521
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 21001, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.AdaptivePerformance.AdaptivePerformanceManagerSettings
+  m_AutomaticLoading: 0
+  m_AutomaticRunning: 0
+  m_Loaders:
+  - {fileID: -5850018399464602949}
+--- !u!114 &3152583212888051674
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 21008, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.AdaptivePerformance.Basic.BasicProviderSettings
+  m_Logging: 1
+  m_AutomaticPerformanceModeEnabled: 1
+  m_AutomaticGameModeEnabled: 0
+  m_EnableBoostOnStartup: 1
+  m_StatsLoggingFrequencyInFrames: 50
+  m_IndexerSettings:
+    m_Active: 1
+    m_ThermalActionDelay: 10
+    m_PerformanceActionDelay: 4
+  m_ScalerSettings:
+    m_AdaptiveFramerate:
+      m_Name: Adaptive Framerate
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 7
+      m_MaxLevel: 45
+      m_MinBound: 15
+      m_MaxBound: 60
+    m_AdaptiveResolution:
+      m_Name: Adaptive Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 6
+      m_MaxLevel: 9
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveBatching:
+      m_Name: Adaptive Batching
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveLOD:
+      m_Name: Adaptive LOD
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.4
+      m_MaxBound: 1
+    m_AdaptiveLut:
+      m_Name: Adaptive Lut
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveMSAA:
+      m_Name: Adaptive MSAA
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 6
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowCascade:
+      m_Name: Adaptive Shadow Cascade
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowDistance:
+      m_Name: Adaptive Shadow Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowmapResolution:
+      m_Name: Adaptive Shadowmap Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowQuality:
+      m_Name: Adaptive Shadow Quality
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 3
+      m_MaxLevel: 3
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveSorting:
+      m_Name: Adaptive Sorting
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveTransparency:
+      m_Name: Adaptive Transparency
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveViewDistance:
+      m_Name: Adaptive View Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 40
+      m_MinBound: 50
+      m_MaxBound: 1000
+    m_AdaptivePhysics:
+      m_Name: Adaptive Physics
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 1
+      m_MaxLevel: 5
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveDecals:
+      m_Name: Adaptive Decals
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 2
+      m_MaxLevel: 20
+      m_MinBound: 0.01
+      m_MaxBound: 1
+    m_AdaptiveLayerCulling:
+      m_Name: Adaptive Layer Culling
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 40
+      m_MinBound: 0.01
+      m_MaxBound: 1
+  m_AddedScalerViaScan: []
+  m_ActiveScalerProfile:
+    rid: -2
+  m_scalerProfileList:
+  - m_AdaptiveFramerate:
+      m_Name: Adaptive Framerate
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 7
+      m_MaxLevel: 45
+      m_MinBound: 15
+      m_MaxBound: 60
+    m_AdaptiveResolution:
+      m_Name: Adaptive Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 6
+      m_MaxLevel: 9
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveBatching:
+      m_Name: Adaptive Batching
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveLOD:
+      m_Name: Adaptive LOD
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.4
+      m_MaxBound: 1
+    m_AdaptiveLut:
+      m_Name: Adaptive Lut
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveMSAA:
+      m_Name: Adaptive MSAA
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 6
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowCascade:
+      m_Name: Adaptive Shadow Cascade
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 3
+      m_MaxLevel: 2
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveShadowDistance:
+      m_Name: Adaptive Shadow Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowmapResolution:
+      m_Name: Adaptive Shadowmap Resolution
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 2
+      m_MaxLevel: 3
+      m_MinBound: 0.15
+      m_MaxBound: 1
+    m_AdaptiveShadowQuality:
+      m_Name: Adaptive Shadow Quality
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 3
+      m_MaxLevel: 3
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveSorting:
+      m_Name: Adaptive Sorting
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveTransparency:
+      m_Name: Adaptive Transparency
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 1
+      m_MinBound: 0
+      m_MaxBound: 1
+    m_AdaptiveViewDistance:
+      m_Name: Adaptive View Distance
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 2
+      m_Target: 2
+      m_MaxLevel: 40
+      m_MinBound: 50
+      m_MaxBound: 1000
+    m_AdaptivePhysics:
+      m_Name: Adaptive Physics
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 0
+      m_Target: 1
+      m_MaxLevel: 5
+      m_MinBound: 0.5
+      m_MaxBound: 1
+    m_AdaptiveDecals:
+      m_Name: Adaptive Decals
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 2
+      m_MaxLevel: 20
+      m_MinBound: 0.01
+      m_MaxBound: 1
+    m_AdaptiveLayerCulling:
+      m_Name: Adaptive Layer Culling
+      m_Enabled: 0
+      m_Scale: 1
+      m_VisualImpact: 1
+      m_Target: 1
+      m_MaxLevel: 40
+      m_MinBound: 0.01
+      m_MaxBound: 1
+    m_AddedScalers: []
+    m_Name: Default Scaler Profile
+  m_DefaultScalerProfilerIndex: 0
+  k_AssetVersion: 3
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &3540177755305727657
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 15010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Quality Settings
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.Build.Profile.BuildProfileQualitySettings
+  m_DefaultQualityLevel: Mobile
+  m_QualityLevels:
+  - Mobile
+--- !u!114 &6091679440113630115
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 21013, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.AdaptivePerformance.Editor.Metadata.BuildProfileProviderContainer
+  m_AdaptivePerformanceProviderSettings:
+  - {fileID: 3152583212888051674}
+  - {fileID: -3646122901790227236}
+--- !u!114 &7628048149558234390
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 21000, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.AdaptivePerformance.AdaptivePerformanceGeneralSettings
+  m_LoaderManagerInstance: {fileID: 2592889070043352521}
+  m_InitManagerOnStart: 1
+  m_LastSelectedProvider: 

@@ -139,7 +139,7 @@ public class EnemyController : MonoBehaviour, IAttackable
     public void Attack()
     {
         var attackInfo = new AttackInfo(LayerMask.NameToLayer("Enemy"), enemyInfo.attack,false);
-        hitInfo.collider.GetComponent<IAttackable>().TakeHit(attackInfo);
+        if(hitInfo.collider) hitInfo.collider.GetComponent<IAttackable>().TakeHit(attackInfo);
     }
 
     public void TakeHit(AttackInfo info)
@@ -190,7 +190,7 @@ public class EnemyController : MonoBehaviour, IAttackable
 
     public void GetStun(float stunAmount)
     {
-        this.stunTime = stunAmount;
+        stunTime = stunAmount;
         stateMachine.ChangeState(stateDict[CharStateType.Stun]);
     }
 

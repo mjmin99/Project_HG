@@ -7,6 +7,11 @@ public class StrongAttack : Skill
     {
         base.Init(skillPool);
         skillType = SkillType.StrongAttack;
+    }
+
+    public override void SkillEffect()
+    {
+        base.SkillEffect();
         Manager.Audio.PlaySfx("Strike");
     }
 }
