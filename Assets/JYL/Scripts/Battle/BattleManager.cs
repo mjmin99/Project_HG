@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private CharacterHpPresenter characterHpPresenter;
     [SerializeField] public SkillPresenter skillPresenter;
     [SerializeField] private StageClearPanel  stageClearPanel;
+    [SerializeField] private Button pauseButton;
+    
     
     public readonly List<SkillInfo> skills = new();
     public readonly Dictionary<int, CharController> skillDict = new();
@@ -100,6 +103,8 @@ public class BattleManager : MonoBehaviour
         skillPresenter.Init(skills);
         // 캐릭터 UI 연결
         characterHpPresenter.Init();
+        // 게임 일시정지 UI 연결
+        pauseButton.OnClickAsObservable().Subscribe(_=>UIManager.Instance.PauseGame()).AddTo(this);
         
         stageClearPanel.gameObject.SetActive(false);
         DialogCheck().Forget();

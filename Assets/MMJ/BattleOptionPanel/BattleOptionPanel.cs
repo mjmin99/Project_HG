@@ -73,6 +73,7 @@ public class BattleOptionPanel : UIPanel
         Time.timeScale = 1f;
         UIManager.Instance.CloseTop();
         await UniTask.WhenAll(Manager.Game.tasks);
+        DOTween.KillAll();
         Manager.Game.ClearCharacters();
         Manager.Game.IsBattle = false;
         Manager.Game.IsGameOver = false;

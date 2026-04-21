@@ -41,6 +41,7 @@ public class SignUpPanel : MonoBehaviour
                 }
                 if (task.IsFaulted)
                 {
+                    ToastUtil.Error("이메일 가입 실패\n입력을 확인해주세요");
                     Debug.Log($"이메일 가입 실패함. 이유 : {task.Exception}");
                     return;
                 }

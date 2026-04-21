@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -53,6 +54,34 @@ public class UIManager : MonoBehaviour
         // }
     }
 
+    // 게임 중 설정 창 오픈 또는 전투 중 일시 정지
+    public void PauseGame()
+    {
+        if (uiStack.Count > 0)
+        {
+            if (Manager.Game.IsBattle && Manager.Game.IsGameOver)
+            {
+                if (uiStack.Peek() is BattleOptionPanel)
+                {
+                    return;
+                }
+            }
+            CloseTop();
+        }
+        else
+        {
+            if (Manager.Game.IsBattle)
+            {
+                if (Manager.Game.IsGameOver || Manager.Game.IsGameClear) return;
+                OpenUI<UIPanel>("BattleOptionPanel");
+            }
+            else
+            {
+                OpenUI<UIPanel>("OptionPanel"); 
+            }
+        }
+    }
+    
     // GameObject로 로드 -> Instantiate -> GetComponent<T>
     public T OpenUI<T>(string key) where T : UIBase
     {

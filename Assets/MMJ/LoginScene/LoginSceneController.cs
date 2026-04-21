@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class LoginSceneController : MonoBehaviour
 {
@@ -8,10 +10,16 @@ public class LoginSceneController : MonoBehaviour
     [SerializeField] GameObject lobbyPanel;
     [SerializeField] GameObject nicknamePanel;
     [SerializeField] GameObject emailPanel;
+    [SerializeField] private Button optionBtn;
 
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        optionBtn.OnClickAsObservable().Subscribe(_=>ClickOptionBtn()).AddTo(this);
     }
 
     public void ReturnToLogin()
@@ -23,5 +31,10 @@ public class LoginSceneController : MonoBehaviour
 
         // 로그인 패널만 켜기
         loginPanel.SetActive(true);
+    }
+    
+    private void ClickOptionBtn()
+    {
+        UIManager.Instance.OpenUI<OptionPanel>("OptionPanel");
     }
 }
