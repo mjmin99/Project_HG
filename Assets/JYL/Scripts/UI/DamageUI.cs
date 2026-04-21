@@ -90,7 +90,11 @@ public class DamageUI : MonoBehaviour
 
     public async UniTask ShowHealEffect(int amount, Transform targetTransform)
     {
-        if(textPool.Count == 0) CreateTextInstance();
+        if(textPool.Count == 0) 
+        {
+            CreateTextInstance();
+            Debug.Log("UI 새로만듦");
+        }
         
         var newText = textPool.Pop();
         var childCanvas = CheckChildCanvas(targetTransform);

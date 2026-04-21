@@ -367,7 +367,7 @@ MonoBehaviour:
     - rid: 3393970746592591873
       type: {class: AndroidPlatformBuildSettings, ns: UnityEditor.Android, asm: UnityEditor.Android.Extensions}
       data:
-        m_Development: 1
+        m_Development: 0
         m_ConnectProfiler: 1
         m_BuildWithDeepProfilingSupport: 0
         m_AllowDebugging: 0
@@ -376,7 +376,7 @@ MonoBehaviour:
         m_ExplicitNullChecks: 0
         m_ExplicitDivideByZeroChecks: 0
         m_ExplicitArrayBoundsChecks: 0
-        m_CompressionType: 2
+        m_CompressionType: 3
         m_InstallInBuildFolder: 0
         m_InsightsSettingsContainer:
           m_BuildProfileEngineDiagnosticsState: 2
@@ -384,10 +384,10 @@ MonoBehaviour:
         m_BuildSubtarget: 0
         m_BuildSystem: 1
         m_ExportAsGoogleAndroidProject: 0
-        m_DebugSymbolLevel: 1
-        m_DebugSymbolFormat: 5
-        m_CurrentDeploymentTargetId: R3CW30QSVSE
-        m_BuildType: 1
+        m_DebugSymbolLevel: 4
+        m_DebugSymbolFormat: 6
+        m_CurrentDeploymentTargetId: __builtin__target_default
+        m_BuildType: 2
         m_LinkTimeOptimization: 0
         m_BuildAppBundle: 1
         m_IPAddressToConnect: 
@@ -407,7 +407,8 @@ MonoBehaviour:
   m_AutomaticLoading: 0
   m_AutomaticRunning: 0
   m_Loaders:
-  - {fileID: -5850018399464602949}
+  - {fileID: 0}
+  - {fileID: 5975547101967280343}
 --- !u!114 &3152583212888051674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -746,6 +747,18 @@ MonoBehaviour:
   m_DefaultQualityLevel: Mobile
   m_QualityLevels:
   - Mobile
+--- !u!114 &5975547101967280343
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f64f689317e344bd94dad777079b3bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AdaptivePerformance.Google.Android::UnityEngine.AdaptivePerformance.Google.Android.GoogleAndroidProviderLoader
 --- !u!114 &6091679440113630115
 MonoBehaviour:
   m_ObjectHideFlags: 1

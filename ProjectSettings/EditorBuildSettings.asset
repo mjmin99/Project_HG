@@ -15,6 +15,10 @@ EditorBuildSettings:
     path: Assets/JYL/Scenes/BattleScene.unity
     guid: 992e551c541466c40a7907a7322a0696
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 3e7e75f825483dc408613dcce43a5d3a, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: d5acc0a34579a11408b7869f7d722993, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 439c3f9299ab2e44699cd62130946562, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 6fc5f360d183bfb498f4d59f23d2e51e, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: b232c1147cc13894387f2379105fab0a, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
