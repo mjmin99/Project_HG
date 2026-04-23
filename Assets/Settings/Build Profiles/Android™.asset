@@ -386,7 +386,7 @@ MonoBehaviour:
         m_ExportAsGoogleAndroidProject: 0
         m_DebugSymbolLevel: 4
         m_DebugSymbolFormat: 6
-        m_CurrentDeploymentTargetId: __builtin__target_default
+        m_CurrentDeploymentTargetId: R39M10DXF8D
         m_BuildType: 2
         m_LinkTimeOptimization: 0
         m_BuildAppBundle: 1
