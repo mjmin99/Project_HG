@@ -37,11 +37,11 @@ public class FirebaseManager : MonoBehaviour
     {
         Debug.Log("[FirebaseManager] 초기화 시작...");
 
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             var dependencyStatus = task.Result;
 
-            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            if (dependencyStatus == DependencyStatus.Available)
             {
                 Debug.Log("[FirebaseManager] 설정 완료!");
                 app = FirebaseApp.DefaultInstance;
