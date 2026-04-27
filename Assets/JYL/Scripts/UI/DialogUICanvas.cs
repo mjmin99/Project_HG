@@ -19,7 +19,12 @@ public class DialogUICanvas : MonoBehaviour
     {
         backGroundPanel.gameObject.SetActive(false);
         fadeImage.gameObject.SetActive(false);
-        
+        skipButton.OnClickAsObservable().Subscribe(_=> ButtonDebug()).AddTo(this);
         skipButton.OnClickAsObservable().Subscribe(_ => Manager.Dialog.DialogSkip());
+    }
+
+    private void ButtonDebug()
+    {
+        Debug.Log("버튼 클릭은 인식됨");
     }
 }

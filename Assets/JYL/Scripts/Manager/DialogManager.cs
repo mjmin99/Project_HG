@@ -2,6 +2,8 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class DialogManager : Singleton<DialogManager>
 {
@@ -143,7 +145,7 @@ public class DialogManager : Singleton<DialogManager>
             }
             
             // 출력 스킵 : 트윈 종료
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Pointer.current != null && EventSystem.current.IsPointerOverGameObject())
             {
                 typingTween.Kill();
                 canvas.dialogText.maxVisibleCharacters = total;
@@ -171,12 +173,10 @@ public class DialogManager : Singleton<DialogManager>
     private async UniTask WaitNextKey()
     {
         // 스킵된 경우 또한 포함
-        while (!Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isSkip) return;
-            await UniTask.Yield(PlayerLoopTiming.Update);
-        }
-        await UniTask.Yield(PlayerLoopTiming.Update);
+        await UniTask.WaitUntil(() => 
+            Pointer.current != null 
+            && EventSystem.current.IsPointerOverGameObject() 
+            || isSkip);
     }
     
     // 들어온 라인의 로직을 종류에 맞게 처리
