@@ -367,11 +367,11 @@ MonoBehaviour:
     - rid: 3393970746592591873
       type: {class: AndroidPlatformBuildSettings, ns: UnityEditor.Android, asm: UnityEditor.Android.Extensions}
       data:
-        m_Development: 0
+        m_Development: 1
         m_ConnectProfiler: 1
-        m_BuildWithDeepProfilingSupport: 0
-        m_AllowDebugging: 0
-        m_WaitForManagedDebugger: 0
+        m_BuildWithDeepProfilingSupport: 1
+        m_AllowDebugging: 1
+        m_WaitForManagedDebugger: 1
         m_ManagedDebuggerFixedPort: 0
         m_ExplicitNullChecks: 0
         m_ExplicitDivideByZeroChecks: 0
@@ -387,7 +387,7 @@ MonoBehaviour:
         m_DebugSymbolLevel: 4
         m_DebugSymbolFormat: 6
         m_CurrentDeploymentTargetId: R39M10DXF8D
-        m_BuildType: 2
+        m_BuildType: 1
         m_LinkTimeOptimization: 0
         m_BuildAppBundle: 1
         m_IPAddressToConnect: 

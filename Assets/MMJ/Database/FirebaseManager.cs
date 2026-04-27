@@ -3,6 +3,7 @@ using Firebase.Extensions;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
+using UniRx;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class FirebaseManager : MonoBehaviour
     private static FirebaseDatabase database;
     public static FirebaseDatabase Database { get { return database; } }
 
-    public static bool IsInitialized { get; private set; } = false;
+    public static BoolReactiveProperty IsInitialized { get; private set; } = new (false);
 
     private void Awake()
     {
@@ -48,7 +49,7 @@ public class FirebaseManager : MonoBehaviour
                 auth = FirebaseAuth.DefaultInstance;
                 database = FirebaseDatabase.DefaultInstance;
 
-                IsInitialized = true;
+                IsInitialized.Value = true;
             }
             else
             {
@@ -57,7 +58,7 @@ public class FirebaseManager : MonoBehaviour
                 auth = null;
                 database = null;
 
-                IsInitialized = false;
+                IsInitialized.Value = false;
             }
         });
     }

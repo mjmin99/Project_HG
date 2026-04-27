@@ -6,6 +6,7 @@ public class LoginSceneController : MonoBehaviour
 {
     public static LoginSceneController Instance { get; private set; }
 
+    [SerializeField] private GameObject GPGSLoginPanel;
     [SerializeField] GameObject loginPanel;
     [SerializeField] GameObject lobbyPanel;
     [SerializeField] GameObject nicknamePanel;
@@ -28,9 +29,10 @@ public class LoginSceneController : MonoBehaviour
         lobbyPanel.SetActive(false);
         nicknamePanel.SetActive(false);
         emailPanel.SetActive(false);
+        loginPanel.SetActive(false);
 
-        // 로그인 패널만 켜기
-        loginPanel.SetActive(true);
+        // GPGS 로그인 대기 패널 켜기
+        GPGSLoginPanel.SetActive(true);
     }
     
     private void ClickOptionBtn()

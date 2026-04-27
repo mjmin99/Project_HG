@@ -64,7 +64,7 @@ public class LoginPanel : MonoBehaviour
 
             // 1. 이미 이메일 인증을 마친 유저인 경우는 로비로
             FirebaseUser user = task.Result.User;
-            if (user.IsEmailVerified == true)
+            if (user.IsEmailVerified)
             {
                 // 1-1. 아직 닉네임 설정을 하지 않은 경우
                 if (user.DisplayName == "")
