@@ -20,6 +20,7 @@ public class GPGSManager : MonoBehaviour
         
         // 버튼에 이벤트 구독
         playGamesButton.OnClickAsObservable().Subscribe(_ => GPGSAuth()).AddTo(this);
+        playGamesButton.OnClickAsObservable().Subscribe(_ => Manager.Audio.PlaySfx("SFX_Ok")).AddTo(this);
         // 파이어베이스가 초기화 되었을 때 수행
         FirebaseManager.IsInitialized
             .Where(x=>x==true)
@@ -33,7 +34,6 @@ public class GPGSManager : MonoBehaviour
         // 다중 입력 방지를 위한 로딩 패널 활성화
         loadingPanel.SetActive(true);
         PlayGamesPlatform.Instance.Authenticate(OnAuthenticated);
-        Manager.Audio.PlaySfx("SFX_OK");
     }
         
 
