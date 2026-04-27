@@ -6,7 +6,7 @@ public class CharacterRewind : CharacterState
     private TestTimeInfo targetInfo;
     private float lerpTime;
 
-    private const float REWIND_SPEED = 1.5f;
+    private const float RewindSpeed = 1.5f;
 
     public CharacterRewind(CharController controller) : base(controller)
     {
@@ -22,7 +22,7 @@ public class CharacterRewind : CharacterState
 
         if(!controller.isDead.Value) controller.PlayAnimation(Rewind);
         
-        controller.animator.speed = 1f * REWIND_SPEED;
+        controller.animator.speed = 1f * RewindSpeed;
 
         startInfo = new TestTimeInfo(controller.transform.position, 0, 0);
         
@@ -42,25 +42,28 @@ public class CharacterRewind : CharacterState
         
         // 분자 합이 분모만큼 되면 1 이상됨
         // rewind speed로 배속 조절 됨
-        lerpTime += (Time.deltaTime * REWIND_SPEED) / Time.fixedDeltaTime; 
+        lerpTime += (Time.deltaTime * RewindSpeed) / Time.fixedDeltaTime; 
 
-        if (lerpTime >= 1f)
+        if (lerpTime >= 1f) // 다음 프레임에 해당하는 시간일 경우
         {
-            if (controller.HasHistory())
+            while (lerpTime > 1f)
             {
-                startInfo = targetInfo;
-                targetInfo = controller.PopHistory();
-                if (controller.isDead.Value && targetInfo.hp > 0)
+                if (controller.HasHistory())
                 {
-                    controller.isDead.Value = false;
-                    controller.PlayAnimation(Rewind);
-                }
+                    startInfo = targetInfo;
+                    targetInfo = controller.PopHistory();
+                    if (controller.isDead.Value && targetInfo.hp > 0)
+                    {
+                        controller.isDead.Value = false;
+                        controller.PlayAnimation(Rewind);
+                    }
 
-                lerpTime -= 1f;
-            }
-            else
-            {
-                lerpTime = 1f;
+                    lerpTime -= 1f;
+                }
+                else
+                {
+                    lerpTime = 1f;
+                }
             }
         }
         

@@ -147,14 +147,14 @@ public class DialogManager : Singleton<DialogManager>
             // 출력 스킵 : 트윈 종료
             if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
             {
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
+                //if (EventSystem.current.IsPointerOverGameObject())
+                //{
                     typingTween.Kill();
                     canvas.dialogText.maxVisibleCharacters = total;
                     isTyping = false;
                     await UniTask.Yield(PlayerLoopTiming.Update);
                     break;
-                }
+                //}
             }
             
             // 트윈 종료 시
@@ -178,8 +178,8 @@ public class DialogManager : Singleton<DialogManager>
         // 스킵된 경우 또한 포함
         await UniTask.WaitUntil(() => 
             Pointer.current != null &&
-            Pointer.current.press.wasPressedThisFrame &&
-            EventSystem.current.IsPointerOverGameObject() 
+            Pointer.current.press.wasPressedThisFrame 
+            /* EventSystem.current.IsPointerOverGameObject() */ 
             || isSkip);
     }
     

@@ -19,7 +19,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Transform[] characterPos;
     
     [Header("Set Values")]
-    [SerializeField] private float rewindTime = 5f;
+    [SerializeField] private float rewindTime = 3f;
     [SerializeField] private float rewindCoolDown = 15f;
 
     [Header("Set UI")] 

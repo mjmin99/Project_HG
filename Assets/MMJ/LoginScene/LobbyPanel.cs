@@ -11,6 +11,7 @@ public class LobbyPanel : MonoBehaviour
     [Header("Panel References")]
     [SerializeField] GameObject loginPanel;
     [SerializeField] GameObject editPanel;
+    [SerializeField] GameObject gpgsLoginPanel;
 
     [Header("User Info UI")]
     [SerializeField] TMP_Text emailContent;
@@ -42,7 +43,7 @@ public class LobbyPanel : MonoBehaviour
     private void Logout()
     {
         FirebaseManager.Auth.SignOut();
-        loginPanel.SetActive(true);
+        gpgsLoginPanel.SetActive(true);
         gameObject.SetActive(false);
     }
 

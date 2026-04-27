@@ -7934,7 +7934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1104309422
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8007,6 +8007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPanel
   loginPanel: {fileID: 777351671}
   editPanel: {fileID: 1846459441}
+  gpgsLoginPanel: {fileID: 523412483}
   emailContent: {fileID: 819289113}
   nameContent: {fileID: 1090035941}
   userIDContent: {fileID: 2038007520}
@@ -8186,7 +8187,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.2856042, y: 0.17710951}
   m_AnchorMax: {x: 0.7191459, y: 0.60557973}
-  m_AnchoredPosition: {x: -2.5742188, y: 1.0312195}
+  m_AnchoredPosition: {x: -2.5742188, y: 1.03125}
   m_SizeDelta: {x: -14.065918, y: -20.151794}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1161346399
