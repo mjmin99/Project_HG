@@ -50,6 +50,10 @@ public class MainScenePresenter : MonoBehaviour
             await Manager.Dialog.StartDialog(DialogKey.Scene1);
             Manager.Dialog.MarkDialogCondition(DialogCondition.IsFirstBase);
         }
+        // 여기서 기본 캐릭터 지급
+        Manager.Character.GiveCharacter(9);
+        Manager.Character.GiveCharacter(10);
+        Manager.Character.GiveCharacter(11);
     }
 
     public void UpdateGoldUI()

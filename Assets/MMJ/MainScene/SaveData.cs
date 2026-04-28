@@ -6,7 +6,7 @@ using UnityEngine;
 public class SaveData
 {
     // 파티 구성 (3명)
-    public int[] partySet = { -1, -1, -1 };
+    public int[] partySet = { 9, 10, 11 }; // 기본 캐릭터 지급 및 배정. 캐릭터 지급은 SaveManager에서 진행
 
     // 보유 캐릭터들 (CharacterInstance 목록)
     public List<CharacterInstance> characters = new();

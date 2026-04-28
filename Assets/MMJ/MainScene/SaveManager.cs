@@ -161,7 +161,7 @@ public class SaveManager : Singleton<SaveManager>
             var inst = new CharacterInstance
             {
                 id = model.id,
-                isOwned = (model.id == 0),
+                isOwned = model.id == 0, // 기본 캐릭터 지급
                 level = 1,
                 exp = 0,
                 shard = 0,
@@ -179,7 +179,6 @@ public class SaveManager : Singleton<SaveManager>
 
         data.gold = 500;
         data.gem = 0;
-
         Debug.Log($"[SaveManager] 기본 세이브 생성: 캐릭터 {data.characters.Count}개, 골드 {data.gold}, 젬 {data.gem}");
         return data;
     }

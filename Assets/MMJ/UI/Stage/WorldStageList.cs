@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class WorldStageList : MonoBehaviour
 {
@@ -45,6 +46,11 @@ public class WorldStageList : MonoBehaviour
         if (!stageDatabase.TryGet(world, stage, out var stageData))
             return;
         
+        if (Manager.Save.CurrentData.partySet.Contains(-1)) // 파티 구성이 완료되어야 출발 가능
+        {
+            ToastUtil.Error("파티 구성을 완료해주세요!");
+            return;
+        }
         UIManager.Instance.CloseTop();
         Manager.Game.SetStageData(stageData);
         UnityEngine.SceneManagement.SceneManager.LoadScene("BattleScene");
