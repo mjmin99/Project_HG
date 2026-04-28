@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 using DG.Tweening;
 
 public abstract class UIBase : MonoBehaviour
@@ -64,6 +65,7 @@ public abstract class UIBase : MonoBehaviour
             {
                 Destroy(gameObject);
             });
+        Manager.Game.tasks.Add(sequence.AsyncWaitForCompletion().AsUniTask());
     }
 
     protected void KillSequence()

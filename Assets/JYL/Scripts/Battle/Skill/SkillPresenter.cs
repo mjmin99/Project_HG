@@ -78,10 +78,16 @@ public class SkillPresenter : MonoBehaviour
             skillBackImage[i].sprite = skills[i].skillIcon;
             
             int index = i;
+            // 스킬 버튼 눌렀을 때의 로직 구독
             skillButton[i].OnClickAsObservable().Subscribe(x => battleManager.OnClickSkills(skills[index].charId, index)).AddTo(this);
+            // 스킬 카운트 변동 시의 로직 구독
             skills[i].skillCount.Subscribe(x =>
                     SetSkillButtonInteractable(index, x, 
                         battleManager.skillDict[skills[index].charId].isDead.Value))
+                .AddTo(this);
+            // 캐릭터들의 살고 죽는 것에 따라 로직 구독
+            Manager.Game.Characters[i].isDead.Subscribe(x=>
+                SetSkillButtonInteractable(index,skills[index].skillCount.Value,x))
                 .AddTo(this);
 
             if (skills[i].skillCount.Value <= 0)
