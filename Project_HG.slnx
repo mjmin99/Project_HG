@@ -1,0 +1,9 @@
+﻿<Solution>
+  <Project Path="UniRx.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Google.Play.Games.Editor.csproj" />
+  <Project Path="Google.Play.Games.csproj" />
+  <Project Path="UniRx.Examples.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+</Solution>
